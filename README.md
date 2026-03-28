@@ -120,6 +120,9 @@ src/
 - 🔗 LinkedIn: [linkedin.com/in/emmanuelgoodness](https://www.linkedin.com/in/emmanuelgoodness)
 - 📧 Email: [emmanuelgoodnesscj@gmail.com](mailto:emmanuelgoodnesscj@gmail.com)
 
+**Anointed Agunloye** — Backend Developer
+
+- 📧 Email: [anointedthedeveloper@gmaill.com](mailto:anointedthedeveloper@gmaill.com)
 ---
 
 <p align="center">Built for the Peter Harvard INT'L School community</p>
