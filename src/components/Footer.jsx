@@ -1,39 +1,63 @@
 import { Link } from 'react-router-dom'
+import { GraduationCap, Mail, Linkedin, MapPin, Phone } from 'lucide-react'
 
 export default function Footer() {
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-sm">PH</div>
-              <span className="font-bold text-gray-900 dark:text-white">Peter Harvard INT'L School</span>
+              <div className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center">
+                <GraduationCap size={18} className="text-white" />
+              </div>
+              <span className="font-bold text-gray-900 dark:text-white">Peter Harvard INT'L</span>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Connecting graduates with their alma mater through a centralized digital community.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              Connecting graduates with their alma mater through a centralized digital community.
+            </p>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Quick Links</h4>
-            <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-              <li><Link to="/" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Home</Link></li>
-              <li><Link to="/directory" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Alumni Directory</Link></li>
-              <li><Link to="/events" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Events & Announcements</Link></li>
-              <li><Link to="/register" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Register as Alumni</Link></li>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Navigation</h4>
+            <ul className="space-y-2.5 text-sm text-gray-500 dark:text-gray-400">
+              {[['/', 'Home'], ['/directory', 'Alumni Directory'], ['/events', 'Events'], ['/about', 'About'], ['/contact', 'Contact']].map(([to, label]) => (
+                <li key={to}><Link to={to} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{label}</Link></li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Contact</h4>
-            <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-              <li>Goodness Emmanuel — <a href="mailto:emmanuelgoodnesscj@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400">emmanuelgoodnesscj@gmail.com</a></li>
-              <li>Anointed Agunloye — <a href="mailto:anointedthedeveloper@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400">anointedthedeveloper@gmail.com</a></li>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Alumni</h4>
+            <ul className="space-y-2.5 text-sm text-gray-500 dark:text-gray-400">
+              {[['/register', 'Register'], ['/directory', 'Browse Directory'], ['/events', 'Announcements'], ['/login', 'Admin Login']].map(([to, label]) => (
+                <li key={to}><Link to={to} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{label}</Link></li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Contact</h4>
+            <ul className="space-y-3 text-sm text-gray-500 dark:text-gray-400">
+              <li className="flex items-start gap-2">
+                <Mail size={14} className="mt-0.5 flex-shrink-0 text-primary-500" />
+                <a href="mailto:emmanuelgoodnesscj@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">emmanuelgoodnesscj@gmail.com</a>
+              </li>
+              <li className="flex items-start gap-2">
+                <Linkedin size={14} className="mt-0.5 flex-shrink-0 text-primary-500" />
+                <a href="https://linkedin.com/in/emmanuelgoodness" target="_blank" rel="noreferrer" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">linkedin.com/in/emmanuelgoodness</a>
+              </li>
+              <li className="flex items-start gap-2">
+                <Mail size={14} className="mt-0.5 flex-shrink-0 text-primary-500" />
+                <a href="mailto:anointedthedeveloper@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">anointedthedeveloper@gmail.com</a>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 text-center text-xs text-gray-400">
-          © {new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal. Built with ❤️ for the community.
+        <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
+          <span>© {new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal. All rights reserved.</span>
+          <span>Built for the Peter Harvard INT'L School community</span>
         </div>
       </div>
     </footer>
