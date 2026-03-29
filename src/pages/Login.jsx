@@ -5,7 +5,7 @@ import { LogIn, Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react'
 import { Spinner } from '../components/Loader'
 
 export default function Login() {
-  const { signIn, updatePassword } = useAuth()
+  const { signIn, signOut, updatePassword } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
   const [newPassword, setNewPassword] = useState('')
@@ -21,6 +21,14 @@ export default function Login() {
     setError('')
     const { data, error: err } = await signIn(form.email, form.password)
     if (err) { setError(err.message); setLoading(false); return }
+
+    // Block admins from using the alumni login page
+    if (data?.user?.user_metadata?.role === 'admin') {
+      await signOut()
+      setError('Admin accounts must log in via the Admin portal. Contact your system administrator.')
+      setLoading(false)
+      return
+    }
 
     // If user has the temp_password flag, prompt to change
     if (data?.user?.user_metadata?.must_change_password) {

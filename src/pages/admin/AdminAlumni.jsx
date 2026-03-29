@@ -10,6 +10,7 @@ export default function AdminAlumni() {
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState(null)
   const [confirmId, setConfirmId] = useState(null)
+  const [deleteError, setDeleteError] = useState('')
 
   useEffect(() => {
     const t = setTimeout(async () => {
@@ -28,7 +29,13 @@ export default function AdminAlumni() {
 
   const handleDelete = async (id) => {
     setDeletingId(id)
-    await alumniService.delete(id)
+    setDeleteError('')
+    const { data, error } = await alumniService.delete(id)
+    if (error || data?.error) {
+      setDeleteError(error?.message || data?.error || 'Delete failed')
+      setDeletingId(null)
+      return
+    }
     setAlumni(a => a.filter(x => x.id !== id))
     setDeletingId(null)
     setConfirmId(null)
@@ -58,6 +65,7 @@ export default function AdminAlumni() {
             <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">
               This will permanently remove <span className="font-semibold text-gray-800 dark:text-gray-200">{alumni.find(a => a.id === confirmId)?.full_name}</span> from the database. This cannot be undone.
             </p>
+            {deleteError && <p className="text-sm text-red-500 text-center mb-3">{deleteError}</p>}
             <div className="flex gap-3">
               <button
                 onClick={() => setConfirmId(null)}

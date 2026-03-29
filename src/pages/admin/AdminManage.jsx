@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../services/supabase'
 import { adminService } from '../../services/api'
+import { useAuth } from '../../context/AuthContext'
 import { ShieldCheck, UserPlus, Mail, Lock, Trash2, Eye, EyeOff } from 'lucide-react'
 import { Spinner } from '../../components/Loader'
 
 export default function AdminManage() {
+  const { user } = useAuth()
   const [admins, setAdmins] = useState([])
   const [form, setForm] = useState({ email: '', password: '' })
   const [showPass, setShowPass] = useState(false)
@@ -114,8 +116,13 @@ export default function AdminManage() {
                 </div>
                 <button
                   onClick={() => handleRemove(a.id)}
-                  className="text-gray-400 hover:text-red-500 transition-colors p-1"
-                  title="Remove admin role"
+                  disabled={a.id === user?.id}
+                  className={`p-1 transition-colors ${
+                    a.id === user?.id
+                      ? 'text-gray-200 dark:text-gray-700 cursor-not-allowed'
+                      : 'text-gray-400 hover:text-red-500'
+                  }`}
+                  title={a.id === user?.id ? 'Cannot remove your own account' : 'Remove admin role'}
                 >
                   <Trash2 size={15} />
                 </button>

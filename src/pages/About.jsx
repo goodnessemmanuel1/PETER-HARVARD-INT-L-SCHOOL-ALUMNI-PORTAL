@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, Mail, Globe } from 'lucide-react'
+import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, Mail, Globe, Award } from 'lucide-react'
 
 const team = [
   {
@@ -142,6 +142,34 @@ export default function About() {
               </span>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Founder */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-2">
+          <Award size={22} className="text-primary-500" /> School Founder
+        </h2>
+        <div className="card p-8 max-w-2xl flex flex-col sm:flex-row items-center sm:items-start gap-8">
+          <img
+            src="/assets/founders/DrPeter.png"
+            alt="Dr. Peter Oyedotun Agunloye"
+            className="w-36 h-36 rounded-2xl object-cover border-4 border-primary-200 dark:border-primary-800 shadow-xl flex-shrink-0"
+          />
+          <div>
+            <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">Dr. Peter Oyedotun Agunloye</h3>
+            <p className="text-primary-600 dark:text-primary-400 font-semibold mb-3">Founder, Peter Harvard INT'L School</p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {['FCA', 'FCIT', 'ACS', 'FMNES', 'DBA', 'Ph.D'].map(c => (
+                <span key={c} className="px-3 py-1 rounded-full text-xs font-bold bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
+                  {c}
+                </span>
+              ))}
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              A distinguished academic and professional, Dr. Peter Oyedotun Agunloye founded Peter Harvard INT'L School with a vision to provide world-class education and raise a generation of excellence. His credentials span accounting, information technology, computer science, environmental sciences, and doctoral-level research.
+            </p>
+          </div>
         </div>
       </section>
 

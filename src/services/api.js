@@ -49,7 +49,7 @@ export const alumniService = {
   },
 
   async delete(id) {
-    return supabase.from('alumni').delete().eq('id', id)
+    return invokeWithAuth('delete-alumni', { alumniId: id })
   },
 
   async setFeatured(id, featured) {
