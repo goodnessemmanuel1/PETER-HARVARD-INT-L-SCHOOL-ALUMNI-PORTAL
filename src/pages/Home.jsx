@@ -179,6 +179,9 @@ export default function Home() {
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
               Founded by Dr. Peter Oyedotun Agunloye, Peter Harvard INT'L School has been a beacon of academic excellence and character development for over {new Date().getFullYear() - 2017} years. The school has produced graduates who have gone on to make significant contributions across various fields.
             </p>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed italic border-l-4 border-primary-500 pl-4 mb-8">
+              &ldquo;Dedicated to raising future-ready leaders by fostering academic excellence, strong moral values, creativity, and a global perspective — developing learners who are confident, responsible, and equipped to thrive in a changing world.&rdquo;
+            </p>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8">
               This alumni portal is a testament to the enduring bonds formed within our school walls — a digital home where every graduate can reconnect, celebrate achievements, and give back to the community that shaped them.
             </p>

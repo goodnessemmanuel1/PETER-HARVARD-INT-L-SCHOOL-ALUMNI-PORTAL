@@ -96,6 +96,19 @@ export default function About() {
         </div>
       </section>
 
+      {/* Vision */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-xs font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3 block">Our Vision</span>
+            <div className="w-16 h-1 bg-primary-600 rounded-full mx-auto mb-8" />
+            <blockquote className="text-xl md:text-2xl font-semibold text-gray-800 dark:text-gray-200 leading-relaxed italic">
+              &ldquo;Peter Harvard International School is dedicated to raising future-ready leaders by fostering academic excellence, strong moral values, creativity, and a global perspective. We strive to develop learners who are confident, responsible, and equipped to thrive in a changing world.&rdquo;
+            </blockquote>
+          </motion.div>
+        </div>
+      </section>
+
       {/* About the School */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
