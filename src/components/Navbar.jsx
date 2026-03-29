@@ -56,9 +56,9 @@ export default function Navbar() {
             alt="Peter Harvard"
             className="w-10 h-10 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-200"
           />
-          <div className="hidden sm:block leading-none">
-            <p className="font-extrabold text-base tracking-tight text-gray-900 dark:text-white">Peter Harvard</p>
-            <p className="text-[10px] font-bold tracking-widest uppercase text-primary-600 dark:text-primary-400">Alumni Portal</p>
+          <div className="leading-none">
+            <p className="font-extrabold text-sm tracking-tight text-gray-900 dark:text-white">Peter Harvard</p>
+            <p className="text-[9px] font-bold tracking-widest uppercase text-primary-600 dark:text-primary-400">Alumni Portal</p>
           </div>
         </Link>
 

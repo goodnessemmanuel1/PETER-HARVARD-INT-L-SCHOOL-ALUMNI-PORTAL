@@ -69,7 +69,7 @@ export default function Gallery() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-purple-700 to-primary-800 text-white">
+      <section className="bg-gradient-to-br from-primary-700 to-primary-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl">
             <div className="flex items-center gap-3 mb-4">

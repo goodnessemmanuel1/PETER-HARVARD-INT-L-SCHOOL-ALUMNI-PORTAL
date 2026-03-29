@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, Mail, Globe, Award, Phone } from 'lucide-react'
+import { GraduationCap, Users, Heart, Star, ArrowRight, Mail, Globe, Award, Phone, BookOpen, Target, Lightbulb, Shield } from 'lucide-react'
 
 const team = [
   {
@@ -8,7 +8,6 @@ const team = [
     role: 'Senior Dev & Operations Engineer',
     alumniTag: 'Alumni — Peter Harvard INT\'L School',
     photo: '/assets/Developers/anointed.png',
-    desc: 'Supabase, PostgreSQL, Database Integration, Edge Functions, DevOps & Deployment',
     email: 'anointedthedeveloper@gmail.com',
     phones: ['+2348101209470', '+2349016471351'],
     links: [
@@ -24,7 +23,6 @@ const team = [
     role: 'Frontend Developer',
     alumniTag: 'Alumni — Peter Harvard INT\'L School',
     photo: '/assets/Developers/goodness.png',
-    desc: 'React, Tailwind CSS, Context API, React Router',
     email: 'emmanuelgoodnesscj@gmail.com',
     phones: ['+2347018621884'],
     links: [
@@ -63,22 +61,13 @@ function SocialIcon({ type, size = 14 }) {
   return <Globe size={size} />
 }
 
-const objectives = [
-  { icon: <Target size={20} />, title: 'Structured Database', desc: 'Create a searchable, organized alumni database.' },
-  { icon: <Users size={20} />, title: 'Community Building', desc: 'Strengthen long-term relationships between alumni and the school.' },
-  { icon: <Lightbulb size={20} />, title: 'Highlight Achievements', desc: 'Showcase successful alumni and their accomplishments.' },
-  { icon: <Heart size={20} />, title: 'Easy Communication', desc: 'Enable seamless announcements and event updates.' },
-]
-
-const roadmap = [
-  { step: 1, title: 'Project Architecture & Folder Structure', done: true },
-  { step: 2, title: 'Authentication System', done: true },
-  { step: 3, title: 'Alumni Registration Form', done: true },
-  { step: 4, title: 'Admin Approval Workflow', done: true },
-  { step: 5, title: 'Alumni Directory & Search', done: true },
-  { step: 6, title: 'Featured Alumni Section', done: true },
-  { step: 7, title: 'Events Management', done: true },
-  { step: 8, title: 'UI Polish & Responsiveness', done: false },
+const values = [
+  { icon: <BookOpen size={22} />, title: 'Academic Excellence', desc: 'Committed to the highest standards of education and intellectual development.' },
+  { icon: <Shield size={22} />, title: 'Integrity & Character', desc: 'Building students of strong moral character who lead with honesty and purpose.' },
+  { icon: <Lightbulb size={22} />, title: 'Innovation', desc: 'Encouraging creative thinking and problem-solving for a changing world.' },
+  { icon: <Heart size={22} />, title: 'Community & Service', desc: 'Fostering a spirit of giving back and contributing to society.' },
+  { icon: <Target size={22} />, title: 'Discipline & Focus', desc: 'Instilling the habits of hard work, perseverance, and goal-setting.' },
+  { icon: <Users size={22} />, title: 'Lifelong Bonds', desc: 'Creating friendships and networks that last well beyond graduation.' },
 ]
 
 export default function About() {
@@ -87,183 +76,175 @@ export default function About() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-700 to-primary-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="max-w-2xl">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center">
                 <GraduationCap size={22} className="text-white" />
               </div>
-              <span className="text-white/70 font-medium">About the Platform</span>
+              <span className="text-white/70 font-semibold text-sm">Est. 2017</span>
             </div>
-            <h1 className="text-4xl font-extrabold mb-4">Peter Harvard INT'L School Alumni Portal</h1>
-            <p className="text-white/75 text-lg leading-relaxed">
-              A web application designed to connect graduates with their alma mater through a centralized digital community. Our goal is to strengthen long-term relationships while delivering a modern, user-friendly experience.
+            <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight leading-tight">
+              Peter Harvard INT'L School
+            </h1>
+            <p className="text-white/80 text-lg leading-relaxed max-w-2xl">
+              A premier institution dedicated to raising a generation of excellence — academically, morally, and professionally. Founded in 2017 by Dr. Peter Oyedotun Agunloye with a vision to transform lives through quality education.
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Objectives */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Project Objectives</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {objectives.map(o => (
-            <div key={o.title} className="card p-6">
-              <div className="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-4">
-                {o.icon}
-              </div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-1">{o.title}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{o.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Tech Stack */}
-      <section className="bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Tech Stack</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      {/* About the School */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+          <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+            <span className="text-xs font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3 block">Our Story</span>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-5 leading-tight">
+              More than a school — a legacy of purpose
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+              Peter Harvard INT'L School was founded in 2017 with a bold vision: to create an institution where every student is equipped not just with academic knowledge, but with the character, discipline, and drive to succeed in any field they choose.
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+              From its earliest days, the school has maintained a culture of excellence — small class sizes, dedicated teachers, and a curriculum designed to challenge and inspire. Students are encouraged to think critically, lead confidently, and serve their communities.
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Today, Peter Harvard INT'L School alumni are making their mark across Nigeria and beyond — in business, technology, medicine, law, and public service. This alumni portal exists to keep that community connected and thriving.
+            </p>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            className="grid grid-cols-2 gap-4">
             {[
-              { title: 'Frontend', items: ['React — Component-based UI', 'Tailwind CSS — Utility-first styling', 'Context API — Global state management', 'React Router — Client-side routing', 'Lucide React — Icon library'] },
-              { title: 'Backend / Database', items: ['Supabase — Authentication & database', 'PostgreSQL — Relational database', 'Row Level Security — Data protection', 'Edge Functions — Serverless backend'] },
-              { title: 'Tooling', items: ['Vite — Fast build tool', 'Git & GitHub — Version control', 'Vercel — Deployment & hosting', 'PostCSS & Autoprefixer'] },
+              { label: 'Founded', value: '2017', color: 'bg-primary-600' },
+              { label: 'Years of Excellence', value: '8+', color: 'bg-primary-700' },
+              { label: 'Registered Alumni', value: '50+', color: 'bg-primary-800' },
+              { label: 'Growing Community', value: '🌍', color: 'bg-primary-900' },
             ].map(s => (
-              <div key={s.title} className="card p-6">
-                <h3 className="font-semibold text-primary-600 dark:text-primary-400 mb-4">{s.title}</h3>
-                <ul className="space-y-2">
-                  {s.items.map(i => (
-                    <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary-500 mt-1.5 flex-shrink-0" />{i}
-                    </li>
-                  ))}
-                </ul>
+              <div key={s.label} className={`${s.color} text-white rounded-2xl p-6`}>
+                <p className="text-3xl font-black mb-1">{s.value}</p>
+                <p className="text-sm font-semibold opacity-80">{s.label}</p>
               </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* School Values */}
+      <section className="bg-gray-50 dark:bg-gray-900/40 border-y border-gray-100 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
+            <span className="text-xs font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3 block">What We Stand For</span>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white">Our Core Values</h2>
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {values.map((v, i) => (
+              <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} viewport={{ once: true }}
+                className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-4">
+                  {v.icon}
+                </div>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-2">{v.title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{v.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Roadmap */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Development Roadmap</h2>
-        <div className="space-y-3 max-w-xl">
-          {roadmap.map(r => (
-            <div key={r.step} className="flex items-center gap-4">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                r.done ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-              }`}>
-                {r.done ? '✓' : r.step}
-              </div>
-              <span className={`text-sm ${r.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'}`}>
-                {r.title}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Founder */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10 flex items-center gap-3">
-          <Award size={28} className="text-primary-500" /> School Founder
-        </h2>
-        <div className="card p-6 md:p-10 max-w-4xl flex flex-col md:flex-row items-center md:items-start gap-10 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 shadow-xl border-primary-100/50 dark:border-primary-900/20">
-          <motion.div 
-            whileHover={{ scale: 1.02 }}
-            className="shrink-0"
-          >
-            <img
-              src="/assets/founders/DrPeter.png"
-              alt="Dr. Peter Oyedotun Agunloye"
-              className="w-48 h-48 md:w-56 md:h-56 rounded-3xl object-cover border-4 border-white dark:border-gray-800 shadow-2xl flex-shrink-0"
-            />
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+          <span className="text-xs font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3 block">Leadership</span>
+          <h2 className="text-3xl font-black text-gray-900 dark:text-white flex items-center gap-3">
+            <Award size={28} className="text-primary-500" /> School Founder
+          </h2>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          className="card p-8 md:p-10 max-w-4xl flex flex-col md:flex-row items-center md:items-start gap-10 shadow-xl">
+          <motion.div whileHover={{ scale: 1.02 }} className="shrink-0">
+            <img src="/assets/founders/DrPeter.png" alt="Dr. Peter Oyedotun Agunloye"
+              className="w-44 h-44 md:w-52 md:h-52 rounded-3xl object-cover border-4 border-primary-100 dark:border-primary-900 shadow-2xl" />
           </motion.div>
           <div className="flex-1 text-center md:text-left">
-            <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-2 leading-tight">Dr. Peter Oyedotun Agunloye</h3>
-            <p className="text-primary-600 dark:text-primary-400 font-bold text-lg mb-5">Founder, Peter Harvard INT'L School</p>
-            <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6">
+            <h3 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white mb-1">Dr. Peter Oyedotun Agunloye</h3>
+            <p className="text-primary-600 dark:text-primary-400 font-bold mb-4">Founder & Proprietor, Peter Harvard INT'L School</p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-5">
               {['FCA', 'FCIT', 'ACS', 'DBA', 'Ph.D', 'M.Sc'].map(c => (
-                <span key={c} className="px-3 py-1 rounded-lg text-xs font-black bg-primary-600 text-white shadow-sm">{c}</span>
+                <span key={c} className="px-3 py-1 rounded-lg text-xs font-black bg-primary-600 text-white">{c}</span>
               ))}
             </div>
-            <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed mb-8">
-              A distinguished economist, chartered accountant, stockbroker, and forensic expert, Dr. Peter Oyedotun Agunloye founded Peter Harvard INT'L School with a vision to raise a generation of excellence. He holds doctorate and master's level qualifications and has built an outstanding career spanning finance, capital markets, and forensic accounting.
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+              A distinguished economist, chartered accountant, stockbroker, and forensic expert, Dr. Peter Oyedotun Agunloye founded Peter Harvard INT'L School in 2017 with a vision to raise a generation of excellence. His career spans finance, capital markets, and forensic accounting — and his passion for education drives the school's commitment to holistic development.
             </p>
-            <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              <a href="tel:08033570685" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition-all font-bold shadow-lg shadow-primary-500/25">
-                <Phone size={18} /> Call Directly
+            <div className="flex flex-wrap justify-center md:justify-start gap-3">
+              <a href="tel:08033570685" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition-all font-bold shadow-md">
+                <Phone size={16} /> Call Directly
               </a>
-              <a href="https://ng.linkedin.com/in/dr-peter-oyedotun-agunloye" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0077b5] text-white hover:opacity-90 transition-all font-bold shadow-lg shadow-blue-500/25">
-                <SocialIcon type="linkedin" size={18} /> LinkedIn Profile
+              <a href="https://ng.linkedin.com/in/dr-peter-oyedotun-agunloye" target="_blank" rel="noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0077b5] text-white hover:opacity-90 transition-all font-bold shadow-md">
+                <SocialIcon type="linkedin" size={16} /> LinkedIn
               </a>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Team */}
-      <section className="bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">The Team</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
+      {/* About the Portal */}
+      <section className="bg-gray-50 dark:bg-gray-900/40 border-y border-gray-100 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-3xl mx-auto text-center mb-14">
+            <span className="text-xs font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3 block">The Alumni Portal</span>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-4">Built by alumni, for alumni</h2>
+            <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
+              This platform was designed and built by two proud Peter Harvard INT'L School alumni — to give every graduate a digital home where they can reconnect, celebrate achievements, and stay part of the community that shaped them.
+            </p>
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {team.map(m => (
-              <div key={m.name} className="card p-6">
-                <div className="flex items-center gap-4 mb-3">
-                  <img
-                    src={m.photo}
-                    alt={m.name}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-primary-200 dark:border-primary-800 flex-shrink-0"
-                  />
+              <motion.div key={m.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <img src={m.photo} alt={m.name} className="w-16 h-16 rounded-full object-cover border-2 border-primary-200 dark:border-primary-800 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">{m.name}</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-white">{m.name}</h3>
                     <p className="text-sm text-primary-600 dark:text-primary-400">{m.role}</p>
                     <span className="inline-flex items-center gap-1 mt-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">
                       <GraduationCap size={10} />{m.alumniTag}
                     </span>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{m.desc}</p>
-                {/* Phone numbers */}
                 <div className="flex flex-col gap-1 mb-3">
                   {m.phones.map(p => (
-                    <a key={p} href={`tel:${p}`}
-                      className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                    <a key={p} href={`tel:${p}`} className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                       <Phone size={11} className="text-primary-500" />{p}
                     </a>
                   ))}
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <a
-                    href={`mailto:${m.email}`}
-                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-400 transition-colors"
-                  >
+                  <a href={`mailto:${m.email}`} className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-400 transition-colors">
                     <Mail size={11} />Email
                   </a>
                   {m.links.map(l => (
-                    <a
-                      key={l.label}
-                      href={l.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-400 transition-colors"
-                    >
+                    <a key={l.label} href={l.href} target="_blank" rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-400 transition-colors">
                       <SocialIcon type={l.icon} size={11} />{l.label}
                     </a>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Be part of the community</h2>
-        <p className="text-gray-500 dark:text-gray-400 mb-6">Register today and connect with fellow Peter Harvard INT'L School graduates.</p>
-        <Link to="/register" className="btn-primary inline-flex items-center gap-2">
-          Get Started<ArrowRight size={16} />
-        </Link>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-4">Be part of the community</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-xl mx-auto">Register today and reconnect with fellow Peter Harvard INT'L School graduates from across the years.</p>
+          <Link to="/register" className="btn-primary inline-flex items-center gap-2 text-base px-8 py-4">
+            Join the Alumni Network <ArrowRight size={18} />
+          </Link>
+        </motion.div>
       </section>
     </div>
   )
