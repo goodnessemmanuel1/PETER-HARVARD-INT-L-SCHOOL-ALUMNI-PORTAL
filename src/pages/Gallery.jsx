@@ -134,7 +134,7 @@ export default function Gallery() {
               />
               {/* Caption bar */}
               {img.hasCaption && (
-                <div className="absolute inset-x-0 bottom-0 px-3 pb-3">
+                <div className="absolute inset-x-0 bottom-0 px-3 pb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <div className="bg-black/75 backdrop-blur-sm rounded-xl px-3 py-2">
                     <p className="text-white text-sm font-bold leading-snug tracking-wide">{img.caption}</p>
                   </div>
