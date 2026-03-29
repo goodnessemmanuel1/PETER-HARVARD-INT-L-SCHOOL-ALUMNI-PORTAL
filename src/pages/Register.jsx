@@ -58,20 +58,31 @@ export default function Register() {
       .maybeSingle()
     if (existing) {
       const msg = existing.status === 'pending'
-        ? 'You have already submitted a registration. Please wait for admin approval.'
+        ? 'You already have a pending registration with this email. Please wait for admin approval.'
         : existing.status === 'approved'
         ? 'An account with this email already exists. Please log in instead.'
-        : 'This email has already been used for a registration.'
+        : existing.status === 'rejected'
+        ? 'This registration was previously rejected. Please contact an admin for help.'
+        : 'This email is already registered. Please try a different email.'
       setError(msg)
       setStatus(null)
       return
     }
+
     const { error: err } = await alumniService.register({
       full_name, email, phone, graduation_year, current_occupation, bio, avatar_url, password,
     })
 
-    if (err) { setError(err.message); setStatus('error') }
-    else setStatus('success')
+    if (err) {
+      const msg = err.message || ''
+      if (msg.toLowerCase().includes('duplicate') || msg.toLowerCase().includes('unique') || msg.toLowerCase().includes('already exists'))
+        setError('An account with this email already exists. Please log in or use a different email.')
+      else
+        setError(msg || 'Registration failed. Please try again.')
+      setStatus(null)
+    } else {
+      setStatus('success')
+    }
   }
 
   if (status === 'success') return (
@@ -198,7 +209,12 @@ export default function Register() {
           <p className="text-xs text-gray-400 mt-2">You'll use this password to log in once your registration is approved.</p>
         </div>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && (
+          <div className="flex items-start gap-2 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm">
+            <span className="mt-0.5 flex-shrink-0">⚠️</span>
+            <span>{error}</span>
+          </div>
+        )}
 
         <button type="submit" disabled={status === 'loading'} className="btn-primary w-full flex items-center justify-center gap-2">
           {status === 'loading' ? <><Spinner size={15} />Submitting...</> : <><UserPlus size={16} />Submit Registration</>}

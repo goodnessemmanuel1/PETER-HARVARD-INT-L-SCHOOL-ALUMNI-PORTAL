@@ -23,16 +23,24 @@ export default function Blog() {
   if (loading) return <PageLoader message="Loading blog..." />
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-4 mb-10">
-        <div className="w-12 h-12 rounded-2xl bg-primary-600 text-white flex items-center justify-center shadow-lg shadow-primary-500/20">
-          <BookOpen size={24} />
+    <div>
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-green-700 to-primary-800 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center">
+                <BookOpen size={22} className="text-white" />
+              </div>
+              <span className="text-white/70 font-semibold text-sm">Stories & Updates</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black mb-3 tracking-tight">Blog</h1>
+            <p className="text-white/75 text-lg">News, stories and updates from Peter Harvard INT'L School</p>
+          </motion.div>
         </div>
-        <div>
-          <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Blog</h1>
-          <p className="text-gray-500 dark:text-gray-400 font-medium">News, stories and updates from Peter Harvard INT'L School</p>
-        </div>
-      </motion.div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
       {posts.length === 0 ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -88,6 +96,7 @@ export default function Blog() {
           ))}
         </div>
       )}
+      </div>
     </div>
   )
 }

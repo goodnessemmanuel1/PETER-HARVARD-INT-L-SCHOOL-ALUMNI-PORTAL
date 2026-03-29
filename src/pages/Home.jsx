@@ -168,6 +168,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Alma Mater ── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+            <span className="text-xs font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-3 block">Our Alma Mater</span>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-5 leading-tight">
+              Peter Harvard INT'L School — <span className="text-primary-600 dark:text-primary-400">A Legacy of Excellence</span>
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+              Founded by Dr. Peter Oyedotun Agunloye, Peter Harvard INT'L School has been a beacon of academic excellence and character development. The school has produced graduates who have gone on to make significant contributions across various fields.
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8">
+              This alumni portal is a testament to the enduring bonds formed within our school walls — a digital home where every graduate can reconnect, celebrate achievements, and give back to the community that shaped them.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/about" className="btn-primary flex items-center gap-2 text-sm">
+                <GraduationCap size={16} /> About the School
+              </Link>
+              <Link to="/register" className="btn-outline flex items-center gap-2 text-sm">
+                Join the Community
+              </Link>
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            className="grid grid-cols-2 gap-4">
+            {[
+              { label: 'Years of Excellence', value: '20+', color: 'bg-primary-600' },
+              { label: 'Alumni Worldwide', value: `${stats.alumni}+`, color: 'bg-blue-600' },
+              { label: 'Featured Graduates', value: `${stats.featured}+`, color: 'bg-yellow-500' },
+              { label: 'School Events', value: `${stats.events}+`, color: 'bg-green-600' },
+            ].map(s => (
+              <div key={s.label} className={`${s.color} text-white rounded-2xl p-6 flex flex-col gap-2`}>
+                <p className="text-3xl font-black">{s.value}</p>
+                <p className="text-sm font-semibold opacity-80">{s.label}</p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       {/* ── Features ── */}
       <section className="bg-gray-50 dark:bg-gray-900/40 border-y border-gray-100 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
