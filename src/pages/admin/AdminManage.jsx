@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../services/supabase'
 import { adminService } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
-import { ShieldCheck, UserPlus, Mail, Lock, Trash2, Eye, EyeOff, RefreshCw } from 'lucide-react'
+import { ShieldCheck, UserPlus, Mail, Lock, Eye, EyeOff, RefreshCw } from 'lucide-react'
 import { Spinner } from '../../components/Loader'
 
 export default function AdminManage() {
@@ -170,18 +170,6 @@ export default function AdminManage() {
                     <p className="text-xs text-gray-400">{a.id === user?.id ? 'Admin (You)' : 'Admin'}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => handleRemove(a.id)}
-                  disabled={a.id === user?.id}
-                  className={`p-1 transition-colors ${
-                    a.id === user?.id
-                      ? 'text-gray-200 dark:text-gray-700 cursor-not-allowed'
-                      : 'text-gray-400 hover:text-red-500'
-                  }`}
-                  title={a.id === user?.id ? 'Cannot remove your own account' : 'Remove admin role'}
-                >
-                  <Trash2 size={15} />
-                </button>
               </div>
             ))}
           </div>

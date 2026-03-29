@@ -189,8 +189,10 @@ export default function AdminGallery() {
             <div key={img.name} className="group relative rounded-2xl overflow-hidden aspect-square bg-gray-100 dark:bg-gray-800">
               <img src={img.url} alt={img.caption || img.name} className="w-full h-full object-cover" loading="lazy" />
               {img.caption && (
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-2">
-                  <p className="text-white text-[11px] font-semibold truncate">{img.caption}</p>
+                <div className="absolute inset-x-0 bottom-0 px-2 pb-2">
+                  <div className="bg-black/75 backdrop-blur-sm rounded-lg px-2.5 py-1.5">
+                    <p className="text-white text-xs font-bold leading-snug">{img.caption}</p>
+                  </div>
                 </div>
               )}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-200 flex items-center justify-center">
