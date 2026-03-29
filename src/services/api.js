@@ -110,6 +110,21 @@ export const contactService = {
   },
 }
 
+export const bugService = {
+  async submit(data) {
+    return supabase.from('bug_reports').insert([data])
+  },
+  async getAll() {
+    return supabase.from('bug_reports').select('*').order('created_at', { ascending: false })
+  },
+  async updateStatus(id, status) {
+    return supabase.from('bug_reports').update({ status }).eq('id', id)
+  },
+  async delete(id) {
+    return supabase.from('bug_reports').delete().eq('id', id)
+  },
+}
+
 export const adminService = {
   async createAdmin(email, password) {
     return invokeWithAuth('create-admin', { email, password })

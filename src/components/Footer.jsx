@@ -93,8 +93,9 @@ export default function Footer() {
         <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
           <span>© {new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal. All rights reserved.</span>
           <span className="text-gray-400 dark:text-gray-500 text-xs">Built with ❤️ by alumni of Peter Harvard INT'L School</span>
-          <a href={WA_GROUP} onClick={openWhatsApp} className="inline-flex items-center gap-1.5 text-green-600 dark:text-green-400 hover:text-green-700 font-medium transition-colors">
-            <MessageCircle size={13} />Join Alumni WhatsApp Group
+          <a href="https://anobyte.online" target="_blank" rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold transition-colors">
+            ⚡ Powered by Anobyte
           </a>
         </div>
       </div>

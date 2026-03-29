@@ -5,6 +5,7 @@ import Footer from '../components/Footer'
 import { useAuth } from '../context/AuthContext'
 import { PageLoader } from '../components/Loader'
 import PageTransition from '../components/PageTransition'
+import ReportBug from '../components/ReportBug'
 
 export default function PublicLayout() {
   const { loading } = useAuth()
@@ -23,6 +24,7 @@ export default function PublicLayout() {
         </AnimatePresence>
       </main>
       <Footer />
+      <ReportBug />
     </div>
   )
 }

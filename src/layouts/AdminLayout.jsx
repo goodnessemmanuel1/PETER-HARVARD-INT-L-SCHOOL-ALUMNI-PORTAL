@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import { PageLoader } from '../components/Loader'
 import PageTransition from '../components/PageTransition'
-import { LayoutDashboard, CheckSquare, Users, CalendarDays, ShieldCheck, UserCircle, Images, BookOpen, Inbox, Menu, X } from 'lucide-react'
+import { LayoutDashboard, CheckSquare, Users, CalendarDays, ShieldCheck, UserCircle, Images, BookOpen, Inbox, Menu, X, Bug } from 'lucide-react'
 import { useState } from 'react'
 
 export default function AdminLayout() {
@@ -26,6 +26,7 @@ export default function AdminLayout() {
     { to: '/admin/blog', label: 'Blog', icon: <BookOpen size={16} /> },
     { to: '/admin/gallery', label: 'Gallery', icon: <Images size={16} /> },
     { to: '/admin/submissions', label: 'Submissions', icon: <Inbox size={16} /> },
+    { to: '/admin/bug-reports', label: 'Bug Reports', icon: <Bug size={16} /> },
     { to: '/admin/manage', label: 'Manage Admins', icon: <ShieldCheck size={16} /> },
     { to: '/admin/profile', label: 'My Profile', icon: <UserCircle size={16} /> },
   ]

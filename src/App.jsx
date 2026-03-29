@@ -32,6 +32,7 @@ import AdminProfile from './pages/admin/AdminProfile'
 import AdminBlog from './pages/admin/AdminBlog'
 import AdminGallery from './pages/admin/AdminGallery'
 import AdminSubmissions from './pages/admin/AdminSubmissions'
+import AdminBugReports from './pages/admin/AdminBugReports'
 import AdminLogin from './pages/admin/AdminLogin'
 
 export default function App() {
@@ -70,6 +71,7 @@ export default function App() {
               <Route path="blog" element={<AdminBlog />} />
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="submissions" element={<AdminSubmissions />} />
+              <Route path="bug-reports" element={<AdminBugReports />} />
             </Route>
           </Routes>
         </BrowserRouter>
