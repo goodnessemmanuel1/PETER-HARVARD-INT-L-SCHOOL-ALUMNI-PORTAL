@@ -13,11 +13,18 @@ export default function AlumniCard({ alumni, actions }) {
     >
       <div className="p-6 flex flex-col gap-4 flex-1">
         <div className="flex items-start gap-4">
-          <motion.div 
-            whileHover={{ scale: 1.1 }}
-            className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-bold text-xl flex-shrink-0 shadow-lg shadow-primary-500/20"
-          >
-            {initials}
+          <motion.div whileHover={{ scale: 1.1 }} className="flex-shrink-0">
+            {alumni.avatar_url ? (
+              <img
+                src={alumni.avatar_url}
+                alt={alumni.full_name}
+                className="w-14 h-14 rounded-2xl object-cover shadow-lg"
+              />
+            ) : (
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-primary-500/20">
+                {initials}
+              </div>
+            )}
           </motion.div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap mb-1">

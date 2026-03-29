@@ -18,6 +18,7 @@ import NotFound from './pages/NotFound'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import Profile from './pages/Profile'
+import Dashboard from './pages/Dashboard'
 
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminApprovals from './pages/admin/AdminApprovals'
@@ -43,6 +44,7 @@ export default function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/alumni/:id" element={<AlumniProfile />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="*" element={<NotFound />} />

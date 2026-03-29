@@ -86,7 +86,7 @@ export default function Navbar() {
           {user ? (
             <div className="flex items-center gap-3">
               {!isAdmin && (
-                <Link to="/profile" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link to="/dashboard" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                   {avatarUrl ? (
                     <img src={avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover border-2 border-primary-200 dark:border-primary-700" />
                   ) : (
@@ -167,6 +167,11 @@ export default function Navbar() {
                   </>
                 ) : (
                   <>
+                    {!isAdmin && (
+                      <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-3 flex items-center justify-center gap-2">
+                        <LayoutDashboard size={18} />My Dashboard
+                      </Link>
+                    )}
                     {!isAdmin && (
                       <Link to="/profile" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-3 flex items-center justify-center gap-2">
                         <UserCircle size={18} />My Profile

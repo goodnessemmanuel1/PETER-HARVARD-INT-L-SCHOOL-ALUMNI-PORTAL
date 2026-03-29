@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { alumniService, eventsService } from '../services/api'
 import { supabase } from '../services/supabase'
+import { useAuth } from '../context/AuthContext'
 import AlumniCard from '../components/AlumniCard'
 import EventCard from '../components/EventCard'
 import {
@@ -32,6 +33,7 @@ const itemVariants = {
 }
 
 export default function Home() {
+  const { user } = useAuth()
   const [featured, setFeatured] = useState([])
   const [events, setEvents] = useState([])
   const [stats, setStats] = useState({ alumni: 0, years: 0, featured: 0, events: 0 })
@@ -265,7 +267,8 @@ export default function Home() {
         </section>
       )}
 
-      {/* CTA */}
+      {/* CTA — hidden when logged in */}
+      {!user && (
       <section className="relative overflow-hidden py-24">
         <div className="absolute inset-0 bg-primary-600 dark:bg-primary-800" />
         <motion.div
@@ -300,6 +303,7 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+      )}
     </div>
   )
 }
