@@ -13,6 +13,16 @@ import {
 
 const WA_GROUP = 'https://chat.whatsapp.com/BkEMJRD01MLCXzzGwCAgeJ'
 
+function openWhatsApp(e) {
+  e.preventDefault()
+  const deep = WA_GROUP.replace('https://', 'whatsapp://')
+  const start = Date.now()
+  window.location.href = deep
+  setTimeout(() => {
+    if (Date.now() - start < 1500) window.open(WA_GROUP, '_blank')
+  }, 800)
+}
+
 const features = [
   { icon: <ClipboardList size={22} />, title: 'Alumni Registration', desc: 'Sign up and create your alumni profile in minutes.' },
   { icon: <CheckCircle size={22} />, title: 'Admin Approval', desc: 'Admins review and approve registrations for a trusted community.' },
@@ -129,8 +139,7 @@ export default function Home() {
               </Link>
               <a
                 href={WA_GROUP}
-                target="_blank"
-                rel="noreferrer"
+                onClick={openWhatsApp}
                 className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-9 py-5 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-xl text-lg"
               >
                 <MessageCircle size={22} />
@@ -293,8 +302,7 @@ export default function Home() {
               </Link>
               <a
                 href={WA_GROUP}
-                target="_blank"
-                rel="noreferrer"
+                onClick={openWhatsApp}
                 className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-bold px-10 py-5 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-2xl text-lg"
               >
                 <MessageCircle size={20} />Join WhatsApp Group

@@ -3,6 +3,27 @@ import { Mail, ExternalLink, MessageCircle } from 'lucide-react'
 
 const WA_GROUP = 'https://chat.whatsapp.com/BkEMJRD01MLCXzzGwCAgeJ'
 
+function scrollTop() { window.scrollTo({ top: 0, behavior: 'instant' }) }
+
+function FooterLink({ to, children }) {
+  return (
+    <Link to={to} onClick={scrollTop} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+      {children}
+    </Link>
+  )
+}
+
+function openWhatsApp(e) {
+  e.preventDefault()
+  // Try deep link first (opens WhatsApp app directly), fall back to web
+  const deep = WA_GROUP.replace('https://', 'whatsapp://')
+  const start = Date.now()
+  window.location.href = deep
+  setTimeout(() => {
+    if (Date.now() - start < 1500) window.open(WA_GROUP, '_blank')
+  }, 800)
+}
+
 export default function Footer() {
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-auto">
@@ -22,7 +43,7 @@ export default function Footer() {
             <h4 className="font-semibold text-gray-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Navigation</h4>
             <ul className="space-y-2.5 text-sm text-gray-500 dark:text-gray-400">
               {[['/', 'Home'], ['/directory', 'Alumni Directory'], ['/events', 'Events'], ['/gallery', 'Gallery'], ['/blog', 'Blog'], ['/about', 'About'], ['/contact', 'Contact']].map(([to, label]) => (
-                <li key={to}><Link to={to} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{label}</Link></li>
+                <li key={to}><FooterLink to={to}>{label}</FooterLink></li>
               ))}
             </ul>
           </div>
@@ -31,13 +52,12 @@ export default function Footer() {
             <h4 className="font-semibold text-gray-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Community</h4>
             <ul className="space-y-2.5 text-sm text-gray-500 dark:text-gray-400">
               {[['/register', 'Register'], ['/directory', 'Browse Directory'], ['/events', 'Announcements'], ['/login', 'Alumni Login']].map(([to, label]) => (
-                <li key={to}><Link to={to} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{label}</Link></li>
+                <li key={to}><FooterLink to={to}>{label}</FooterLink></li>
               ))}
               <li>
                 <a
                   href={WA_GROUP}
-                  target="_blank"
-                  rel="noreferrer"
+                  onClick={openWhatsApp}
                   className="inline-flex items-center gap-1.5 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium transition-colors"
                 >
                   <MessageCircle size={14} />Join WhatsApp Group
@@ -68,7 +88,7 @@ export default function Footer() {
         <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
           <span>© {new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal. All rights reserved.</span>
           <span className="text-gray-400 dark:text-gray-500 text-xs">Built with ❤️ by alumni of Peter Harvard INT'L School</span>
-          <a href={WA_GROUP} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-green-600 dark:text-green-400 hover:text-green-700 font-medium transition-colors">
+          <a href={WA_GROUP} onClick={openWhatsApp} className="inline-flex items-center gap-1.5 text-green-600 dark:text-green-400 hover:text-green-700 font-medium transition-colors">
             <MessageCircle size={13} />Join Alumni WhatsApp Group
           </a>
         </div>
