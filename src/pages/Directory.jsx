@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { alumniService } from '../services/api'
 import { Search, Users, Filter } from 'lucide-react'
 import AlumniCard from '../components/AlumniCard'
+import { CardSkeleton } from '../components/Loader'
 
 const YEARS = Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i)
 
