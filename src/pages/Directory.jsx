@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { alumniService } from '../services/api'
-import AlumniCard from '../components/AlumniCard'
 import { Search, Users, Filter } from 'lucide-react'
+import AlumniCard from '../components/AlumniCard'
 
 const YEARS = Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i)
 
@@ -54,9 +54,7 @@ export default function Directory() {
       )}
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[...Array(6)].map((_, i) => <div key={i} className="card p-5 h-36 animate-pulse bg-gray-100 dark:bg-gray-800" />)}
-        </div>
+        <CardSkeleton count={6} />
       ) : alumni.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
           <Users size={48} className="mx-auto mb-4 opacity-30" />

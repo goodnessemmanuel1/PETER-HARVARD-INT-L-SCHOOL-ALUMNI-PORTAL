@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { alumniService } from '../services/api'
 import { UserPlus, CheckCircle, User, Mail, Phone, Calendar, Briefcase, FileText } from 'lucide-react'
+import { Spinner } from '../components/Loader'
 
 const YEARS = Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i)
 
@@ -95,7 +96,7 @@ export default function Register() {
         {error && <p className="text-sm text-red-500">{error}</p>}
 
         <button type="submit" disabled={status === 'loading'} className="btn-primary w-full flex items-center justify-center gap-2">
-          <UserPlus size={16} />{status === 'loading' ? 'Submitting...' : 'Submit Registration'}
+          {status === 'loading' ? <><Spinner size={15} />Submitting...</> : <><UserPlus size={16} />Submit Registration</>}
         </button>
       </form>
     </div>

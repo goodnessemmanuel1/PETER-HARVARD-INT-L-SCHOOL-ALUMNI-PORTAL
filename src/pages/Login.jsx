@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { GraduationCap, LogIn, Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react'
+import { LogIn, Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react'
+import { Spinner } from '../components/Loader'
 
 export default function Login() {
   const { signIn, updatePassword } = useAuth()
@@ -43,9 +44,7 @@ export default function Login() {
     <div className="min-h-[70vh] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-full bg-primary-600 flex items-center justify-center mx-auto mb-4">
-            <KeyRound size={26} className="text-white" />
-          </div>
+          <img src="/favicon.ico" alt="Peter Harvard" className="w-14 h-14 rounded-full object-cover mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Set New Password</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
             Welcome! Please set a new password for your account.
@@ -73,7 +72,7 @@ export default function Login() {
           </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
-            <KeyRound size={15} />{loading ? 'Saving...' : 'Set Password & Continue'}
+            <KeyRound size={15} />{loading ? <><Spinner size={14} /> Saving...</> : 'Set Password & Continue'}
           </button>
         </form>
       </div>
@@ -84,9 +83,7 @@ export default function Login() {
     <div className="min-h-[70vh] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-full bg-primary-600 flex items-center justify-center mx-auto mb-4">
-            <GraduationCap size={28} className="text-white" />
-          </div>
+          <img src="/favicon.ico" alt="Peter Harvard" className="w-14 h-14 rounded-full object-cover mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Alumni Login</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
             Sign in with the credentials sent to your email after approval
@@ -122,7 +119,7 @@ export default function Login() {
           {error && <p className="text-sm text-red-500">{error}</p>}
 
           <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
-            <LogIn size={16} />{loading ? 'Signing in...' : 'Sign In'}
+            <LogIn size={16} />{loading ? <><Spinner size={14} /> Signing in...</> : 'Sign In'}
           </button>
         </form>
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import { GraduationCap, Briefcase, Mail, Phone, Star, ArrowLeft, User } from 'lucide-react'
+import { PageLoader } from '../components/Loader'
 
 export default function AlumniProfile() {
   const { id } = useParams()
@@ -13,23 +14,7 @@ export default function AlumniProfile() {
       .then(({ data }) => { setAlumni(data); setLoading(false) })
   }, [id])
 
-  if (loading) return (
-    <div className="max-w-3xl mx-auto px-4 py-12">
-      <div className="card p-8 animate-pulse">
-        <div className="flex gap-5 mb-6">
-          <div className="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700" />
-          <div className="flex-1 space-y-3">
-            <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
-          </div>
-        </div>
-        <div className="space-y-3">
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded" />
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
-        </div>
-      </div>
-    </div>
-  )
+  if (loading) return <PageLoader message="Loading profile..." />
 
   if (!alumni) return (
     <div className="max-w-3xl mx-auto px-4 py-20 text-center">

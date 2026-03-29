@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { alumniService } from '../../services/api'
 import AlumniCard from '../../components/AlumniCard'
 import { Users, Search, Star } from 'lucide-react'
+import { CardSkeleton } from '../../components/Loader'
 
 export default function AdminAlumni() {
   const [alumni, setAlumni] = useState([])
@@ -37,9 +38,7 @@ export default function AdminAlumni() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[...Array(6)].map((_, i) => <div key={i} className="card p-5 h-36 animate-pulse bg-gray-100 dark:bg-gray-800" />)}
-        </div>
+        <CardSkeleton count={6} />
       ) : alumni.length === 0 ? (
         <div className="card p-12 text-center text-gray-400">No alumni found.</div>
       ) : (

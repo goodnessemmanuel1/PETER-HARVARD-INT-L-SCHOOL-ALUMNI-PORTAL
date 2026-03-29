@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap, Mail, Linkedin, MapPin, Phone } from 'lucide-react'
+import { Mail, Linkedin } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -8,9 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center">
-                <GraduationCap size={18} className="text-white" />
-              </div>
+              <img src="/favicon.ico" alt="Peter Harvard" className="w-9 h-9 rounded-full object-cover" />
               <span className="font-bold text-gray-900 dark:text-white">Peter Harvard INT'L</span>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">

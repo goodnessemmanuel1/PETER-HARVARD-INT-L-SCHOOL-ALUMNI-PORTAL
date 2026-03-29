@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { alumniService } from '../../services/api'
 import AlumniCard from '../../components/AlumniCard'
 import { CheckSquare, Check, X, Loader } from 'lucide-react'
+import { CardSkeleton } from '../../components/Loader'
 
 export default function AdminApprovals() {
   const [pending, setPending] = useState([])
@@ -35,7 +36,7 @@ export default function AdminApprovals() {
     setPending(p => p.filter(a => a.id !== id))
   }
 
-  if (loading) return <div className="text-gray-400">Loading...</div>
+  if (loading) return <CardSkeleton count={3} />
 
   return (
     <div>

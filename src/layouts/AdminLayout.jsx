@@ -1,16 +1,13 @@
 import { NavLink, Outlet, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
+import { PageLoader } from '../components/Loader'
 import { LayoutDashboard, CheckSquare, Users, CalendarDays } from 'lucide-react'
 
 export default function AdminLayout() {
   const { isAdmin, loading } = useAuth()
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <span className="text-gray-400">Loading...</span>
-    </div>
-  )
+  if (loading) return <PageLoader message="Verifying access..." />
   if (!isAdmin) return <Navigate to="/login" replace />
 
   const base = 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-400 transition-colors'

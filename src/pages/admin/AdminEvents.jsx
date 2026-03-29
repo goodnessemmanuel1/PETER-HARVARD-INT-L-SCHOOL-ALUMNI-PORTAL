@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { eventsService } from '../../services/api'
 import EventCard from '../../components/EventCard'
 import { CalendarDays, PlusCircle } from 'lucide-react'
+import { CardSkeleton, Spinner } from '../../components/Loader'
 
 const EMPTY = { title: '', description: '', event_date: '', type: 'Announcement' }
 
@@ -69,15 +70,13 @@ export default function AdminEvents() {
             <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={3} className="input resize-none" placeholder="Event details..." />
           </div>
           <button type="submit" disabled={saving} className="btn-primary self-start flex items-center gap-2">
-            <PlusCircle size={15} />{saving ? 'Posting...' : 'Post Event'}
+            {saving ? <><Spinner size={14} />Posting...</> : <><PlusCircle size={15} />Post Event</>}
           </button>
         </form>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[...Array(3)].map((_, i) => <div key={i} className="card p-5 h-32 animate-pulse bg-gray-100 dark:bg-gray-800" />)}
-        </div>
+        <CardSkeleton count={3} />
       ) : events.length === 0 ? (
         <div className="card p-12 text-center text-gray-400">No events posted yet.</div>
       ) : (

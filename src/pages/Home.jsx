@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { alumniService, eventsService } from '../services/api'
 import AlumniCard from '../components/AlumniCard'
 import EventCard from '../components/EventCard'
+import { CardSkeleton } from '../components/Loader'
 import {
   GraduationCap, Users, CalendarDays, Star, ArrowRight,
   ClipboardList, CheckCircle, Search, Megaphone, LayoutDashboard, ChevronRight

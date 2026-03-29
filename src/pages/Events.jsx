@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { eventsService } from '../services/api'
 import EventCard from '../components/EventCard'
+import { CardSkeleton } from '../components/Loader'
 import { CalendarDays, Megaphone } from 'lucide-react'
 
 export default function Events() {
@@ -47,9 +48,7 @@ export default function Events() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[...Array(6)].map((_, i) => <div key={i} className="card p-5 h-32 animate-pulse bg-gray-100 dark:bg-gray-800" />)}
-        </div>
+        <CardSkeleton count={6} />
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
           <Megaphone size={48} className="mx-auto mb-4 opacity-30" />

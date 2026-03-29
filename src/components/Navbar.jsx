@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { useState } from 'react'
 import {
-  Sun, Moon, Menu, X, GraduationCap, 
+  Sun, Moon, Menu, X,
   Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone
 } from 'lucide-react'
 
@@ -31,9 +31,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center">
-            <GraduationCap size={16} className="text-white" />
-          </div>
+          <img src="/favicon.ico" alt="Peter Harvard" className="w-8 h-8 rounded-full object-cover" />
           <span className="font-bold text-gray-900 dark:text-white hidden sm:block leading-tight">
             Peter Harvard <span className="text-primary-600">Alumni</span>
           </span>
