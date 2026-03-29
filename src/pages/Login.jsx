@@ -44,7 +44,7 @@ export default function Login() {
     <div className="min-h-[70vh] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/favicon.ico" alt="Peter Harvard" className="w-14 h-14 rounded-full object-cover mx-auto mb-4" />
+          <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-14 h-14 rounded-full object-cover mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Set New Password</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
             Welcome! Please set a new password for your account.
@@ -83,7 +83,7 @@ export default function Login() {
     <div className="min-h-[70vh] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/favicon.ico" alt="Peter Harvard" className="w-14 h-14 rounded-full object-cover mx-auto mb-4" />
+          <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-14 h-14 rounded-full object-cover mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Alumni Login</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
             Sign in with the credentials sent to your email after approval

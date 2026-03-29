@@ -47,7 +47,7 @@ export default function Navbar() {
             transition={{ duration: 0.5 }}
             className="w-12 h-12 rounded-xl overflow-hidden shadow-lg border-2 border-primary-500/20"
           >
-            <img src="/favicon.ico" alt="Peter Harvard" className="w-full h-full object-cover" />
+            <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-full h-full object-cover" />
           </motion.div>
           <span className="font-extrabold text-xl tracking-tight text-gray-900 dark:text-white hidden sm:block leading-none">
             Peter Harvard <span className="text-primary-600 block text-xs font-bold tracking-widest uppercase mt-0.5">Alumni Portal</span>

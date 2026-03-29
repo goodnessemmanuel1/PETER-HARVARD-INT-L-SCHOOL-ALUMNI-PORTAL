@@ -16,7 +16,7 @@ export function Spinner({ size = 20, className = '' }) {
 export function PageLoader({ message = 'Loading...' }) {
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-gray-400 dark:text-gray-500">
-      <img src="/favicon.ico" alt="logo" className="w-12 h-12 animate-pulse" />
+      <img src="/assets/phislogo.png" alt="logo" className="w-12 h-12 animate-pulse" />
       <Spinner size={28} className="text-primary-500" />
       <span className="text-sm">{message}</span>
     </div>
