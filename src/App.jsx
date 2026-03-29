@@ -31,6 +31,7 @@ import AdminProfile from './pages/admin/AdminProfile'
 import AdminBlog from './pages/admin/AdminBlog'
 import AdminGallery from './pages/admin/AdminGallery'
 import AdminSubmissions from './pages/admin/AdminSubmissions'
+import AdminLogin from './pages/admin/AdminLogin'
 
 export default function App() {
   return (
@@ -54,6 +55,7 @@ export default function App() {
               <Route path="/blog" element={<Blog />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/admin" element={<AdminLayout />}>

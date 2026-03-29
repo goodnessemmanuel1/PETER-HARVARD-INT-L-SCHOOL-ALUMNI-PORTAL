@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../services/supabase'
-import { User, Phone, Briefcase, FileText, Camera, Save, KeyRound, Eye, EyeOff, GraduationCap, AlertCircle, CheckCircle } from 'lucide-react'
+import { User, Phone, Briefcase, FileText, Camera, Save, KeyRound, Eye, EyeOff, GraduationCap, AlertCircle, CheckCircle, CalendarDays } from 'lucide-react'
 import { Spinner, PageLoader } from '../components/Loader'
 import { Navigate } from 'react-router-dom'
 import { uploadAvatar } from '../services/uploadAvatar'
@@ -32,6 +32,7 @@ export default function Profile() {
           setForm({
             full_name: data.full_name || '',
             phone: data.phone || '',
+            graduation_year: data.graduation_year || '',
             current_occupation: data.current_occupation || '',
             bio: data.bio || '',
           })
@@ -161,7 +162,7 @@ export default function Profile() {
             <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <User size={16} className="text-primary-500" />Edit Profile
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><User size={12} />Full Name</label>
                 <input value={form.full_name || ''} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} className="input" />
@@ -169,6 +170,10 @@ export default function Profile() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><Phone size={12} />Phone</label>
                 <input value={form.phone || ''} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className="input" placeholder="+1 234 567 8900" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><CalendarDays size={12} />Graduation Year</label>
+                <input type="number" min="1980" max={new Date().getFullYear()} value={form.graduation_year || ''} onChange={e => setForm(f => ({ ...f, graduation_year: e.target.value }))} className="input" placeholder="e.g. 2015" />
               </div>
             </div>
             <div>
