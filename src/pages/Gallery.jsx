@@ -133,9 +133,13 @@ export default function Gallery() {
                 loading="lazy"
               />
               {/* Caption bar */}
-              <div className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-3 pt-8 pb-3 transition-all duration-300 ${img.hasCaption ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                <p className="text-white text-xs font-semibold drop-shadow leading-snug">{img.caption}</p>
-              </div>
+              {img.hasCaption && (
+                <div className="absolute inset-x-0 bottom-0 px-3 pb-3">
+                  <div className="bg-black/75 backdrop-blur-sm rounded-xl px-3 py-2">
+                    <p className="text-white text-sm font-bold leading-snug tracking-wide">{img.caption}</p>
+                  </div>
+                </div>
+              )}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
                 <ZoomIn size={28} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg" />
               </div>
@@ -183,9 +187,9 @@ export default function Gallery() {
               />
               {/* Caption in lightbox */}
               {images[lightbox]?.hasCaption && (
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm">
-                  <Tag size={13} className="text-white/60 flex-shrink-0" />
-                  <p className="text-white text-sm font-semibold">{images[lightbox]?.caption}</p>
+                <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-black/70 backdrop-blur-sm border border-white/10">
+                  <Tag size={14} className="text-primary-400 flex-shrink-0" />
+                  <p className="text-white text-base font-bold tracking-wide">{images[lightbox]?.caption}</p>
                 </div>
               )}
             </motion.div>
