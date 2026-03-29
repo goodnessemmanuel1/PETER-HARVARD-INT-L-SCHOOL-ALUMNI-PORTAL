@@ -42,13 +42,30 @@ export default function Register() {
     if (avatarFile) {
       const ext = avatarFile.name.split('.').pop()
       const path = `pending-avatars/${Date.now()}.${ext}`
-      const { error: upErr } = await supabase.storage.from('profiles').upload(path, avatarFile)
+      const { error: upErr } = await supabase.storage.from('gallery').upload(path, avatarFile)
       if (upErr) { setError(upErr.message); setStatus('error'); return }
-      const { data: { publicUrl } } = supabase.storage.from('profiles').getPublicUrl(path)
+      const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(path)
       avatar_url = publicUrl
     }
 
     const { full_name, email, phone, graduation_year, current_occupation, bio, password } = form
+
+    // Check for duplicate email
+    const { data: existing } = await supabase
+      .from('alumni')
+      .select('id, status')
+      .ilike('email', email.trim())
+      .maybeSingle()
+    if (existing) {
+      const msg = existing.status === 'pending'
+        ? 'You have already submitted a registration. Please wait for admin approval.'
+        : existing.status === 'approved'
+        ? 'An account with this email already exists. Please log in instead.'
+        : 'This email has already been used for a registration.'
+      setError(msg)
+      setStatus(null)
+      return
+    }
     const { error: err } = await alumniService.register({
       full_name, email, phone, graduation_year, current_occupation, bio, avatar_url, password,
     })
