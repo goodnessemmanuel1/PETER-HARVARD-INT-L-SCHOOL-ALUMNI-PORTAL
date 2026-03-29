@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 
 export default function Navbar() {
-  const { user, isAdmin, signOut } = useAuth()
+  const { user, isAdmin, signOut, avatarUrl } = useAuth()
   const { dark, toggle } = useTheme()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -91,16 +91,24 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               {!isAdmin && (
                 <Link to="/profile" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs">
-                    {user.email?.[0].toUpperCase()}
-                  </div>
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover border-2 border-primary-200 dark:border-primary-700" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold">
+                      {user.email?.[0].toUpperCase()}
+                    </div>
+                  )}
                 </Link>
               )}
               {isAdmin && (
                 <Link to="/admin/profile" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs">
-                    {user.email?.[0].toUpperCase()}
-                  </div>
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover border-2 border-primary-200 dark:border-primary-700" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold">
+                      {user.email?.[0].toUpperCase()}
+                    </div>
+                  )}
                 </Link>
               )}
               <button 

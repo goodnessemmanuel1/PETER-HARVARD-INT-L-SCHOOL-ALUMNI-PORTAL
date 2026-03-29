@@ -7,7 +7,7 @@ import { Navigate } from 'react-router-dom'
 import { uploadAvatar } from '../services/uploadAvatar'
 
 export default function Profile() {
-  const { user, updatePassword } = useAuth()
+  const { user, updatePassword, refreshAvatar } = useAuth()
   const fileRef = useRef()
 
   const [alumni, setAlumni] = useState(null)
@@ -58,6 +58,7 @@ export default function Profile() {
       const publicUrl = await uploadAvatar(file, 'avatars')
       await supabase.from('alumni').update({ avatar_url: publicUrl }).eq('id', alumni.id)
       setAvatarUrl(publicUrl)
+      refreshAvatar(publicUrl)
       setAvatarMsg({ type: 'success', text: 'Profile photo updated!' })
     } catch (err) {
       setAvatarMsg({ type: 'error', text: err.message })

@@ -42,12 +42,34 @@ function SocialIcon({ type, size = 15 }) {
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
-    const mailto = `mailto:anointedthedeveloper@gmail.com?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(`From: ${form.name} (${form.email})\n\n${form.message}`)}`
-    window.location.href = mailto
-    setSent(true)
+    setSending(true)
+    setError('')
+    try {
+      const res = await fetch('https://formspree.io/f/meepanev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+        }),
+      })
+      if (res.ok) {
+        setSent(true)
+        setForm({ name: '', email: '', subject: '', message: '' })
+      } else {
+        setError('Failed to send. Please try again.')
+      }
+    } catch {
+      setError('Network error. Please try again.')
+    }
+    setSending(false)
   }
 
   return (
@@ -115,7 +137,7 @@ export default function Contact() {
                 <CheckCircle size={28} className="text-green-600 dark:text-green-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Message Sent!</h3>
-              <p className="text-gray-500 dark:text-gray-400">Your email client should have opened. We'll get back to you soon.</p>
+              <p className="text-gray-500 dark:text-gray-400">Your message has been sent. We'll get back to you soon.</p>
               <button onClick={() => setSent(false)} className="btn-outline mt-6 text-sm">Send Another</button>
             </div>
           ) : (
@@ -138,8 +160,9 @@ export default function Contact() {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message *</label>
                 <textarea required value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} rows={6} className="input resize-none" placeholder="Write your message here..." />
               </div>
-              <button type="submit" className="btn-primary self-start flex items-center gap-2">
-                <Send size={15} />Send Message
+              {error && <p className="text-sm text-red-500">{error}</p>}
+              <button type="submit" disabled={sending} className="btn-primary self-start flex items-center gap-2">
+                {sending ? <><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/></svg>Sending...</> : <><Send size={15} />Send Message</>}
               </button>
             </form>
           )}

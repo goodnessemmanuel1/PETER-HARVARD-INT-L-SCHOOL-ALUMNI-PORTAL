@@ -7,19 +7,40 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [avatarUrl, setAvatarUrl] = useState(null)
 
   const checkAdmin = (u) => u?.user_metadata?.role === 'admin'
 
+  const loadAvatar = async (u) => {
+    if (!u) { setAvatarUrl(null); return }
+    // Admin avatar stored in user_metadata
+    if (u.user_metadata?.avatar_url) {
+      setAvatarUrl(u.user_metadata.avatar_url)
+      return
+    }
+    // Alumni avatar stored in alumni table
+    const { data } = await supabase
+      .from('alumni')
+      .select('avatar_url')
+      .eq('auth_user_id', u.id)
+      .single()
+    setAvatarUrl(data?.avatar_url || null)
+  }
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setIsAdmin(checkAdmin(session?.user))
+      const u = session?.user ?? null
+      setUser(u)
+      setIsAdmin(checkAdmin(u))
+      loadAvatar(u)
       setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      setIsAdmin(checkAdmin(session?.user))
+      const u = session?.user ?? null
+      setUser(u)
+      setIsAdmin(checkAdmin(u))
+      loadAvatar(u)
     })
 
     return () => subscription.unsubscribe()
@@ -38,8 +59,11 @@ export function AuthProvider({ children }) {
       redirectTo: `${window.location.origin}/reset-password`,
     })
 
+  // Called after avatar upload so Navbar updates immediately
+  const refreshAvatar = (url) => setAvatarUrl(url)
+
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signOut, updatePassword, resetPassword }}>
+    <AuthContext.Provider value={{ user, isAdmin, loading, avatarUrl, signIn, signOut, updatePassword, resetPassword, refreshAvatar }}>
       {children}
     </AuthContext.Provider>
   )

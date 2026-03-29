@@ -6,7 +6,7 @@ import { Spinner } from '../../components/Loader'
 import { uploadAvatar } from '../../services/uploadAvatar'
 
 export default function AdminProfile() {
-  const { user, updatePassword } = useAuth()
+  const { user, updatePassword, refreshAvatar } = useAuth()
   const fileRef = useRef()
 
   const [avatarUrl, setAvatarUrl] = useState(user?.user_metadata?.avatar_url || null)
@@ -33,6 +33,7 @@ export default function AdminProfile() {
       const publicUrl = await uploadAvatar(file, 'admin-avatars')
       await supabase.auth.updateUser({ data: { avatar_url: publicUrl } })
       setAvatarUrl(publicUrl)
+      refreshAvatar(publicUrl)
       setAvatarMsg({ type: 'success', text: 'Profile photo updated!' })
     } catch (err) {
       setAvatarMsg({ type: 'error', text: err.message })
