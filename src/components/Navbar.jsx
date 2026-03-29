@@ -3,8 +3,8 @@ import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { useState } from 'react'
 import {
-  Sun, Moon, Menu, X, GraduationCap, LayoutDashboard,
-  Users, CalendarDays, BookOpen, LogOut, LogIn, UserPlus, Info, Phone
+  Sun, Moon, Menu, X, GraduationCap, 
+  Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone
 } from 'lucide-react'
 
 export default function Navbar() {
@@ -25,6 +25,7 @@ export default function Navbar() {
     { to: '/about', label: 'About', icon: <Info size={15} /> },
     { to: '/contact', label: 'Contact', icon: <Phone size={15} /> },
   ]
+  // Admin link intentionally omitted — access /admin directly
 
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 shadow-sm">
@@ -44,11 +45,7 @@ export default function Navbar() {
               {l.icon}{l.label}
             </NavLink>
           ))}
-          {isAdmin && (
-            <NavLink to="/admin" className={({ isActive }) => isActive ? active : base}>
-              <LayoutDashboard size={15} />Admin
-            </NavLink>
-          )}
+
         </div>
 
         <div className="flex items-center gap-2">
@@ -80,11 +77,7 @@ export default function Navbar() {
               {l.icon}{l.label}
             </NavLink>
           ))}
-          {isAdmin && (
-            <NavLink to="/admin" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? active : base}>
-              <LayoutDashboard size={15} />Admin
-            </NavLink>
-          )}
+
           {!user && (
             <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-gray-800">
               <Link to="/login" onClick={() => setMenuOpen(false)} className="btn-outline text-sm py-1.5 px-3 flex items-center gap-1.5"><LogIn size={14} />Login</Link>
