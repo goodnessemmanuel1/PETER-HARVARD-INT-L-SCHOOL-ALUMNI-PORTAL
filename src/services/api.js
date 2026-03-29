@@ -79,6 +79,18 @@ export const eventsService = {
   },
 }
 
+export const blogService = {
+  async getAll() {
+    return supabase.from('blog_posts').select('*').order('created_at', { ascending: false })
+  },
+  async create(data) {
+    return supabase.from('blog_posts').insert([data]).select().single()
+  },
+  async delete(id) {
+    return supabase.from('blog_posts').delete().eq('id', id)
+  },
+}
+
 export const adminService = {
   async createAdmin(email, password) {
     return invokeWithAuth('create-admin', { email, password })

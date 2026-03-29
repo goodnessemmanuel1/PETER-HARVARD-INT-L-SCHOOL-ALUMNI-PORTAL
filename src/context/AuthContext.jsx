@@ -38,10 +38,11 @@ export function AuthProvider({ children }) {
       const u = session?.user ?? null
       setUser(u)
       setIsAdmin(checkAdmin(u))
-      // Only reload avatar on actual sign-in/sign-out, not token refreshes
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
         loadAvatar(u)
       }
+      // Ensure loading is cleared on any auth event in case getSession was slow
+      setLoading(false)
     })
 
     return () => subscription.unsubscribe()
