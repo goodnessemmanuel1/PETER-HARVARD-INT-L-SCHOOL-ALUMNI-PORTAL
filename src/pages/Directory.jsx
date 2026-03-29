@@ -1,10 +1,24 @@
 import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { alumniService } from '../services/api'
-import { Search, Users, Filter } from 'lucide-react'
+import { Search, Users, Filter, X } from 'lucide-react'
 import AlumniCard from '../components/AlumniCard'
 import { CardSkeleton } from '../components/Loader'
 
 const YEARS = Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i)
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05 }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+}
 
 export default function Directory() {
   const [alumni, setAlumni] = useState([])
@@ -24,47 +38,103 @@ export default function Directory() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-            <Users size={20} className="text-primary-600 dark:text-primary-400" />
+      <div className="mb-12">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-4 mb-4"
+        >
+          <div className="w-12 h-12 rounded-2xl bg-primary-600 text-white flex items-center justify-center shadow-lg shadow-primary-500/20">
+            <Users size={24} />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Alumni Directory</h1>
-        </div>
-        <p className="text-gray-500 dark:text-gray-400 mt-2">Search and connect with fellow graduates.</p>
+          <div>
+            <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Alumni Directory</h1>
+            <p className="text-gray-500 dark:text-gray-400 font-medium">Search and connect with fellow graduates from across the years.</p>
+          </div>
+        </motion.div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-8">
-        <div className="relative max-w-sm w-full">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input value={search} onChange={e => setSearch(e.target.value)} className="input pl-9" placeholder="Search by name..." />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col md:flex-row gap-4 mb-10 p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
+      >
+        <div className="relative flex-1 group">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+          <input 
+            value={search} 
+            onChange={e => setSearch(e.target.value)} 
+            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-xl pl-12 pr-4 py-3.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none" 
+            placeholder="Search by name, occupation, or bio..." 
+          />
+          {search && (
+            <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+              <X size={16} />
+            </button>
+          )}
         </div>
-        <div className="relative max-w-[180px] w-full">
-          <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <select value={year} onChange={e => setYear(e.target.value)} className="input pl-8">
-            <option value="">All Years</option>
+        
+        <div className="relative w-full md:w-64">
+          <Filter size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <select 
+            value={year} 
+            onChange={e => setYear(e.target.value)} 
+            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-xl pl-12 pr-4 py-3.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none appearance-none"
+          >
+            <option value="">All Graduation Years</option>
             {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>
-      </div>
+      </motion.div>
 
-      {!loading && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
-          {alumni.length} alumni found
-        </p>
-      )}
+      <div className="flex items-center justify-between mb-6">
+        <AnimatePresence mode="wait">
+          {!loading && (
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest"
+            >
+              {alumni.length} alumni discovered
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
 
       {loading ? (
         <CardSkeleton count={6} />
       ) : alumni.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <Users size={48} className="mx-auto mb-4 opacity-30" />
-          <p>No alumni found matching your search.</p>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center py-24 bg-gray-50/50 dark:bg-gray-900/50 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-800"
+        >
+          <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Users size={32} className="text-gray-300" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No matching alumni</h3>
+          <p className="text-gray-500 dark:text-gray-400">Try adjusting your search filters to find what you're looking for.</p>
+          <button 
+            onClick={() => { setSearch(''); setYear('') }}
+            className="mt-6 text-primary-600 dark:text-primary-400 font-bold hover:underline"
+          >
+            Clear all filters
+          </button>
+        </motion.div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {alumni.map(a => <AlumniCard key={a.id} alumni={a} />)}
-        </div>
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {alumni.map(a => (
+            <motion.div key={a.id} variants={itemVariants}>
+              <AlumniCard alumni={a} />
+            </motion.div>
+          ))}
+        </motion.div>
       )}
     </div>
   )
