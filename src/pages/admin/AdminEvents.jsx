@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { eventsService } from '../../services/api'
 import EventCard from '../../components/EventCard'
-import { CalendarDays, PlusCircle } from 'lucide-react'
+import { CalendarDays, PlusCircle, AlertCircle } from 'lucide-react'
 import { CardSkeleton, Spinner } from '../../components/Loader'
 
 const EMPTY = { title: '', description: '', event_date: '', type: 'Announcement' }
@@ -11,6 +11,7 @@ export default function AdminEvents() {
   const [form, setForm] = useState(EMPTY)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const load = async () => {
     const { data } = await eventsService.getAll()
@@ -23,15 +24,24 @@ export default function AdminEvents() {
   const handleSubmit = async e => {
     e.preventDefault()
     setSaving(true)
-    await eventsService.create(form)
-    setForm(EMPTY)
-    await load()
+    setError('')
+    const { error: err } = await eventsService.create(form)
+    if (err) {
+      setError(err.message || 'Failed to post event. Make sure RLS policies are applied in Supabase.')
+    } else {
+      setForm(EMPTY)
+      await load()
+    }
     setSaving(false)
   }
 
   const handleDelete = async id => {
-    await eventsService.delete(id)
-    setEvents(ev => ev.filter(e => e.id !== id))
+    const { error: err } = await eventsService.delete(id)
+    if (err) {
+      setError(err.message || 'Failed to delete event.')
+    } else {
+      setEvents(ev => ev.filter(e => e.id !== id))
+    }
   }
 
   return (
@@ -69,6 +79,13 @@ export default function AdminEvents() {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
             <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={3} className="input resize-none" placeholder="Event details..." />
           </div>
+
+          {error && (
+            <div className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />{error}
+            </div>
+          )}
+
           <button type="submit" disabled={saving} className="btn-primary self-start flex items-center gap-2">
             {saving ? <><Spinner size={14} />Posting...</> : <><PlusCircle size={15} />Post Event</>}
           </button>

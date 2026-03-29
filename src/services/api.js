@@ -11,10 +11,8 @@ export const alumniService = {
       .select('*')
       .eq('status', 'approved')
       .order('full_name')
-
     if (search) query = query.ilike('full_name', `%${search}%`)
     if (year) query = query.eq('graduation_year', year)
-
     return query
   },
 
@@ -25,15 +23,10 @@ export const alumniService = {
       .order('created_at', { ascending: false })
   },
 
-  // Approve: calls edge function which creates auth user + sends email
   async approve(alumniId) {
-    const { data, error } = await supabase.functions.invoke('approve-alumni', {
-      body: { alumniId },
-    })
-    return { data, error }
+    return supabase.functions.invoke('approve-alumni', { body: { alumniId } })
   },
 
-  // Reject: just update status
   async reject(id) {
     return supabase.from('alumni').update({ status: 'rejected' }).eq('id', id)
   },
@@ -56,7 +49,8 @@ export const eventsService = {
   },
 
   async create(data) {
-    return supabase.from('events').insert([data])
+    const { data: result, error } = await supabase.from('events').insert([data]).select().single()
+    return { data: result, error }
   },
 
   async delete(id) {

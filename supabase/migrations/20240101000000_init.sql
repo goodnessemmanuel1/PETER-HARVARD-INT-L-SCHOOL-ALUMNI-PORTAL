@@ -32,45 +32,63 @@ create table if not exists public.events (
 alter table public.alumni enable row level security;
 alter table public.events enable row level security;
 
--- Drop existing policies if re-running
+-- Drop all existing policies before recreating
 drop policy if exists "Anyone can register" on public.alumni;
 drop policy if exists "Public can view approved alumni" on public.alumni;
-drop policy if exists "Public can view events" on public.events;
 drop policy if exists "Admins can view all alumni" on public.alumni;
-drop policy if exists "Admins can update alumni" on public.events;
+drop policy if exists "Admins can update alumni" on public.alumni;
+drop policy if exists "Admins can delete alumni" on public.alumni;
+drop policy if exists "Public can view events" on public.events;
+drop policy if exists "Admins can insert events" on public.events;
+drop policy if exists "Admins can delete events" on public.events;
 
--- Alumni policies
+-- ── ALUMNI POLICIES ──────────────────────────────────────────
+
+-- Anyone (anon) can submit a registration
 create policy "Anyone can register" on public.alumni
   for insert with check (status = 'pending');
 
+-- Anyone can view approved alumni
 create policy "Public can view approved alumni" on public.alumni
   for select using (status = 'approved');
 
--- Admins can see all alumni (pending, approved, rejected)
+-- Admins can view ALL alumni (pending, approved, rejected)
 create policy "Admins can view all alumni" on public.alumni
   for select using (
-    auth.jwt() ->> 'role' = 'service_role'
-    or (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
   );
 
--- Events policies
+-- Admins can update alumni (approve, reject, feature)
+create policy "Admins can update alumni" on public.alumni
+  for update using (
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+  );
+
+-- ── EVENTS POLICIES ──────────────────────────────────────────
+
+-- Anyone can read events
 create policy "Public can view events" on public.events
   for select using (true);
 
+-- Admins can insert events
+create policy "Admins can insert events" on public.events
+  for insert with check (
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+  );
+
+-- Admins can delete events
+create policy "Admins can delete events" on public.events
+  for delete using (
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+  );
+
 -- ============================================================
 -- SEED: Create initial admin account
--- Email: anointedthedeveloper@gmail.com / Password: pass123
+-- Step 1: Go to Supabase Dashboard → Authentication → Users
+--         → Add User → Email: anointedthedeveloper@gmail.com
+--         → Password: pass123 → Auto Confirm: ON
+-- Step 2: Run the UPDATE below
 -- ============================================================
--- NOTE: Run this block AFTER the tables above.
--- This uses Supabase's auth.users directly via the service role.
--- The easiest way is to use the Supabase Dashboard:
---   Authentication → Users → Add User
---   Email: anointedthedeveloper@gmail.com
---   Password: pass123
---   Then run the UPDATE below to set the admin role.
-
--- After creating the user in the dashboard, run this to make them admin:
--- (Replace the email if needed)
 update auth.users
 set raw_user_meta_data = raw_user_meta_data || '{"role": "admin"}'::jsonb
 where email = 'anointedthedeveloper@gmail.com';
