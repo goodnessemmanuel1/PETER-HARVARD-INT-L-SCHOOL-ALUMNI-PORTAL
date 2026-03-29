@@ -16,56 +16,77 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
+    const handleScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const handleSignOut = async () => { await signOut(); navigate('/') }
 
-  const base = 'relative flex items-center gap-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2'
-  const active = 'relative flex items-center gap-1.5 text-sm font-bold text-primary-600 dark:text-primary-400 py-2'
-
   const links = [
-    { to: '/', label: 'Home', icon: <Home size={16} />, end: true },
-    { to: '/directory', label: 'Directory', icon: <Users size={16} /> },
-    { to: '/events', label: 'Events', icon: <CalendarDays size={16} /> },
-    { to: '/gallery', label: 'Gallery', icon: <Images size={16} /> },
-    { to: '/blog', label: 'Blog', icon: <BookOpen size={16} /> },
-    { to: '/about', label: 'About', icon: <Info size={16} /> },
-    { to: '/contact', label: 'Contact', icon: <Phone size={16} /> },
+    { to: '/', label: 'Home', icon: <Home size={15} />, end: true },
+    { to: '/directory', label: 'Directory', icon: <Users size={15} /> },
+    { to: '/events', label: 'Events', icon: <CalendarDays size={15} /> },
+    { to: '/gallery', label: 'Gallery', icon: <Images size={15} /> },
+    { to: '/blog', label: 'Blog', icon: <BookOpen size={15} /> },
+    { to: '/about', label: 'About', icon: <Info size={15} /> },
+    { to: '/contact', label: 'Contact', icon: <Phone size={15} /> },
   ]
+
+  const Avatar = () => (
+    avatarUrl
+      ? <img src={avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover ring-2 ring-primary-200 dark:ring-primary-700" />
+      : <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-primary-200 dark:ring-primary-700">
+          {user?.email?.[0].toUpperCase()}
+        </div>
+  )
 
   return (
     <nav className={`sticky top-0 z-50 transition-all duration-300 ${
-      scrolled 
-        ? 'bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-lg' 
-        : 'bg-white dark:bg-gray-950 border-b border-transparent'
+      scrolled
+        ? 'bg-white/90 dark:bg-gray-950/90 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 shadow-sm'
+        : 'bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-900'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="relative"
-          >
-            <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" />
-          </motion.div>
-          <span className="font-extrabold text-xl md:text-2xl tracking-tight text-gray-900 dark:text-white hidden lg:block leading-none">
-            Peter Harvard <span className="text-primary-600 block text-[10px] md:text-xs font-bold tracking-widest uppercase mt-0.5">Alumni Portal</span>
-          </span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
+
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
+          <img
+            src="/assets/phislogo.png"
+            alt="Peter Harvard"
+            className="w-10 h-10 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-200"
+          />
+          <div className="hidden sm:block leading-none">
+            <p className="font-extrabold text-base tracking-tight text-gray-900 dark:text-white">Peter Harvard</p>
+            <p className="text-[10px] font-bold tracking-widest uppercase text-primary-600 dark:text-primary-400">Alumni Portal</p>
+          </div>
         </Link>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Nav Links */}
+        <div className="hidden lg:flex items-center gap-1 flex-1 justify-center">
           {links.map(l => (
-            <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => isActive ? active : base}>
+            <NavLink
+              key={l.to}
+              to={l.to}
+              end={l.end}
+              className={({ isActive }) =>
+                `relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-semibold'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/60'
+                }`
+              }
+            >
               {({ isActive }) => (
                 <>
-                  {l.icon}{l.label}
+                  <span className={isActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'}>
+                    {l.icon}
+                  </span>
+                  {l.label}
                   {isActive && (
-                    <motion.div 
-                      layoutId="nav-underline"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full"
+                    <motion.div
+                      layoutId="nav-pill"
+                      className="absolute inset-0 rounded-lg bg-primary-50 dark:bg-primary-900/20 -z-10"
                     />
                   )}
                 </>
@@ -73,122 +94,138 @@ export default function Navbar() {
             </NavLink>
           ))}
           {isAdmin && (
-            <Link to="/admin" className="flex items-center gap-1.5 text-sm font-bold text-accent-600 hover:text-accent-500 transition-colors">
-              <LayoutDashboard size={16} />Admin
-            </Link>
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                  isActive
+                    ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20'
+                    : 'text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20'
+                }`
+              }
+            >
+              <LayoutDashboard size={15} />Admin
+            </NavLink>
           )}
         </div>
 
-        <div className="flex items-center gap-3">
-          <motion.button 
-            whileTap={{ scale: 0.9 }}
-            onClick={toggle} 
-            className="p-2.5 rounded-xl bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400 border border-gray-200/50 dark:border-gray-700/50"
+        {/* Right Actions */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Theme toggle */}
+          <button
+            onClick={toggle}
+            className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            aria-label="Toggle theme"
           >
-            {dark ? <Sun size={20} /> : <Moon size={20} />}
-          </motion.button>
+            {dark ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
 
           {user ? (
-            <div className="flex items-center gap-3">
-              {!isAdmin && (
-                <Link to="/dashboard" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  {avatarUrl ? (
-                    <img src={avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover border-2 border-primary-200 dark:border-primary-700" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold">
-                      {user.email?.[0].toUpperCase()}
-                    </div>
-                  )}
-                </Link>
-              )}
-              {isAdmin && (
-                <Link to="/admin/profile" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  {avatarUrl ? (
-                    <img src={avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover border-2 border-primary-200 dark:border-primary-700" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold">
-                      {user.email?.[0].toUpperCase()}
-                    </div>
-                  )}
-                </Link>
-              )}
-              <button 
-                onClick={handleSignOut} 
-                className="btn-outline border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm py-2 px-4 flex items-center gap-2"
+            <div className="hidden lg:flex items-center gap-2">
+              <Link to={isAdmin ? '/admin/profile' : '/dashboard'}>
+                <Avatar />
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
               >
-                <LogOut size={16} /> <span className="hidden sm:inline">Sign Out</span>
+                <LogOut size={15} />Sign Out
               </button>
             </div>
           ) : (
-            <div className="hidden md:flex items-center gap-3">
-              <Link to="/login" className="text-gray-700 dark:text-gray-300 hover:text-primary-600 font-semibold text-sm px-4 py-2 transition-colors">Login</Link>
-              <Link to="/register" className="btn-primary shadow-lg shadow-primary-500/25 text-sm py-2 px-5 flex items-center gap-2">
-                <UserPlus size={16} />Register
+            <div className="hidden lg:flex items-center gap-2">
+              <Link
+                to="/login"
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="btn-primary text-sm py-2 px-4 flex items-center gap-1.5 shadow-md shadow-primary-500/20"
+              >
+                <UserPlus size={15} />Register
               </Link>
             </div>
           )}
 
-          <motion.button 
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setMenuOpen(o => !o)} 
-            className="md:hidden p-2.5 rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-gray-700/50"
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMenuOpen(o => !o)}
+            className="lg:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
-          </motion.button>
+          </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden shadow-2xl"
+            className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden"
           >
-            <div className="px-4 py-6 flex flex-col gap-4">
+            <div className="px-4 pt-3 pb-5 flex flex-col gap-1">
               {links.map(l => (
-                <NavLink key={l.to} to={l.to} end={l.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? active : base}>
-                  {l.icon} <span className="text-base">{l.label}</span>
+                <NavLink
+                  key={l.to}
+                  to={l.to}
+                  end={l.end}
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                      isActive
+                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60'
+                    }`
+                  }
+                >
+                  {l.icon}{l.label}
                 </NavLink>
               ))}
-              
+
               {isAdmin && (
-                <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-1.5 text-base font-bold text-accent-600 py-2">
-                  <LayoutDashboard size={18} /> Admin Dashboard
+                <Link
+                  to="/admin"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all"
+                >
+                  <LayoutDashboard size={16} />Admin Dashboard
                 </Link>
               )}
 
-              <div className="pt-4 mt-2 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-3">
+              <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-2">
                 {!user ? (
                   <>
-                    <Link to="/login" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-3 flex items-center justify-center gap-2">
-                      <LogIn size={18} />Login
+                    <Link to="/login" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-2.5 flex items-center justify-center gap-2 text-sm">
+                      <LogIn size={16} />Login
                     </Link>
-                    <Link to="/register" onClick={() => setMenuOpen(false)} className="btn-primary w-full py-3 flex items-center justify-center gap-2">
-                      <UserPlus size={18} />Register
+                    <Link to="/register" onClick={() => setMenuOpen(false)} className="btn-primary w-full py-2.5 flex items-center justify-center gap-2 text-sm">
+                      <UserPlus size={16} />Register
                     </Link>
                   </>
                 ) : (
                   <>
                     {!isAdmin && (
-                      <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-3 flex items-center justify-center gap-2">
-                        <LayoutDashboard size={18} />My Dashboard
+                      <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-all">
+                        <LayoutDashboard size={16} />My Dashboard
                       </Link>
                     )}
-                    {!isAdmin && (
-                      <Link to="/profile" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-3 flex items-center justify-center gap-2">
-                        <UserCircle size={18} />My Profile
-                      </Link>
-                    )}
-                    {isAdmin && (
-                      <Link to="/admin/profile" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-3 flex items-center justify-center gap-2">
-                        <UserCircle size={18} />Admin Profile
-                      </Link>
-                    )}
-                    <button onClick={handleSignOut} className="btn-outline w-full py-3 flex items-center justify-center gap-2 text-red-600 border-red-100 bg-red-50">
-                      <LogOut size={18} />Sign Out
+                    <Link
+                      to={isAdmin ? '/admin/profile' : '/profile'}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-all"
+                    >
+                      <UserCircle size={16} />{isAdmin ? 'Admin Profile' : 'My Profile'}
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all w-full text-left"
+                    >
+                      <LogOut size={16} />Sign Out
                     </button>
                   </>
                 )}
