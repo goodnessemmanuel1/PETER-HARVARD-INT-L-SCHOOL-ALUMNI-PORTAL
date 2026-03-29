@@ -61,7 +61,7 @@ export default function Home() {
   return (
     <div className="overflow-x-hidden">
       {/* Hero */}
-      <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white overflow-hidden">
+      <section className="relative min-h-screen flex items-center bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white overflow-hidden">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 0.1, scale: 1 }}
@@ -81,12 +81,12 @@ export default function Home() {
           />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-          <div className="max-w-3xl">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40 w-full">
+          <div className="max-w-5xl">
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30 px-3 py-1 rounded-full mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                Version 1.0 MVP — In Development
+                Version 1.1 — Live & Growing
               </span>
             </motion.div>
 
@@ -94,10 +94,10 @@ export default function Home() {
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 tracking-tight"
+              className="text-6xl md:text-8xl font-extrabold leading-[1.05] mb-6 tracking-tight"
             >
               Connect with your <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-primary-100">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-white to-primary-100">
                 School Legacy
               </span>
             </motion.h1>
@@ -106,7 +106,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-xl text-white/80 mb-10 leading-relaxed max-w-2xl"
+              className="text-xl md:text-2xl text-white/85 mb-12 leading-relaxed max-w-3xl"
             >
               The official Peter Harvard INT'L School Alumni Portal. Reconnect with old friends, stay updated on school news, and join a growing community of excellence.
             </motion.p>
@@ -117,21 +117,21 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="flex flex-wrap gap-4"
             >
-              <Link to="/register" className="group inline-flex items-center gap-2 bg-white text-primary-700 hover:bg-gray-100 font-bold px-8 py-4 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-xl">
-                <GraduationCap size={20} className="group-hover:rotate-12 transition-transform" />
+              <Link to="/register" className="group inline-flex items-center gap-2 bg-white text-primary-700 hover:bg-gray-100 font-bold px-9 py-5 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-xl text-lg">
+                <GraduationCap size={22} className="group-hover:rotate-12 transition-transform" />
                 Join as Alumni
               </Link>
-              <Link to="/directory" className="inline-flex items-center gap-2 border-2 border-white/40 hover:border-white hover:bg-white/10 text-white font-bold px-8 py-4 rounded-xl transition-all hover:scale-105 active:scale-95">
-                <Users size={20} />
+              <Link to="/directory" className="inline-flex items-center gap-2 border-2 border-white/50 hover:border-white hover:bg-white/10 text-white font-bold px-9 py-5 rounded-2xl transition-all hover:scale-105 active:scale-95 text-lg">
+                <Users size={22} />
                 Browse Directory
               </Link>
               <a
                 href={WA_GROUP}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-8 py-4 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-xl"
+                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-9 py-5 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-xl text-lg"
               >
-                <MessageCircle size={20} />
+                <MessageCircle size={22} />
                 WhatsApp Group
               </a>
             </motion.div>
