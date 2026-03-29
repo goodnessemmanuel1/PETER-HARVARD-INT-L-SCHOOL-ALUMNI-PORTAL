@@ -39,7 +39,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-gray-500 dark:text-gray-400">
               <li className="flex items-start gap-2">
                 <Mail size={14} className="mt-0.5 flex-shrink-0 text-primary-500" />
-                <a href="mailto:emmanuelgoodnesscj@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">emmanuelgoodnesscj@gmail.com</a>
+                <a href="mailto:anointedthedeveloper@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">anointedthedeveloper@gmail.com</a>
               </li>
               <li className="flex items-start gap-2">
                 <ExternalLink size={14} className="mt-0.5 flex-shrink-0 text-primary-500" />
@@ -47,7 +47,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2">
                 <Mail size={14} className="mt-0.5 flex-shrink-0 text-primary-500" />
-                <a href="mailto:anointedthedeveloper@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">anointedthedeveloper@gmail.com</a>
+                <a href="mailto:emmanuelgoodnesscj@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">emmanuelgoodnesscj@gmail.com</a>
               </li>
             </ul>
           </div>

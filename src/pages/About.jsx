@@ -1,21 +1,50 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, ExternalLink, Mail } from 'lucide-react'
+import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, Mail, Globe } from 'lucide-react'
 
 const team = [
   {
-    name: 'Goodness Emmanuel',
-    role: 'Frontend Developer',
-    desc: 'React, Tailwind CSS, Context API',
-    linkedin: 'https://linkedin.com/in/emmanuelgoodness',
-    email: 'emmanuelgoodnesscj@gmail.com',
-  },
-  {
     name: 'Anointed Agunloye',
     role: 'Backend Developer',
-    desc: 'Supabase, Database Integration',
+    photo: '/assets/Developers/anointed.png',
+    desc: 'Supabase, PostgreSQL, Database Integration, Edge Functions',
     email: 'anointedthedeveloper@gmail.com',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/anointedthedeveloper', icon: 'github' },
+      { label: 'Dev.to', href: 'https://dev.to/anointedthedeveloper', icon: 'devto' },
+      { label: 'anobyte.online', href: 'https://anobyte.online', icon: 'globe' },
+    ],
+  },
+  {
+    name: 'Goodness Emmanuel',
+    role: 'Frontend Developer',
+    photo: '/assets/Developers/goodness.png',
+    desc: 'React, Tailwind CSS, Context API, React Router',
+    email: 'emmanuelgoodnesscj@gmail.com',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/goodnessemmanuel1', icon: 'github' },
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/emmanuelgoodness', icon: 'linkedin' },
+    ],
   },
 ]
+
+function SocialIcon({ type, size = 14 }) {
+  if (type === 'github') return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
+    </svg>
+  )
+  if (type === 'devto') return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M7.42 10.05c-.18-.16-.46-.23-.84-.23H6l.02 2.44.04 2.45.56-.02c.41 0 .63-.07.83-.26.24-.24.26-.36.26-2.2 0-1.91-.02-1.96-.29-2.18zM0 4.94v14.12h24V4.94H0zM8.56 15.3c-.44.58-1.06.77-2.53.77H4.71V8.53h1.4c1.67 0 2.16.18 2.6.9.27.43.29.6.32 2.57.05 2.23-.02 2.73-.47 3.3zm5.09-5.47h-2.47v1.77h1.52v1.28l-.72.04-.75.03v1.77l1.22.03 1.2.04v1.28h-1.6c-1.53 0-1.6-.01-1.87-.3l-.3-.28v-3.16c0-3.02.01-3.18.25-3.48.23-.31.25-.31 1.88-.31h1.64v1.29zm4.68 5.45c-.17.43-.64.79-1 .79-.18 0-.45-.15-.67-.39-.32-.32-.45-.63-.82-2.08l-.9-3.39-.45-1.67h.76c.4 0 .75.02.75.05 0 .06 1.16 4.54 1.26 4.83.04.15.32-.7.73-2.3l.66-2.52.74-.04c.4-.02.73 0 .73.04 0 .14-1.67 6.38-1.8 6.68z" />
+    </svg>
+  )
+  if (type === 'linkedin') return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  )
+  return <Globe size={size} />
+}
 
 const objectives = [
   { icon: <Target size={20} />, title: 'Structured Database', desc: 'Create a searchable, organized alumni database.' },
@@ -79,11 +108,11 @@ export default function About() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
               { title: 'Frontend', items: ['React — Component-based UI', 'Tailwind CSS — Utility-first styling', 'Context API — Global state management', 'React Router — Client-side routing', 'Lucide React — Icon library'] },
-              { title: 'Backend / Database', items: ['Supabase — Authentication & database', 'PostgreSQL — Relational database', 'Row Level Security — Data protection', 'Supabase Storage — File uploads'] },
+              { title: 'Backend / Database', items: ['Supabase — Authentication & database', 'PostgreSQL — Relational database', 'Row Level Security — Data protection', 'Edge Functions — Serverless backend'] },
               { title: 'Tooling', items: ['Vite — Fast build tool', 'Git & GitHub — Version control', 'Vercel — Deployment & hosting', 'PostCSS & Autoprefixer'] },
             ].map(s => (
               <div key={s.title} className="card p-6">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-4 text-primary-600 dark:text-primary-400">{s.title}</h3>
+                <h3 className="font-semibold text-primary-600 dark:text-primary-400 mb-4">{s.title}</h3>
                 <ul className="space-y-2">
                   {s.items.map(i => (
                     <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
@@ -120,34 +149,42 @@ export default function About() {
       <section className="bg-gray-50 dark:bg-gray-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">The Team</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
-            {team.map(m => {
-              const initials = m.name.split(' ').map(n => n[0]).join('')
-              return (
-                <div key={m.name} className="card p-6">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 flex items-center justify-center font-bold text-lg">
-                      {initials}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">{m.name}</h3>
-                      <p className="text-sm text-primary-600 dark:text-primary-400">{m.role}</p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{m.desc}</p>
-                  <div className="flex gap-3">
-                    <a href={`mailto:${m.email}`} className="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                      <Mail size={16} />
-                    </a>
-                    {m.linkedin && (
-                      <a href={m.linkedin} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                        <ExternalLink size={16} />
-                      </a>
-                    )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
+            {team.map(m => (
+              <div key={m.name} className="card p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <img
+                    src={m.photo}
+                    alt={m.name}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-primary-200 dark:border-primary-800 flex-shrink-0"
+                  />
+                  <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">{m.name}</h3>
+                    <p className="text-sm text-primary-600 dark:text-primary-400">{m.role}</p>
                   </div>
                 </div>
-              )
-            })}
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{m.desc}</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <a
+                    href={`mailto:${m.email}`}
+                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-400 transition-colors"
+                  >
+                    <Mail size={11} />Email
+                  </a>
+                  {m.links.map(l => (
+                    <a
+                      key={l.label}
+                      href={l.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-400 transition-colors"
+                    >
+                      <SocialIcon type={l.icon} size={11} />{l.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
