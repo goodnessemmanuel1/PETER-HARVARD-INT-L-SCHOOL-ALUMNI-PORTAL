@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import { GraduationCap, Briefcase, Mail, Phone, Star, ArrowLeft, User } from 'lucide-react'
