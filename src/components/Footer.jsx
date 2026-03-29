@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Mail, Linkedin } from 'lucide-react'
+import { Mail, ExternalLink } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -42,7 +42,7 @@ export default function Footer() {
                 <a href="mailto:emmanuelgoodnesscj@gmail.com" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-all">emmanuelgoodnesscj@gmail.com</a>
               </li>
               <li className="flex items-start gap-2">
-                <Linkedin size={14} className="mt-0.5 flex-shrink-0 text-primary-500" />
+                <ExternalLink size={14} className="mt-0.5 flex-shrink-0 text-primary-500" />
                 <a href="https://linkedin.com/in/emmanuelgoodness" target="_blank" rel="noreferrer" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">linkedin.com/in/emmanuelgoodness</a>
               </li>
               <li className="flex items-start gap-2">

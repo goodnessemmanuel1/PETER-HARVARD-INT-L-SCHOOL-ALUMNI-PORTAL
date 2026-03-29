@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Send, Linkedin, CheckCircle } from 'lucide-react'
+import { Mail, Send, CheckCircle, ExternalLink } from 'lucide-react'
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
@@ -55,7 +55,7 @@ export default function Contact() {
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
-                  <Linkedin size={15} className="text-primary-600 dark:text-primary-400" />
+                  <ExternalLink size={15} className="text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 mb-0.5">LinkedIn</p>

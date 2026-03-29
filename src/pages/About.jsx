@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, Github, Linkedin, Mail } from 'lucide-react'
+import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, ExternalLink, Mail } from 'lucide-react'
 
 const team = [
   {
@@ -141,7 +141,7 @@ export default function About() {
                     </a>
                     {m.linkedin && (
                       <a href={m.linkedin} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                        <Linkedin size={16} />
+                        <ExternalLink size={16} />
                       </a>
                     )}
                   </div>
