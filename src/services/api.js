@@ -13,7 +13,13 @@ async function invokeWithAuth(fnName, body = {}) {
 
 export const alumniService = {
   async register(data) {
-    return supabase.from('alumni').insert([{ ...data, status: 'pending' }])
+    // Store password separately — used by approve-alumni edge function to create auth account
+    const { password, confirm_password, ...alumniData } = data
+    return supabase.from('alumni').insert([{ 
+      ...alumniData, 
+      status: 'pending',
+      pending_password: password, // stored temporarily, cleared after approval
+    }])
   },
 
   async getAll({ search = '', year = '' } = {}) {

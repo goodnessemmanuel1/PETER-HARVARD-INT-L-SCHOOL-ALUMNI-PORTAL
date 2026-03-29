@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { alumniService, eventsService } from '../services/api'
+import { supabase } from '../services/supabase'
 import AlumniCard from '../components/AlumniCard'
 import EventCard from '../components/EventCard'
 import {
@@ -40,10 +41,29 @@ const itemVariants = {
 export default function Home() {
   const [featured, setFeatured] = useState([])
   const [events, setEvents] = useState([])
+  const [stats, setStats] = useState({ alumni: 0, years: 0, featured: 0, events: 0 })
 
   useEffect(() => {
     alumniService.getFeatured().then(({ data }) => setFeatured(data || []))
     eventsService.getAll().then(({ data }) => setEvents((data || []).slice(0, 3)))
+
+    // Fetch real stats from DB
+    async function loadStats() {
+      const [alumniRes, featuredRes, eventsRes, yearsRes] = await Promise.all([
+        supabase.from('alumni').select('id', { count: 'exact', head: true }).eq('status', 'approved'),
+        supabase.from('alumni').select('id', { count: 'exact', head: true }).eq('status', 'approved').eq('featured', true),
+        supabase.from('events').select('id', { count: 'exact', head: true }),
+        supabase.from('alumni').select('graduation_year').eq('status', 'approved'),
+      ])
+      const uniqueYears = new Set((yearsRes.data || []).map(a => a.graduation_year)).size
+      setStats({
+        alumni: alumniRes.count || 0,
+        featured: featuredRes.count || 0,
+        events: eventsRes.count || 0,
+        years: uniqueYears,
+      })
+    }
+    loadStats()
   }, [])
 
   return (
@@ -139,10 +159,10 @@ export default function Home() {
           className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
         >
           {[
-            { label: 'Registered Alumni', value: '500+', icon: <GraduationCap size={24} className="text-primary-500" /> },
-            { label: 'Graduation Years', value: '20+', icon: <CalendarDays size={24} className="text-primary-500" /> },
-            { label: 'Featured Alumni', value: '50+', icon: <Star size={24} className="text-primary-500" /> },
-            { label: 'Events Posted', value: '100+', icon: <Megaphone size={24} className="text-primary-500" /> },
+            { label: 'Registered Alumni', value: stats.alumni, icon: <GraduationCap size={24} className="text-primary-500" /> },
+            { label: 'Graduation Years', value: stats.years, icon: <CalendarDays size={24} className="text-primary-500" /> },
+            { label: 'Featured Alumni', value: stats.featured, icon: <Star size={24} className="text-primary-500" /> },
+            { label: 'Events Posted', value: stats.events, icon: <Megaphone size={24} className="text-primary-500" /> },
           ].map((s, idx) => (
             <motion.div 
               key={s.label}

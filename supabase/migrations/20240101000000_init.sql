@@ -15,6 +15,7 @@ create table if not exists public.alumni (
   status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
   featured boolean not null default false,
   avatar_url text,
+  pending_password text,
   auth_user_id uuid references auth.users(id) on delete set null,
   created_at timestamptz not null default now()
 );
@@ -121,4 +122,8 @@ create policy "Public can view avatars" on storage.objects
   for select using (bucket_id = 'profiles');
 
 -- Add avatar_url column if it doesn't exist
+alter table public.alumni add column if not exists avatar_url text;
+
+-- Add new columns if they don't exist (for existing databases)
+alter table public.alumni add column if not exists pending_password text;
 alter table public.alumni add column if not exists avatar_url text;

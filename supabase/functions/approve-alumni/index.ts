@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
     const { alumniId } = await req.json()
     if (!alumniId) throw new Error('alumniId is required')
 
-    // Get alumni record
+    // Get alumni record including pending_password
     const { data: alumni, error: fetchError } = await supabaseAdmin
       .from('alumni')
       .select('*')
@@ -39,11 +39,9 @@ Deno.serve(async (req) => {
 
     if (fetchError || !alumni) throw new Error('Alumni not found')
 
-    // Generate a random password
-    const password =
-      Math.random().toString(36).slice(-8) +
-      Math.random().toString(36).slice(-4).toUpperCase() +
-      '!2'
+    // Use their own password if set, otherwise generate one
+    const password = alumni.pending_password ||
+      Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-4).toUpperCase() + '!2'
 
     // Create Supabase auth user
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
@@ -54,22 +52,26 @@ Deno.serve(async (req) => {
         role: 'alumni',
         alumni_id: alumniId,
         full_name: alumni.full_name,
-        must_change_password: true,
       },
     })
 
     if (authError) throw authError
 
-    // Update alumni status and store auth_user_id
+    // Update alumni: approved, store auth_user_id, clear pending_password
     await supabaseAdmin
       .from('alumni')
-      .update({ status: 'approved', auth_user_id: authData.user.id })
+      .update({ 
+        status: 'approved', 
+        auth_user_id: authData.user.id,
+        pending_password: null,
+      })
       .eq('id', alumniId)
 
-    // Send invite email with credentials via Supabase invite
+    // Send welcome email via Supabase invite
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://peter-harvard-int-l-school-alumni-p.vercel.app'
     await supabaseAdmin.auth.admin.inviteUserByEmail(alumni.email, {
-      redirectTo: `${Deno.env.get('SITE_URL') || 'https://peter-harvard-int-l-school-alumni-p.vercel.app'}/login`,
-      data: { full_name: alumni.full_name, temp_password: password },
+      redirectTo: `${siteUrl}/login`,
+      data: { full_name: alumni.full_name },
     })
 
     return new Response(JSON.stringify({ success: true }), {
