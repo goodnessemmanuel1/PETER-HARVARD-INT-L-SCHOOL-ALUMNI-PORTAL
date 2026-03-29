@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Sun, Moon, Menu, X, Home,
-  Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone, LayoutDashboard
+  Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone, LayoutDashboard, UserCircle
 } from 'lucide-react'
 
 export default function Navbar() {
@@ -89,11 +89,20 @@ export default function Navbar() {
 
           {user ? (
             <div className="flex items-center gap-3">
-              <Link to="/directory" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs">
-                  {user.email?.[0].toUpperCase()}
-                </div>
-              </Link>
+              {!isAdmin && (
+                <Link to="/profile" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs">
+                    {user.email?.[0].toUpperCase()}
+                  </div>
+                </Link>
+              )}
+              {isAdmin && (
+                <Link to="/admin/profile" className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs">
+                    {user.email?.[0].toUpperCase()}
+                  </div>
+                </Link>
+              )}
               <button 
                 onClick={handleSignOut} 
                 className="btn-outline border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm py-2 px-4 flex items-center gap-2"
@@ -153,9 +162,21 @@ export default function Navbar() {
                     </Link>
                   </>
                 ) : (
-                  <button onClick={handleSignOut} className="btn-outline w-full py-3 flex items-center justify-center gap-2 text-red-600 border-red-100 bg-red-50">
-                    <LogOut size={18} />Sign Out
-                  </button>
+                  <>
+                    {!isAdmin && (
+                      <Link to="/profile" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-3 flex items-center justify-center gap-2">
+                        <UserCircle size={18} />My Profile
+                      </Link>
+                    )}
+                    {isAdmin && (
+                      <Link to="/admin/profile" onClick={() => setMenuOpen(false)} className="btn-outline w-full py-3 flex items-center justify-center gap-2">
+                        <UserCircle size={18} />Admin Profile
+                      </Link>
+                    )}
+                    <button onClick={handleSignOut} className="btn-outline w-full py-3 flex items-center justify-center gap-2 text-red-600 border-red-100 bg-red-50">
+                      <LogOut size={18} />Sign Out
+                    </button>
+                  </>
                 )}
               </div>
             </div>

@@ -14,6 +14,7 @@ create table if not exists public.alumni (
   bio text,
   status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
   featured boolean not null default false,
+  avatar_url text,
   auth_user_id uuid references auth.users(id) on delete set null,
   created_at timestamptz not null default now()
 );
@@ -92,3 +93,32 @@ create policy "Admins can delete events" on public.events
 update auth.users
 set raw_user_meta_data = raw_user_meta_data || '{"role": "admin"}'::jsonb
 where email = 'anointedthedeveloper@gmail.com';
+
+-- ============================================================
+-- STORAGE: Profile photos bucket
+-- Run this in Supabase SQL Editor
+-- ============================================================
+
+-- Create profiles storage bucket (public)
+insert into storage.buckets (id, name, public)
+values ('profiles', 'profiles', true)
+on conflict (id) do nothing;
+
+-- Allow authenticated users to upload their own avatar
+create policy "Users can upload avatars" on storage.objects
+  for insert with check (
+    bucket_id = 'profiles' and auth.role() = 'authenticated'
+  );
+
+-- Allow authenticated users to update their own avatar
+create policy "Users can update avatars" on storage.objects
+  for update using (
+    bucket_id = 'profiles' and auth.role() = 'authenticated'
+  );
+
+-- Allow public to view all avatars
+create policy "Public can view avatars" on storage.objects
+  for select using (bucket_id = 'profiles');
+
+-- Add avatar_url column if it doesn't exist
+alter table public.alumni add column if not exists avatar_url text;

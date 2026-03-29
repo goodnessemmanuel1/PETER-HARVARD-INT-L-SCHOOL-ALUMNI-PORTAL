@@ -15,12 +15,16 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import AlumniProfile from './pages/AlumniProfile'
 import NotFound from './pages/NotFound'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+import Profile from './pages/Profile'
 
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminApprovals from './pages/admin/AdminApprovals'
 import AdminAlumni from './pages/admin/AdminAlumni'
 import AdminEvents from './pages/admin/AdminEvents'
 import AdminManage from './pages/admin/AdminManage'
+import AdminProfile from './pages/admin/AdminProfile'
 
 export default function App() {
   return (
@@ -38,6 +42,9 @@ export default function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/alumni/:id" element={<AlumniProfile />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/admin" element={<AdminLayout />}>
@@ -46,6 +53,7 @@ export default function App() {
               <Route path="alumni" element={<AdminAlumni />} />
               <Route path="events" element={<AdminEvents />} />
               <Route path="manage" element={<AdminManage />} />
+              <Route path="profile" element={<AdminProfile />} />
             </Route>
           </Routes>
         </BrowserRouter>

@@ -118,6 +118,10 @@ export default function Login() {
 
           {error && <p className="text-sm text-red-500">{error}</p>}
 
+          <div className="flex items-center justify-between">
+            <Link to="/forgot-password" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">Forgot password?</Link>
+          </div>
+
           <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
             <LogIn size={16} />{loading ? <><Spinner size={14} /> Signing in...</> : 'Sign In'}
           </button>

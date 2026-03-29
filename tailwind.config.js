@@ -26,6 +26,20 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
+      keyframes: {
+        fadeIn: { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(24px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+        slideIn: { '0%': { opacity: '0', transform: 'translateX(-16px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+        scaleIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.4s ease-out both',
+        'fade-in-up': 'fadeInUp 0.5s ease-out both',
+        'slide-in': 'slideIn 0.3s ease-out both',
+        'scale-in': 'scaleIn 0.3s ease-out both',
+        shimmer: 'shimmer 1.5s infinite linear',
+      },
     },
   },
   plugins: [],
