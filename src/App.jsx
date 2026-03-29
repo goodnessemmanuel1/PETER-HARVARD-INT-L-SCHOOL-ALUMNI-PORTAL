@@ -19,6 +19,7 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminApprovals from './pages/admin/AdminApprovals'
 import AdminAlumni from './pages/admin/AdminAlumni'
 import AdminEvents from './pages/admin/AdminEvents'
+import AdminManage from './pages/admin/AdminManage'
 
 export default function App() {
   return (
@@ -42,6 +43,7 @@ export default function App() {
               <Route path="approvals" element={<AdminApprovals />} />
               <Route path="alumni" element={<AdminAlumni />} />
               <Route path="events" element={<AdminEvents />} />
+              <Route path="manage" element={<AdminManage />} />
             </Route>
           </Routes>
         </BrowserRouter>

@@ -2,7 +2,7 @@ import { NavLink, Outlet, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import { PageLoader } from '../components/Loader'
-import { LayoutDashboard, CheckSquare, Users, CalendarDays } from 'lucide-react'
+import { LayoutDashboard, CheckSquare, Users, CalendarDays, ShieldCheck } from 'lucide-react'
 
 export default function AdminLayout() {
   const { isAdmin, loading } = useAuth()
@@ -18,6 +18,7 @@ export default function AdminLayout() {
     { to: '/admin/approvals', label: 'Approvals', icon: <CheckSquare size={16} /> },
     { to: '/admin/alumni', label: 'All Alumni', icon: <Users size={16} /> },
     { to: '/admin/events', label: 'Events', icon: <CalendarDays size={16} /> },
+    { to: '/admin/manage', label: 'Manage Admins', icon: <ShieldCheck size={16} /> },
   ]
 
   return (

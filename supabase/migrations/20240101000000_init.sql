@@ -1,3 +1,8 @@
+-- ============================================================
+-- PETER HARVARD INT'L SCHOOL ALUMNI PORTAL — DATABASE SETUP
+-- Run this entire file in Supabase SQL Editor
+-- ============================================================
+
 -- Alumni table
 create table if not exists public.alumni (
   id uuid primary key default gen_random_uuid(),
@@ -27,20 +32,45 @@ create table if not exists public.events (
 alter table public.alumni enable row level security;
 alter table public.events enable row level security;
 
+-- Drop existing policies if re-running
+drop policy if exists "Anyone can register" on public.alumni;
+drop policy if exists "Public can view approved alumni" on public.alumni;
+drop policy if exists "Public can view events" on public.events;
+drop policy if exists "Admins can view all alumni" on public.alumni;
+drop policy if exists "Admins can update alumni" on public.events;
+
 -- Alumni policies
--- Anyone can submit a registration (insert pending)
 create policy "Anyone can register" on public.alumni
   for insert with check (status = 'pending');
 
--- Approved alumni are publicly readable
 create policy "Public can view approved alumni" on public.alumni
   for select using (status = 'approved');
 
--- Admins (service role) can do everything — handled via edge function with service role key
+-- Admins can see all alumni (pending, approved, rejected)
+create policy "Admins can view all alumni" on public.alumni
+  for select using (
+    auth.jwt() ->> 'role' = 'service_role'
+    or (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+  );
 
 -- Events policies
--- Anyone can read events
 create policy "Public can view events" on public.events
   for select using (true);
 
--- Only service role can insert/delete events (via admin dashboard using service role)
+-- ============================================================
+-- SEED: Create initial admin account
+-- Email: anointedthedeveloper@gmail.com / Password: pass123
+-- ============================================================
+-- NOTE: Run this block AFTER the tables above.
+-- This uses Supabase's auth.users directly via the service role.
+-- The easiest way is to use the Supabase Dashboard:
+--   Authentication → Users → Add User
+--   Email: anointedthedeveloper@gmail.com
+--   Password: pass123
+--   Then run the UPDATE below to set the admin role.
+
+-- After creating the user in the dashboard, run this to make them admin:
+-- (Replace the email if needed)
+update auth.users
+set raw_user_meta_data = raw_user_meta_data || '{"role": "admin"}'::jsonb
+where email = 'anointedthedeveloper@gmail.com';
