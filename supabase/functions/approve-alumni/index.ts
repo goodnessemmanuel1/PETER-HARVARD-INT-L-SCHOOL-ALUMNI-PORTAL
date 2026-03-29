@@ -187,19 +187,22 @@ Deno.serve(async (req) => {
       })
       .eq('id', alumniId)
 
-    // Send custom welcome email with credentials
+    // Send custom welcome email with credentials (non-fatal)
     const siteUrl = Deno.env.get('SITE_URL') || 'https://peter-harvard-int-l-school-alumni-p.vercel.app'
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
-
     if (resendApiKey) {
-      await sendWelcomeEmail({
-        to: alumni.email,
-        fullName: alumni.full_name,
-        email: alumni.email,
-        password,
-        loginUrl: `${siteUrl}/login`,
-        resendApiKey,
-      })
+      try {
+        await sendWelcomeEmail({
+          to: alumni.email,
+          fullName: alumni.full_name,
+          email: alumni.email,
+          password,
+          loginUrl: `${siteUrl}/login`,
+          resendApiKey,
+        })
+      } catch (emailErr) {
+        console.error('Email send failed (non-fatal):', emailErr.message)
+      }
     }
 
     return new Response(JSON.stringify({ success: true }), {
