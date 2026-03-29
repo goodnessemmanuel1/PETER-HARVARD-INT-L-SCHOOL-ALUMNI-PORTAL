@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext'
 import { supabase } from '../../services/supabase'
 import { Camera, KeyRound, Eye, EyeOff, ShieldCheck, AlertCircle, CheckCircle } from 'lucide-react'
 import { Spinner } from '../../components/Loader'
+import { uploadAvatar } from '../../services/uploadAvatar'
 
 export default function AdminProfile() {
   const { user, updatePassword } = useAuth()
@@ -28,25 +29,15 @@ export default function AdminProfile() {
     }
     setUploading(true)
     setAvatarMsg({ type: '', text: '' })
-
-    const ext = file.name.split('.').pop().toLowerCase()
-    const path = `admin-avatars/${user.id}-${Date.now()}.${ext}`
-
-    const { error: upErr } = await supabase.storage
-      .from('profiles')
-      .upload(path, file, { upsert: true, contentType: file.type })
-
-    if (upErr) {
-      setAvatarMsg({ type: 'error', text: `Upload failed: ${upErr.message}. Make sure the "profiles" storage bucket exists in Supabase.` })
-      setUploading(false)
-      return
+    try {
+      const publicUrl = await uploadAvatar(file, 'admin-avatars')
+      await supabase.auth.updateUser({ data: { avatar_url: publicUrl } })
+      setAvatarUrl(publicUrl)
+      setAvatarMsg({ type: 'success', text: 'Profile photo updated!' })
+    } catch (err) {
+      setAvatarMsg({ type: 'error', text: err.message })
     }
-
-    const { data: { publicUrl } } = supabase.storage.from('profiles').getPublicUrl(path)
-    await supabase.auth.updateUser({ data: { avatar_url: publicUrl } })
-    setAvatarUrl(publicUrl)
     setUploading(false)
-    setAvatarMsg({ type: 'success', text: 'Profile photo updated!' })
   }
 
   const handlePasswordChange = async e => {

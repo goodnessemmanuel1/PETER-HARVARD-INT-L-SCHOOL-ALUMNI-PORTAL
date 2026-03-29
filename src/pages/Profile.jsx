@@ -4,6 +4,7 @@ import { supabase } from '../services/supabase'
 import { User, Phone, Briefcase, FileText, Camera, Save, KeyRound, Eye, EyeOff, GraduationCap, AlertCircle, CheckCircle } from 'lucide-react'
 import { Spinner, PageLoader } from '../components/Loader'
 import { Navigate } from 'react-router-dom'
+import { uploadAvatar } from '../services/uploadAvatar'
 
 export default function Profile() {
   const { user, updatePassword } = useAuth()
@@ -53,25 +54,15 @@ export default function Profile() {
     }
     setUploading(true)
     setAvatarMsg({ type: '', text: '' })
-
-    const ext = file.name.split('.').pop().toLowerCase()
-    const path = `avatars/${user.id}-${Date.now()}.${ext}`
-
-    const { error: upErr } = await supabase.storage
-      .from('profiles')
-      .upload(path, file, { upsert: true, contentType: file.type })
-
-    if (upErr) {
-      setAvatarMsg({ type: 'error', text: `Upload failed: ${upErr.message}. Make sure the "profiles" storage bucket exists in Supabase.` })
-      setUploading(false)
-      return
+    try {
+      const publicUrl = await uploadAvatar(file, 'avatars')
+      await supabase.from('alumni').update({ avatar_url: publicUrl }).eq('id', alumni.id)
+      setAvatarUrl(publicUrl)
+      setAvatarMsg({ type: 'success', text: 'Profile photo updated!' })
+    } catch (err) {
+      setAvatarMsg({ type: 'error', text: err.message })
     }
-
-    const { data: { publicUrl } } = supabase.storage.from('profiles').getPublicUrl(path)
-    await supabase.from('alumni').update({ avatar_url: publicUrl }).eq('id', alumni.id)
-    setAvatarUrl(publicUrl)
     setUploading(false)
-    setAvatarMsg({ type: 'success', text: 'Profile photo updated!' })
   }
 
   const handleSave = async e => {
