@@ -151,32 +151,37 @@ export default function About() {
 
       {/* Founder */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-2">
-          <Award size={22} className="text-primary-500" /> School Founder
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10 flex items-center gap-3">
+          <Award size={28} className="text-primary-500" /> School Founder
         </h2>
-        <div className="card p-8 max-w-3xl flex flex-col sm:flex-row items-center sm:items-start gap-8">
-          <img
-            src="/assets/founders/DrPeter.png"
-            alt="Dr. Peter Oyedotun Agunloye"
-            className="w-40 h-40 rounded-2xl object-cover border-4 border-primary-200 dark:border-primary-800 shadow-xl flex-shrink-0"
-          />
-          <div className="flex-1">
-            <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">Dr. Peter Oyedotun Agunloye</h3>
-            <p className="text-primary-600 dark:text-primary-400 font-semibold mb-3">Founder, Peter Harvard INT'L School</p>
-            <div className="flex flex-wrap gap-2 mb-4">
+        <div className="card p-6 md:p-10 max-w-4xl flex flex-col md:flex-row items-center md:items-start gap-10 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 shadow-xl border-primary-100/50 dark:border-primary-900/20">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="shrink-0"
+          >
+            <img
+              src="/assets/founders/DrPeter.png"
+              alt="Dr. Peter Oyedotun Agunloye"
+              className="w-48 h-48 md:w-56 md:h-56 rounded-3xl object-cover border-4 border-white dark:border-gray-800 shadow-2xl flex-shrink-0"
+            />
+          </motion.div>
+          <div className="flex-1 text-center md:text-left">
+            <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-2 leading-tight">Dr. Peter Oyedotun Agunloye</h3>
+            <p className="text-primary-600 dark:text-primary-400 font-bold text-lg mb-5">Founder, Peter Harvard INT'L School</p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6">
               {['FCA', 'FCIT', 'ACS', 'DBA', 'Ph.D', 'M.Sc'].map(c => (
-                <span key={c} className="px-3 py-1 rounded-full text-xs font-bold bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800">{c}</span>
+                <span key={c} className="px-3 py-1 rounded-lg text-xs font-black bg-primary-600 text-white shadow-sm">{c}</span>
               ))}
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+            <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed mb-8">
               A distinguished economist, chartered accountant, stockbroker, and forensic expert, Dr. Peter Oyedotun Agunloye founded Peter Harvard INT'L School with a vision to raise a generation of excellence. He holds doctorate and master's level qualifications and has built an outstanding career spanning finance, capital markets, and forensic accounting.
             </p>
-            <div className="flex flex-wrap gap-3 text-sm">
-              <a href="tel:08033570685" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-400 transition-colors font-medium">
-                📞 08033570685
+            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              <a href="tel:08033570685" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition-all font-bold shadow-lg shadow-primary-500/25">
+                <Phone size={18} /> Call Directly
               </a>
-              <a href="https://ng.linkedin.com/in/dr-peter-oyedotun-agunloye" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 transition-colors font-medium">
-                <SocialIcon type="linkedin" size={13} /> LinkedIn
+              <a href="https://ng.linkedin.com/in/dr-peter-oyedotun-agunloye" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0077b5] text-white hover:opacity-90 transition-all font-bold shadow-lg shadow-blue-500/25">
+                <SocialIcon type="linkedin" size={18} /> LinkedIn Profile
               </a>
             </div>
           </div>

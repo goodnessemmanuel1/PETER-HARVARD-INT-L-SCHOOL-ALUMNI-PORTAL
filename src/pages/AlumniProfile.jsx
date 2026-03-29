@@ -28,60 +28,95 @@ export default function AlumniProfile() {
   const initials = alumni.full_name?.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-      <Link to="/directory" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors mb-6">
-        <ArrowLeft size={15} />Back to Directory
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+      <Link to="/directory" className="inline-flex items-center gap-2 text-sm font-bold text-primary-600 dark:text-primary-400 hover:gap-3 transition-all mb-8">
+        <ArrowLeft size={18} /> Back to Directory
       </Link>
 
-      <div className="card p-8">
-        {/* Header */}
-        <div className="flex items-start gap-5 mb-8">
-          <div className="w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 flex items-center justify-center font-bold text-2xl flex-shrink-0">
-            {initials}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="card overflow-hidden shadow-2xl border-none"
+      >
+        <div className="h-32 bg-gradient-to-r from-primary-600 to-primary-800" />
+        <div className="px-6 md:px-10 pb-10">
+          {/* Header */}
+          <div className="relative flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16 mb-10 text-center md:text-left">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="w-32 h-32 rounded-3xl bg-white dark:bg-gray-900 p-2 shadow-xl shrink-0"
+            >
+              <div className="w-full h-full rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-black text-4xl shadow-inner">
+                {initials}
+              </div>
+            </motion.div>
+            
+            <div className="flex-1 pb-2">
+              <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2">
+                <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">{alumni.full_name}</h1>
+                {alumni.featured && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 w-fit mx-auto md:mx-0">
+                    <Star size={12} className="fill-current" /> Featured
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest text-xs">
+                <span className="flex items-center gap-2"><GraduationCap size={16} className="text-primary-500" /> Class of {alumni.graduation_year}</span>
+                {alumni.current_occupation && <span className="flex items-center gap-2"><Briefcase size={16} className="text-primary-500" /> {alumni.current_occupation}</span>}
+              </div>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 flex-wrap mb-1">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{alumni.full_name}</h1>
-              {alumni.featured && (
-                <span className="badge-green flex items-center gap-1"><Star size={11} />Featured Alumni</span>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {/* Main Content */}
+            <div className="md:col-span-2 space-y-8">
+              {alumni.bio && (
+                <div>
+                  <h2 className="text-xl font-black text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <div className="w-1.5 h-6 bg-primary-600 rounded-full" />
+                    Professional Bio
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg italic bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800">
+                    "{alumni.bio}"
+                  </p>
+                </div>
               )}
             </div>
-            <p className="text-gray-500 dark:text-gray-400 flex items-center gap-1.5 text-sm">
-              <GraduationCap size={14} />Class of {alumni.graduation_year}
-            </p>
-            {alumni.current_occupation && (
-              <p className="text-gray-600 dark:text-gray-300 flex items-center gap-1.5 text-sm mt-1">
-                <Briefcase size={14} className="text-gray-400" />{alumni.current_occupation}
-              </p>
-            )}
+
+            {/* Sidebar Contact */}
+            <div className="space-y-6">
+              <h2 className="text-xl font-black text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <div className="w-1.5 h-6 bg-primary-600 rounded-full" />
+                Contact Info
+              </h2>
+              <div className="flex flex-col gap-4">
+                {alumni.email && (
+                  <a href={`mailto:${alumni.email}`} className="group flex items-center gap-3 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 hover:border-primary-500 transition-all">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-gray-900 flex items-center justify-center text-primary-500 group-hover:bg-primary-600 group-hover:text-white transition-all shadow-sm">
+                      <Mail size={20} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Email Address</p>
+                      <p className="text-sm font-bold text-gray-700 dark:text-gray-300 truncate">{alumni.email}</p>
+                    </div>
+                  </a>
+                )}
+                {alumni.phone && (
+                  <div className="group flex items-center gap-3 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-gray-900 flex items-center justify-center text-primary-500 shadow-sm">
+                      <Phone size={20} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Phone Number</p>
+                      <p className="text-sm font-bold text-gray-700 dark:text-gray-300 truncate">{alumni.phone}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Bio */}
-        {alumni.bio && (
-          <div className="mb-8">
-            <h2 className="font-semibold text-gray-900 dark:text-white mb-3">About</h2>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{alumni.bio}</p>
-          </div>
-        )}
-
-        {/* Contact */}
-        <div>
-          <h2 className="font-semibold text-gray-900 dark:text-white mb-3">Contact</h2>
-          <div className="space-y-2">
-            {alumni.email && (
-              <a href={`mailto:${alumni.email}`} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                <Mail size={15} className="text-gray-400" />{alumni.email}
-              </a>
-            )}
-            {alumni.phone && (
-              <p className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                <Phone size={15} className="text-gray-400" />{alumni.phone}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

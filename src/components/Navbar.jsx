@@ -44,9 +44,14 @@ export default function Navbar() {
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
-          <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-14 h-14 object-contain" />
-          <span className="font-extrabold text-xl tracking-tight text-gray-900 dark:text-white hidden sm:block leading-none">
-            Peter Harvard <span className="text-primary-600 block text-xs font-bold tracking-widest uppercase mt-0.5">Alumni Portal</span>
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="relative"
+          >
+            <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" />
+          </motion.div>
+          <span className="font-extrabold text-xl md:text-2xl tracking-tight text-gray-900 dark:text-white hidden lg:block leading-none">
+            Peter Harvard <span className="text-primary-600 block text-[10px] md:text-xs font-bold tracking-widest uppercase mt-0.5">Alumni Portal</span>
           </span>
         </Link>
 
