@@ -13,12 +13,10 @@ export function AuthProvider({ children }) {
 
   const loadAvatar = async (u) => {
     if (!u) { setAvatarUrl(null); return }
-    // Admin avatar stored in user_metadata
     if (u.user_metadata?.avatar_url) {
       setAvatarUrl(u.user_metadata.avatar_url)
       return
     }
-    // Alumni avatar stored in alumni table
     const { data } = await supabase
       .from('alumni')
       .select('avatar_url')
@@ -36,11 +34,14 @@ export function AuthProvider({ children }) {
       setLoading(false)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       const u = session?.user ?? null
       setUser(u)
       setIsAdmin(checkAdmin(u))
-      loadAvatar(u)
+      // Only reload avatar on actual sign-in/sign-out, not token refreshes
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+        loadAvatar(u)
+      }
     })
 
     return () => subscription.unsubscribe()

@@ -56,8 +56,13 @@ export default function Profile() {
     setAvatarMsg({ type: '', text: '' })
     try {
       const publicUrl = await uploadAvatar(file, 'avatars')
-      await supabase.from('alumni').update({ avatar_url: publicUrl }).eq('id', alumni.id)
+      const { error: dbErr } = await supabase
+        .from('alumni')
+        .update({ avatar_url: publicUrl })
+        .eq('id', alumni.id)
+      if (dbErr) throw new Error(dbErr.message)
       setAvatarUrl(publicUrl)
+      setAlumni(a => ({ ...a, avatar_url: publicUrl }))
       refreshAvatar(publicUrl)
       setAvatarMsg({ type: 'success', text: 'Profile photo updated!' })
     } catch (err) {
