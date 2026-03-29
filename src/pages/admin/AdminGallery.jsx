@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { supabase } from '../../services/supabase'
-import { Images, Upload, Trash2, X } from 'lucide-react'
+import { Images, Upload, Trash2, X, Tag } from 'lucide-react'
 import { Spinner } from '../../components/Loader'
 
 export default function AdminGallery() {
@@ -10,6 +10,9 @@ export default function AdminGallery() {
   const [uploadError, setUploadError] = useState('')
   const [confirmName, setConfirmName] = useState(null)
   const [deletingName, setDeletingName] = useState(null)
+  // Upload modal state
+  const [showUploadModal, setShowUploadModal] = useState(false)
+  const [pendingFiles, setPendingFiles] = useState([]) // [{ file, preview, caption }]
   const fileRef = useRef()
 
   const load = async () => {
@@ -24,6 +27,7 @@ export default function AdminGallery() {
           .filter(f => f.name !== '.emptyFolderPlaceholder')
           .map(f => ({
             name: f.name,
+            caption: decodeCaption(f.name),
             url: supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl,
           }))
       )
@@ -33,20 +37,44 @@ export default function AdminGallery() {
 
   useEffect(() => { load() }, [])
 
-  const handleUpload = async e => {
+  // Caption is encoded after the random slug: {timestamp}-{slug}--{caption}.{ext}
+  function decodeCaption(filename) {
+    const noExt = filename.replace(/\.[^.]+$/, '')
+    const parts = noExt.split('--')
+    if (parts.length >= 2) return decodeURIComponent(parts.slice(1).join('--').replace(/-/g, ' '))
+    return ''
+  }
+
+  const handleFilePick = e => {
     const files = Array.from(e.target.files || [])
     if (!files.length) return
+    const items = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file),
+      caption: '',
+    }))
+    setPendingFiles(items)
+    setShowUploadModal(true)
+    fileRef.current.value = ''
+  }
+
+  const handleUpload = async () => {
     setUploading(true)
     setUploadError('')
-    for (const file of files) {
-      if (file.size > 10 * 1024 * 1024) { setUploadError(`${file.name} exceeds 10MB limit.`); continue }
-      const ext = file.name.split('.').pop()
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-      const { error } = await supabase.storage.from('gallery').upload(fileName, file, { upsert: false })
+    for (const item of pendingFiles) {
+      if (item.file.size > 10 * 1024 * 1024) { setUploadError(`${item.file.name} exceeds 10MB.`); continue }
+      const ext = item.file.name.split('.').pop()
+      const slug = Math.random().toString(36).slice(2)
+      const captionSlug = item.caption.trim()
+        ? '--' + encodeURIComponent(item.caption.trim().replace(/\s+/g, '-'))
+        : ''
+      const fileName = `${Date.now()}-${slug}${captionSlug}.${ext}`
+      const { error } = await supabase.storage.from('gallery').upload(fileName, item.file, { upsert: false })
       if (error) setUploadError(error.message)
     }
     setUploading(false)
-    fileRef.current.value = ''
+    setShowUploadModal(false)
+    setPendingFiles([])
     load()
   }
 
@@ -76,13 +104,55 @@ export default function AdminGallery() {
           className="btn-primary text-sm flex items-center gap-2">
           {uploading ? <><Spinner size={14} />Uploading...</> : <><Upload size={15} />Upload Photos</>}
         </button>
-        <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} />
+        <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFilePick} />
       </div>
-      <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Upload and manage school gallery photos.</p>
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Upload and manage school gallery photos. Add captions like "Graduation Day 2024".</p>
 
       {uploadError && (
         <div className="mb-4 flex items-center gap-2 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm">
           <X size={14} className="flex-shrink-0" />{uploadError}
+        </div>
+      )}
+
+      {/* Upload Modal with captions */}
+      {showUploadModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 max-w-2xl w-full border border-gray-100 dark:border-gray-800 max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <Tag size={18} className="text-primary-500" /> Add Captions
+              </h3>
+              <button onClick={() => { setShowUploadModal(false); setPendingFiles([]) }}
+                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                <X size={16} />
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Optionally add a caption to each photo (e.g. "Graduation Day 2024", "Sports Day").</p>
+            <div className="overflow-y-auto flex-1 space-y-4 pr-1">
+              {pendingFiles.map((item, idx) => (
+                <div key={idx} className="flex items-center gap-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800">
+                  <img src={item.preview} alt="" className="w-16 h-16 rounded-xl object-cover flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-400 truncate mb-1.5">{item.file.name}</p>
+                    <input
+                      type="text"
+                      value={item.caption}
+                      onChange={e => setPendingFiles(prev => prev.map((p, i) => i === idx ? { ...p, caption: e.target.value } : p))}
+                      placeholder="e.g. Graduation Day 2024 (optional)"
+                      className="input text-sm py-1.5"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-3 mt-5 pt-4 border-t border-gray-100 dark:border-gray-800">
+              <button onClick={() => { setShowUploadModal(false); setPendingFiles([]) }} className="flex-1 btn-outline py-2.5 text-sm">Cancel</button>
+              <button onClick={handleUpload} disabled={uploading}
+                className="flex-1 btn-primary py-2.5 text-sm flex items-center justify-center gap-2">
+                {uploading ? <><Spinner size={14} />Uploading...</> : <><Upload size={14} />Upload {pendingFiles.length} Photo{pendingFiles.length > 1 ? 's' : ''}</>}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -117,7 +187,12 @@ export default function AdminGallery() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {images.map(img => (
             <div key={img.name} className="group relative rounded-2xl overflow-hidden aspect-square bg-gray-100 dark:bg-gray-800">
-              <img src={img.url} alt={img.name} className="w-full h-full object-cover" loading="lazy" />
+              <img src={img.url} alt={img.caption || img.name} className="w-full h-full object-cover" loading="lazy" />
+              {img.caption && (
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-2">
+                  <p className="text-white text-[11px] font-semibold truncate">{img.caption}</p>
+                </div>
+              )}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-200 flex items-center justify-center">
                 <button
                   onClick={() => setConfirmName(img.name)}

@@ -47,9 +47,17 @@ export default function AlumniProfile() {
               whileHover={{ scale: 1.05 }}
               className="w-32 h-32 rounded-3xl bg-white dark:bg-gray-900 p-2 shadow-xl shrink-0"
             >
-              <div className="w-full h-full rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-black text-4xl shadow-inner">
-                {initials}
-              </div>
+              {alumni.avatar_url ? (
+                <img
+                  src={alumni.avatar_url}
+                  alt={alumni.full_name}
+                  className="w-full h-full rounded-2xl object-cover shadow-inner"
+                />
+              ) : (
+                <div className="w-full h-full rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-black text-4xl shadow-inner">
+                  {initials}
+                </div>
+              )}
             </motion.div>
             
             <div className="flex-1 pb-2">
