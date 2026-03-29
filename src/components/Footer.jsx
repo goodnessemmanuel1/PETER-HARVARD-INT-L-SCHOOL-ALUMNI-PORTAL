@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-9 h-9 rounded-full object-cover" />
+              <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-10 h-10 object-contain" />
               <span className="font-bold text-gray-900 dark:text-white">Peter Harvard INT'L</span>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
@@ -67,6 +67,7 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
           <span>© {new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal. All rights reserved.</span>
+          <span className="text-gray-400 dark:text-gray-500 text-xs">Built with ❤️ by alumni of Peter Harvard INT'L School</span>
           <a href={WA_GROUP} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-green-600 dark:text-green-400 hover:text-green-700 font-medium transition-colors">
             <MessageCircle size={13} />Join Alumni WhatsApp Group
           </a>

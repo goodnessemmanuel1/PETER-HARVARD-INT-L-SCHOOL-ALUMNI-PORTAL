@@ -4,9 +4,9 @@ import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, Mail, Globe
 const team = [
   {
     name: 'Anointed Agunloye',
-    role: 'Backend Developer',
+    role: 'Senior Dev & Operations Engineer',
     photo: '/assets/Developers/anointed.png',
-    desc: 'Supabase, PostgreSQL, Database Integration, Edge Functions',
+    desc: 'Supabase, PostgreSQL, Database Integration, Edge Functions, DevOps & Deployment',
     email: 'anointedthedeveloper@gmail.com',
     links: [
       { label: 'GitHub', href: 'https://github.com/anointedthedeveloper', icon: 'github' },

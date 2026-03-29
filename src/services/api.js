@@ -48,6 +48,10 @@ export const alumniService = {
     return supabase.from('alumni').update({ status: 'rejected' }).eq('id', id)
   },
 
+  async delete(id) {
+    return supabase.from('alumni').delete().eq('id', id)
+  },
+
   async setFeatured(id, featured) {
     return supabase.from('alumni').update({ featured }).eq('id', id)
   },
