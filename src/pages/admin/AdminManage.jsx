@@ -18,7 +18,13 @@ export default function AdminManage() {
   const loadAdmins = async () => {
     setLoadingAdmins(true)
     const { data, error } = await adminService.listAdmins()
-    if (!error && data?.admins) setAdmins(data.admins)
+    if (error) {
+      console.error('listAdmins error:', error)
+    } else if (data?.admins) {
+      setAdmins(data.admins)
+    } else {
+      console.warn('listAdmins unexpected response:', data)
+    }
     setLoadingAdmins(false)
   }
 
