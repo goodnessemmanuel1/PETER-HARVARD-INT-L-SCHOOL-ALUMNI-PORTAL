@@ -5,7 +5,7 @@ import { Clock, CheckCircle, Star, CalendarDays, ArrowRight, PlusCircle } from '
 import { PageLoader } from '../../components/Loader'
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({ pending: 0, approved: 0, featured: 0, events: 0 })
+  const [stats, setStats] = useState(null)
 
   useEffect(() => {
     async function load() {
@@ -25,7 +25,9 @@ export default function AdminDashboard() {
     load()
   }, [])
 
-  if (!stats && loading) return <PageLoader message="Loading dashboard..." />
+  if (!stats) return <PageLoader message="Loading dashboard..." />
+
+  const cards = [
     { label: 'Pending Approvals', value: stats.pending, icon: <Clock size={22} />, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-100 dark:bg-yellow-900/30', to: '/admin/approvals' },
     { label: 'Approved Alumni', value: stats.approved, icon: <CheckCircle size={22} />, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/30', to: '/admin/alumni' },
     { label: 'Featured Alumni', value: stats.featured, icon: <Star size={22} />, color: 'text-primary-600 dark:text-primary-400', bg: 'bg-primary-100 dark:bg-primary-900/30', to: '/admin/alumni' },
