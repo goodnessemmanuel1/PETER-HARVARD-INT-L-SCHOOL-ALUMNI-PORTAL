@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { useState } from 'react'
 import {
-  Sun, Moon, Menu, X,
+  Sun, Moon, Menu, X, Home,
   Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone
 } from 'lucide-react'
 
@@ -19,7 +19,7 @@ export default function Navbar() {
   const active = 'flex items-center gap-1.5 text-sm font-semibold text-primary-600 dark:text-primary-400'
 
   const links = [
-    { to: '/', label: 'Home', icon: <GraduationCap size={15} />, end: true },
+    { to: '/', label: 'Home', icon: <Home size={15} />, end: true },
     { to: '/directory', label: 'Directory', icon: <Users size={15} /> },
     { to: '/events', label: 'Events', icon: <CalendarDays size={15} /> },
     { to: '/about', label: 'About', icon: <Info size={15} /> },
