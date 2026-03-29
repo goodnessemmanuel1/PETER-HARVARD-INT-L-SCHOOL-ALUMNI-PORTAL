@@ -33,7 +33,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
               <img src="/assets/phislogo.png" alt="Peter Harvard" className="w-10 h-10 object-contain" />
-              <span className="font-bold text-gray-900 dark:text-white">Peter Harvard INT'L</span>
+              <span className="font-bold text-gray-900 dark:text-white">Peter Harvard INT'L School</span>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Connecting graduates with their alma mater through a centralized digital community.

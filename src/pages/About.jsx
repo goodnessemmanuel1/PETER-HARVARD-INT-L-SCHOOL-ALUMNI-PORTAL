@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, Mail, Globe, Award } from 'lucide-react'
+import { GraduationCap, Target, Users, Lightbulb, Heart, ArrowRight, Mail, Globe, Award, Phone } from 'lucide-react'
 
 const team = [
   {
     name: 'Anointed Agunloye',
     role: 'Senior Dev & Operations Engineer',
+    alumniTag: 'Alumni — Peter Harvard INT\'L School',
     photo: '/assets/Developers/anointed.png',
     desc: 'Supabase, PostgreSQL, Database Integration, Edge Functions, DevOps & Deployment',
     email: 'anointedthedeveloper@gmail.com',
+    phones: ['+2348101209470', '+2349016471351'],
     links: [
       { label: 'GitHub', href: 'https://github.com/anointedthedeveloper', icon: 'github' },
       { label: 'Dev.to', href: 'https://dev.to/anointedthedeveloper', icon: 'devto' },
@@ -17,9 +19,11 @@ const team = [
   {
     name: 'Goodness Emmanuel',
     role: 'Frontend Developer',
+    alumniTag: 'Alumni — Peter Harvard INT\'L School',
     photo: '/assets/Developers/goodness.png',
     desc: 'React, Tailwind CSS, Context API, React Router',
     email: 'emmanuelgoodnesscj@gmail.com',
+    phones: ['+2347018621884'],
     links: [
       { label: 'GitHub', href: 'https://github.com/goodnessemmanuel1', icon: 'github' },
       { label: 'LinkedIn', href: 'https://linkedin.com/in/emmanuelgoodness', icon: 'linkedin' },
@@ -186,7 +190,7 @@ export default function About() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
             {team.map(m => (
               <div key={m.name} className="card p-6">
-                <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center gap-4 mb-3">
                   <img
                     src={m.photo}
                     alt={m.name}
@@ -195,9 +199,21 @@ export default function About() {
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">{m.name}</h3>
                     <p className="text-sm text-primary-600 dark:text-primary-400">{m.role}</p>
+                    <span className="inline-flex items-center gap-1 mt-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">
+                      <GraduationCap size={10} />{m.alumniTag}
+                    </span>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{m.desc}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{m.desc}</p>
+                {/* Phone numbers */}
+                <div className="flex flex-col gap-1 mb-3">
+                  {m.phones.map(p => (
+                    <a key={p} href={`tel:${p}`}
+                      className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                      <Phone size={11} className="text-primary-500" />{p}
+                    </a>
+                  ))}
+                </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <a
                     href={`mailto:${m.email}`}
