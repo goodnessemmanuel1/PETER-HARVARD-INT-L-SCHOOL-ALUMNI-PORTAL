@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Sun, Moon, Menu, X, Home,
-  Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone, LayoutDashboard, UserCircle
+  Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone, LayoutDashboard, UserCircle, Images
 } from 'lucide-react'
 
 export default function Navbar() {
@@ -30,6 +30,7 @@ export default function Navbar() {
     { to: '/', label: 'Home', icon: <Home size={16} />, end: true },
     { to: '/directory', label: 'Directory', icon: <Users size={16} /> },
     { to: '/events', label: 'Events', icon: <CalendarDays size={16} /> },
+    { to: '/gallery', label: 'Gallery', icon: <Images size={16} /> },
     { to: '/about', label: 'About', icon: <Info size={16} /> },
     { to: '/contact', label: 'Contact', icon: <Phone size={16} /> },
   ]

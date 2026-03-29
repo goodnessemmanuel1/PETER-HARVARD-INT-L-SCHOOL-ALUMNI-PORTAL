@@ -150,25 +150,31 @@ export default function About() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-2">
           <Award size={22} className="text-primary-500" /> School Founder
         </h2>
-        <div className="card p-8 max-w-2xl flex flex-col sm:flex-row items-center sm:items-start gap-8">
+        <div className="card p-8 max-w-3xl flex flex-col sm:flex-row items-center sm:items-start gap-8">
           <img
             src="/assets/founders/DrPeter.png"
             alt="Dr. Peter Oyedotun Agunloye"
-            className="w-36 h-36 rounded-2xl object-cover border-4 border-primary-200 dark:border-primary-800 shadow-xl flex-shrink-0"
+            className="w-40 h-40 rounded-2xl object-cover border-4 border-primary-200 dark:border-primary-800 shadow-xl flex-shrink-0"
           />
-          <div>
+          <div className="flex-1">
             <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">Dr. Peter Oyedotun Agunloye</h3>
             <p className="text-primary-600 dark:text-primary-400 font-semibold mb-3">Founder, Peter Harvard INT'L School</p>
             <div className="flex flex-wrap gap-2 mb-4">
-              {['FCA', 'FCIT', 'ACS', 'FMNES', 'DBA', 'Ph.D'].map(c => (
-                <span key={c} className="px-3 py-1 rounded-full text-xs font-bold bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
-                  {c}
-                </span>
+              {['FCA', 'FCIT', 'ACS', 'DBA', 'Ph.D', 'M.Sc'].map(c => (
+                <span key={c} className="px-3 py-1 rounded-full text-xs font-bold bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800">{c}</span>
               ))}
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-              A distinguished academic and professional, Dr. Peter Oyedotun Agunloye founded Peter Harvard INT'L School with a vision to provide world-class education and raise a generation of excellence. His credentials span accounting, information technology, computer science, environmental sciences, and doctoral-level research.
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+              A distinguished economist, chartered accountant, stockbroker, and forensic expert, Dr. Peter Oyedotun Agunloye founded Peter Harvard INT'L School with a vision to raise a generation of excellence. He holds doctorate and master's level qualifications and has built an outstanding career spanning finance, capital markets, and forensic accounting.
             </p>
+            <div className="flex flex-wrap gap-3 text-sm">
+              <a href="tel:08033570685" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-400 transition-colors font-medium">
+                📞 08033570685
+              </a>
+              <a href="https://ng.linkedin.com/in/dr-peter-oyedotun-agunloye" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 transition-colors font-medium">
+                <SocialIcon type="linkedin" size={13} /> LinkedIn
+              </a>
+            </div>
           </div>
         </div>
       </section>
