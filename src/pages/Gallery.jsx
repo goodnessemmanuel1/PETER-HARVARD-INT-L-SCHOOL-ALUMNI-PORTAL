@@ -15,10 +15,20 @@ export default function Gallery() {
       if (!error && data) {
         const urls = data
           .filter(f => f.name !== '.emptyFolderPlaceholder')
-          .map(f => ({
-            name: f.name,
-            url: supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl,
-          }))
+          .map((f, idx) => {
+            // Build a caption: strip timestamp prefix and extension, humanise
+            const raw = f.name.replace(/^\d+-[a-z0-9]+\.\w+$/, '') || f.name
+            const caption = raw
+              .replace(/^\d+-[a-z0-9]+-?/, '')
+              .replace(/\.[^.]+$/, '')
+              .replace(/[-_]/g, ' ')
+              .trim() || `Photo ${idx + 1}`
+            return {
+              name: f.name,
+              caption,
+              url: supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl,
+            }
+          })
         setImages(urls)
       }
       setLoading(false)
@@ -85,11 +95,15 @@ export default function Gallery() {
             >
               <img
                 src={img.url}
-                alt={img.name}
+                alt={img.caption}
                 className="w-full object-cover"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+              {/* Caption overlay */}
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-3 py-3 translate-y-1 group-hover:translate-y-0 opacity-90 group-hover:opacity-100 transition-all duration-300">
+                <p className="text-white text-xs font-semibold truncate drop-shadow">{img.caption}</p>
+              </div>
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
                 <ZoomIn size={28} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg" />
               </div>
             </motion.div>
@@ -139,8 +153,9 @@ export default function Gallery() {
               <ChevronRight size={22} />
             </button>
 
-            <div className="absolute bottom-4 text-white/60 text-sm">
-              {lightbox + 1} / {images.length}
+            <div className="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-1">
+              <p className="text-white/90 text-sm font-semibold drop-shadow">{images[lightbox]?.caption}</p>
+              <p className="text-white/50 text-xs">{lightbox + 1} / {images.length}</p>
             </div>
           </motion.div>
         )}

@@ -49,7 +49,8 @@ export const alumniService = {
   },
 
   async delete(id) {
-    return invokeWithAuth('delete-alumni', { alumniId: id })
+    // Direct delete — requires RLS policy: admins can delete alumni
+    return supabase.from('alumni').delete().eq('id', id)
   },
 
   async setFeatured(id, featured) {

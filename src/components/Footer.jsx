@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
-import { Mail, ExternalLink, MessageCircle } from 'lucide-react'
+import { Mail, ExternalLink, MessageCircle, Globe } from 'lucide-react'
 
 const WA_GROUP = 'https://chat.whatsapp.com/BkEMJRD01MLCXzzGwCAgeJ'
+const SCHOOL_WEBSITE = 'https://peterharvardschools.com/'
 
 function scrollTop() { window.scrollTo({ top: 0, behavior: 'instant' }) }
 
@@ -37,6 +38,10 @@ export default function Footer() {
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Connecting graduates with their alma mater through a centralized digital community.
             </p>
+            <a href={SCHOOL_WEBSITE} target="_blank" rel="noreferrer"
+              className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+              <Globe size={14} />peterharvardschools.com
+            </a>
           </div>
 
           <div>
