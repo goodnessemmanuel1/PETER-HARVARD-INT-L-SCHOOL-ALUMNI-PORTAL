@@ -3,18 +3,32 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { status: 200, headers: corsHeaders })
+  }
 
   try {
-    const { alumniId } = await req.json()
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) throw new Error('Missing authorization header')
 
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL'),
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'),
     )
+
+    // Verify caller is admin
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(
+      authHeader.replace('Bearer ', '')
+    )
+    if (userError || !user) throw new Error('Unauthorized')
+    if (user.user_metadata?.role !== 'admin') throw new Error('Forbidden: admin only')
+
+    const { alumniId } = await req.json()
+    if (!alumniId) throw new Error('alumniId is required')
 
     // Get alumni record
     const { data: alumni, error: fetchError } = await supabaseAdmin
@@ -26,63 +40,40 @@ Deno.serve(async (req) => {
     if (fetchError || !alumni) throw new Error('Alumni not found')
 
     // Generate a random password
-    const password = Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-4).toUpperCase() + '!'
+    const password =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-4).toUpperCase() +
+      '!2'
 
     // Create Supabase auth user
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email: alumni.email,
       password,
       email_confirm: true,
-      user_metadata: { role: 'alumni', alumni_id: alumniId, full_name: alumni.full_name },
+      user_metadata: {
+        role: 'alumni',
+        alumni_id: alumniId,
+        full_name: alumni.full_name,
+        must_change_password: true,
+      },
     })
 
     if (authError) throw authError
 
-    // Update alumni status to approved and store auth user id
+    // Update alumni status and store auth_user_id
     await supabaseAdmin
       .from('alumni')
       .update({ status: 'approved', auth_user_id: authData.user.id })
       .eq('id', alumniId)
 
-    // Send welcome email via Supabase's built-in email (SMTP)
-    // We use the admin API to send a custom email
-    const emailBody = `
-Hello ${alumni.full_name},
-
-Congratulations! Your Peter Harvard INT'L School Alumni Portal registration has been approved.
-
-Your login credentials are:
-
-  Email:    ${alumni.email}
-  Password: ${password}
-
-Login here: ${Deno.env.get('SITE_URL')}/login
-
-We recommend changing your password after your first login.
-
-Welcome to the community!
-
-— Peter Harvard INT'L School Alumni Team
-    `.trim()
-
-    // Use Supabase's SMTP to send email by triggering a password reset
-    // which delivers the credentials email instead
-    await supabaseAdmin.auth.admin.generateLink({
-      type: 'magiclink',
-      email: alumni.email,
-    })
-
-    // Send via fetch to a simple email endpoint or use Resend/SendGrid
-    // For now we use Supabase's own invite flow which sends an email
-    const { error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(alumni.email, {
+    // Send invite email with credentials via Supabase invite
+    await supabaseAdmin.auth.admin.inviteUserByEmail(alumni.email, {
+      redirectTo: `${Deno.env.get('SITE_URL') || 'https://peter-harvard-int-l-school-alumni-p.vercel.app'}/login`,
       data: { full_name: alumni.full_name, temp_password: password },
-      redirectTo: `${Deno.env.get('SITE_URL')}/login`,
     })
-
-    // If invite fails (user already exists), just return success
-    // The user was already created above
 
     return new Response(JSON.stringify({ success: true }), {
+      status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (err) {
