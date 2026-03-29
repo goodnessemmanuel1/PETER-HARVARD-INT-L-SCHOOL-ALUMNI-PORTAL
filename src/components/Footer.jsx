@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
-import { Mail, ExternalLink } from 'lucide-react'
+import { Mail, ExternalLink, MessageCircle } from 'lucide-react'
+
+const WA_GROUP = 'https://chat.whatsapp.com/BkEMJRD01MLCXzzGwCAgeJ'
 
 export default function Footer() {
   return (
@@ -26,11 +28,21 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Alumni</h4>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4 text-sm uppercase tracking-wider">Community</h4>
             <ul className="space-y-2.5 text-sm text-gray-500 dark:text-gray-400">
-              {[['/register', 'Register'], ['/directory', 'Browse Directory'], ['/events', 'Announcements'], ['/login', 'Admin Login']].map(([to, label]) => (
+              {[['/register', 'Register'], ['/directory', 'Browse Directory'], ['/events', 'Announcements'], ['/login', 'Alumni Login']].map(([to, label]) => (
                 <li key={to}><Link to={to} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{label}</Link></li>
               ))}
+              <li>
+                <a
+                  href={WA_GROUP}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium transition-colors"
+                >
+                  <MessageCircle size={14} />Join WhatsApp Group
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -55,7 +67,9 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
           <span>© {new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal. All rights reserved.</span>
-          <span>Built for the Peter Harvard INT'L School community</span>
+          <a href={WA_GROUP} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-green-600 dark:text-green-400 hover:text-green-700 font-medium transition-colors">
+            <MessageCircle size={13} />Join Alumni WhatsApp Group
+          </a>
         </div>
       </div>
     </footer>

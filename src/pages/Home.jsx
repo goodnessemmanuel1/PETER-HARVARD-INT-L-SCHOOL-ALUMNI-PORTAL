@@ -7,8 +7,10 @@ import AlumniCard from '../components/AlumniCard'
 import EventCard from '../components/EventCard'
 import {
   GraduationCap, Users, CalendarDays, Star, ArrowRight,
-  ClipboardList, CheckCircle, Search, Megaphone, LayoutDashboard, ChevronRight
+  ClipboardList, CheckCircle, Search, Megaphone, LayoutDashboard, ChevronRight, MessageCircle
 } from 'lucide-react'
+
+const WA_GROUP = 'https://chat.whatsapp.com/BkEMJRD01MLCXzzGwCAgeJ'
 
 const features = [
   { icon: <ClipboardList size={22} />, title: 'Alumni Registration', desc: 'Sign up and create your alumni profile in minutes.' },
@@ -21,21 +23,12 @@ const features = [
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
 }
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, ease: 'easeOut' }
-  }
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: 'easeOut' } }
 }
 
 export default function Home() {
@@ -47,7 +40,6 @@ export default function Home() {
     alumniService.getFeatured().then(({ data }) => setFeatured(data || []))
     eventsService.getAll().then(({ data }) => setEvents((data || []).slice(0, 3)))
 
-    // Fetch real stats from DB
     async function loadStats() {
       const [alumniRes, featuredRes, eventsRes, yearsRes] = await Promise.all([
         supabase.from('alumni').select('id', { count: 'exact', head: true }).eq('status', 'approved'),
@@ -70,47 +62,35 @@ export default function Home() {
     <div className="overflow-x-hidden">
       {/* Hero */}
       <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white overflow-hidden">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 0.1, scale: 1 }}
           transition={{ duration: 1.5, ease: 'easeOut' }}
-          className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,white,transparent_60%)]" 
+          className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,white,transparent_60%)]"
         />
-        
-        {/* Abstract background shapes */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div 
-            animate={{ 
-              y: [0, -20, 0],
-              rotate: [0, 5, 0]
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" 
+          <motion.div
+            animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+            className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"
           />
-          <motion.div 
-            animate={{ 
-              y: [0, 20, 0],
-              rotate: [0, -5, 0]
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute -bottom-24 -left-24 w-80 h-80 bg-primary-400/10 rounded-full blur-3xl" 
+          <motion.div
+            animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+            className="absolute -bottom-24 -left-24 w-80 h-80 bg-primary-400/10 rounded-full blur-3xl"
           />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
           <div className="max-w-3xl">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
+            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30 px-3 py-1 rounded-full mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                 Version 1.0 MVP — In Development
               </span>
             </motion.div>
 
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -122,7 +102,7 @@ export default function Home() {
               </span>
             </motion.h1>
 
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
@@ -131,7 +111,7 @@ export default function Home() {
               The official Peter Harvard INT'L School Alumni Portal. Reconnect with old friends, stay updated on school news, and join a growing community of excellence.
             </motion.p>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
@@ -145,6 +125,15 @@ export default function Home() {
                 <Users size={20} />
                 Browse Directory
               </Link>
+              <a
+                href={WA_GROUP}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-8 py-4 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-xl"
+              >
+                <MessageCircle size={20} />
+                WhatsApp Group
+              </a>
             </motion.div>
           </div>
         </div>
@@ -152,7 +141,7 @@ export default function Home() {
 
       {/* Stats */}
       <section className="relative z-10 -mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -164,7 +153,7 @@ export default function Home() {
             { label: 'Featured Alumni', value: stats.featured, icon: <Star size={24} className="text-primary-500" /> },
             { label: 'Events Posted', value: stats.events, icon: <Megaphone size={24} className="text-primary-500" /> },
           ].map((s, idx) => (
-            <motion.div 
+            <motion.div
               key={s.label}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -184,7 +173,7 @@ export default function Home() {
 
       {/* Features */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -196,15 +185,15 @@ export default function Home() {
           </p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {features.map((f, idx) => (
-            <motion.div 
+          {features.map(f => (
+            <motion.div
               key={f.title}
               variants={itemVariants}
               whileHover={{ y: -5 }}
@@ -225,35 +214,20 @@ export default function Home() {
         <section className="bg-gray-50/50 dark:bg-gray-900/30 border-y border-gray-100 dark:border-gray-800/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
+              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                   <Star size={28} className="text-yellow-500 fill-yellow-500" />
                   Featured Alumni
                 </h2>
                 <p className="text-gray-500 dark:text-gray-400 mt-2 text-lg">Spotlighting our notable graduates and their journeys</p>
               </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
+              <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
                 <Link to="/directory" className="group inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold hover:gap-3 transition-all">
                   Browse All Alumni <ArrowRight size={20} />
                 </Link>
               </motion.div>
             </div>
-            
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
+            <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {featured.map(a => (
                 <motion.div key={a.id} variants={itemVariants}>
                   <AlumniCard alumni={a} />
@@ -268,35 +242,20 @@ export default function Home() {
       {events.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                 <CalendarDays size={28} className="text-primary-500" />
                 Latest Events
               </h2>
               <p className="text-gray-500 dark:text-gray-400 mt-2 text-lg">What's happening in your school community</p>
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
+            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <Link to="/events" className="group inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold hover:gap-3 transition-all">
                 View Calendar <ArrowRight size={20} />
               </Link>
             </motion.div>
           </div>
-          
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
+          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {events.map(e => (
               <motion.div key={e.id} variants={itemVariants}>
                 <EventCard event={e} />
@@ -306,18 +265,14 @@ export default function Home() {
         </section>
       )}
 
-      {/* CTA Section */}
+      {/* CTA */}
       <section className="relative overflow-hidden py-24">
         <div className="absolute inset-0 bg-primary-600 dark:bg-primary-800" />
-        <motion.div 
-          animate={{ 
-            rotate: [0, 360],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-1/2 -left-1/4 w-[100%] h-[150%] bg-white/5 blur-3xl rounded-full" 
+        <motion.div
+          animate={{ rotate: [0, 360], scale: [1, 1.1, 1] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          className="absolute -top-1/2 -left-1/4 w-[100%] h-[150%] bg-white/5 blur-3xl rounded-full"
         />
-        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -329,9 +284,19 @@ export default function Home() {
             <p className="text-xl text-white/80 mb-10">
               Join the growing network of Peter Harvard INT'L School alumni and keep the spirit of your alma mater alive.
             </p>
-            <Link to="/register" className="inline-flex items-center gap-3 bg-white text-primary-700 hover:bg-gray-100 font-bold px-10 py-5 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-2xl text-lg">
-              Register Now <ChevronRight size={20} />
-            </Link>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link to="/register" className="inline-flex items-center gap-3 bg-white text-primary-700 hover:bg-gray-100 font-bold px-10 py-5 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-2xl text-lg">
+                Register Now <ChevronRight size={20} />
+              </Link>
+              <a
+                href={WA_GROUP}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-bold px-10 py-5 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-2xl text-lg"
+              >
+                <MessageCircle size={20} />Join WhatsApp Group
+              </a>
+            </div>
           </motion.div>
         </div>
       </section>
