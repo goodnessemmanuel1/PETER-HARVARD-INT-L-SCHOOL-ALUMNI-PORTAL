@@ -61,6 +61,9 @@ function SocialIcon({ type, size = 14 }) {
   return <Globe size={size} />
 }
 
+const FOUNDED = 2017
+const YEARS_RUNNING = new Date().getFullYear() - FOUNDED
+
 const values = [
   { icon: <BookOpen size={22} />, title: 'Academic Excellence', desc: 'Committed to the highest standards of education and intellectual development.' },
   { icon: <Shield size={22} />, title: 'Integrity & Character', desc: 'Building students of strong moral character who lead with honesty and purpose.' },
@@ -87,7 +90,7 @@ export default function About() {
               Peter Harvard INT'L School
             </h1>
             <p className="text-white/80 text-lg leading-relaxed max-w-2xl">
-              A premier institution dedicated to raising a generation of excellence — academically, morally, and professionally. Founded in 2017 by Dr. Peter Oyedotun Agunloye with a vision to transform lives through quality education.
+              Founded in {FOUNDED} by Dr. Peter Oyedotun Agunloye, Peter Harvard INT'L School has been a beacon of academic excellence and character development for {YEARS_RUNNING} years. The school has produced graduates who have gone on to make significant contributions across various fields.
             </p>
           </motion.div>
         </div>
@@ -102,7 +105,7 @@ export default function About() {
               More than a school — a legacy of purpose
             </h2>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-              Peter Harvard INT'L School was founded in 2017 with a bold vision: to create an institution where every student is equipped not just with academic knowledge, but with the character, discipline, and drive to succeed in any field they choose.
+              Peter Harvard INT'L School was founded in {FOUNDED} with a bold vision: to create an institution where every student is equipped not just with academic knowledge, but with the character, discipline, and drive to succeed in any field they choose.
             </p>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
               From its earliest days, the school has maintained a culture of excellence — small class sizes, dedicated teachers, and a curriculum designed to challenge and inspire. Students are encouraged to think critically, lead confidently, and serve their communities.
@@ -114,8 +117,8 @@ export default function About() {
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             className="grid grid-cols-2 gap-4">
             {[
-              { label: 'Founded', value: '2017', color: 'bg-primary-600' },
-              { label: 'Years of Excellence', value: '8+', color: 'bg-primary-700' },
+              { label: 'Founded', value: FOUNDED, color: 'bg-primary-600' },
+              { label: 'Years of Excellence', value: `${YEARS_RUNNING}+`, color: 'bg-primary-700' },
               { label: 'Registered Alumni', value: '50+', color: 'bg-primary-800' },
               { label: 'Growing Community', value: '🌍', color: 'bg-primary-900' },
             ].map(s => (
@@ -173,7 +176,7 @@ export default function About() {
               ))}
             </div>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-              A distinguished economist, chartered accountant, stockbroker, and forensic expert, Dr. Peter Oyedotun Agunloye founded Peter Harvard INT'L School in 2017 with a vision to raise a generation of excellence. His career spans finance, capital markets, and forensic accounting — and his passion for education drives the school's commitment to holistic development.
+              A distinguished economist, chartered accountant, stockbroker, and forensic expert, Dr. Peter Oyedotun Agunloye founded Peter Harvard INT'L School in {FOUNDED} with a vision to raise a generation of excellence. His career spans finance, capital markets, and forensic accounting — and his passion for education drives the school's commitment to holistic development.
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-3">
               <a href="tel:08033570685" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition-all font-bold shadow-md">

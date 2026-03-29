@@ -177,7 +177,7 @@ export default function Home() {
               Peter Harvard INT'L School — <span className="text-primary-600 dark:text-primary-400">A Legacy of Excellence</span>
             </h2>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-              Founded by Dr. Peter Oyedotun Agunloye, Peter Harvard INT'L School has been a beacon of academic excellence and character development. The school has produced graduates who have gone on to make significant contributions across various fields.
+              Founded by Dr. Peter Oyedotun Agunloye, Peter Harvard INT'L School has been a beacon of academic excellence and character development for over {new Date().getFullYear() - 2017} years. The school has produced graduates who have gone on to make significant contributions across various fields.
             </p>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8">
               This alumni portal is a testament to the enduring bonds formed within our school walls — a digital home where every graduate can reconnect, celebrate achievements, and give back to the community that shaped them.
@@ -194,7 +194,7 @@ export default function Home() {
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             className="grid grid-cols-2 gap-4">
             {[
-              { label: 'Years of Excellence', value: '20+', color: 'bg-primary-600' },
+              { label: 'Years of Excellence', value: `${new Date().getFullYear() - 2017}+`, color: 'bg-primary-600' },
               { label: 'Alumni Worldwide', value: `${stats.alumni}+`, color: 'bg-blue-600' },
               { label: 'Featured Graduates', value: `${stats.featured}+`, color: 'bg-yellow-500' },
               { label: 'School Events', value: `${stats.events}+`, color: 'bg-green-600' },
