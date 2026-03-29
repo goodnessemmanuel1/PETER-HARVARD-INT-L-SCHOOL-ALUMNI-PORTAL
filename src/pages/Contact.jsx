@@ -66,13 +66,33 @@ export default function Contact() {
     e.preventDefault()
     setSending(true)
     setError('')
-    const { error: err } = await contactService.submit(form)
-    if (err) {
+
+    // Save to DB (admin inbox)
+    const { error: dbErr } = await contactService.submit(form)
+    if (dbErr) {
       setError('Failed to send. Please try again.')
-    } else {
-      setSent(true)
-      setForm({ name: '', email: '', subject: '', message: '' })
+      setSending(false)
+      return
     }
+
+    // Also send email notification via Formspree to school email
+    try {
+      await fetch('https://formspree.io/f/meepanev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          _replyto: form.email,
+          subject: `[PHIS Alumni Portal] ${form.subject}`,
+          message: `From: ${form.name} <${form.email}>\n\n${form.message}`,
+        }),
+      })
+    } catch {
+      // Email notification failed silently — message is still saved to DB
+    }
+
+    setSent(true)
+    setForm({ name: '', email: '', subject: '', message: '' })
     setSending(false)
   }
 

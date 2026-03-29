@@ -86,6 +86,9 @@ export const blogService = {
   async create(data) {
     return supabase.from('blog_posts').insert([data]).select().single()
   },
+  async update(id, data) {
+    return supabase.from('blog_posts').update(data).eq('id', id).select().single()
+  },
   async delete(id) {
     return supabase.from('blog_posts').delete().eq('id', id)
   },
