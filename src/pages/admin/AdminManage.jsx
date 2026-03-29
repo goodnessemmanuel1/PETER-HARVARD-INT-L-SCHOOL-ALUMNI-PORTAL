@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../services/supabase'
+import { adminService } from '../../services/api'
 import { ShieldCheck, UserPlus, Mail, Lock, Trash2, Eye, EyeOff } from 'lucide-react'
 import { Spinner } from '../../components/Loader'
 
@@ -12,8 +13,7 @@ export default function AdminManage() {
   const [success, setSuccess] = useState('')
 
   const loadAdmins = async () => {
-    // Fetch all users with admin role via edge function
-    const { data, error } = await supabase.functions.invoke('list-admins')
+    const { data, error } = await adminService.listAdmins()
     if (!error && data?.admins) setAdmins(data.admins)
   }
 
@@ -25,9 +25,7 @@ export default function AdminManage() {
     setError('')
     setSuccess('')
 
-    const { data, error: err } = await supabase.functions.invoke('create-admin', {
-      body: { email: form.email, password: form.password },
-    })
+    const { data, error: err } = await adminService.createAdmin(form.email, form.password)
 
     if (err || data?.error) {
       setError(err?.message || data?.error)
@@ -41,7 +39,7 @@ export default function AdminManage() {
 
   const handleRemove = async (userId) => {
     if (!confirm('Remove admin role from this user?')) return
-    await supabase.functions.invoke('remove-admin', { body: { userId } })
+    await adminService.removeAdmin(userId)
     loadAdmins()
   }
 

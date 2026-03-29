@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../../services/supabase'
+import { adminService } from '../../services/api'
 import { Clock, CheckCircle, Star, CalendarDays, ArrowRight, PlusCircle, ShieldCheck, UserPlus, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { PageLoader, Spinner } from '../../components/Loader'
 
@@ -33,9 +34,7 @@ export default function AdminDashboard() {
     e.preventDefault()
     setSaving(true)
     setAdminMsg({ type: '', text: '' })
-    const { data, error } = await supabase.functions.invoke('create-admin', {
-      body: { email: form.email, password: form.password },
-    })
+    const { data, error } = await adminService.createAdmin(form.email, form.password)
     if (error || data?.error) {
       setAdminMsg({ type: 'error', text: error?.message || data?.error })
     } else {

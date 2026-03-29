@@ -1,5 +1,16 @@
 import { supabase } from './supabase'
 
+// Helper — gets current session access token and passes it as Authorization header
+async function invokeWithAuth(fnName, body = {}) {
+  const { data: { session } } = await supabase.auth.getSession()
+  return supabase.functions.invoke(fnName, {
+    body,
+    headers: session?.access_token
+      ? { Authorization: `Bearer ${session.access_token}` }
+      : {},
+  })
+}
+
 export const alumniService = {
   async register(data) {
     return supabase.from('alumni').insert([{ ...data, status: 'pending' }])
@@ -24,7 +35,7 @@ export const alumniService = {
   },
 
   async approve(alumniId) {
-    return supabase.functions.invoke('approve-alumni', { body: { alumniId } })
+    return invokeWithAuth('approve-alumni', { alumniId })
   },
 
   async reject(id) {
@@ -55,5 +66,19 @@ export const eventsService = {
 
   async delete(id) {
     return supabase.from('events').delete().eq('id', id)
+  },
+}
+
+export const adminService = {
+  async createAdmin(email, password) {
+    return invokeWithAuth('create-admin', { email, password })
+  },
+
+  async listAdmins() {
+    return invokeWithAuth('list-admins')
+  },
+
+  async removeAdmin(userId) {
+    return invokeWithAuth('remove-admin', { userId })
   },
 }
