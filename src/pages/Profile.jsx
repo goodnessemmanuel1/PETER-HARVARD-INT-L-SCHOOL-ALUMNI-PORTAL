@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../services/supabase'
-import { User, Phone, Briefcase, FileText, Camera, Save, KeyRound, Eye, EyeOff, GraduationCap, AlertCircle, CheckCircle, CalendarDays } from 'lucide-react'
+import { User, Phone, Briefcase, FileText, Camera, Save, KeyRound, Eye, EyeOff, GraduationCap, AlertCircle, CheckCircle, CalendarDays, Trash2 } from 'lucide-react'
 import { Spinner, PageLoader } from '../components/Loader'
 import { Navigate } from 'react-router-dom'
 import { uploadAvatar } from '../services/uploadAvatar'
@@ -14,6 +14,7 @@ export default function Profile() {
   const [form, setForm] = useState({})
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [removing, setRemoving] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState(null)
   const [msg, setMsg] = useState({ type: '', text: '' })
   const [avatarMsg, setAvatarMsg] = useState({ type: '', text: '' })
@@ -70,6 +71,25 @@ export default function Profile() {
       setAvatarMsg({ type: 'error', text: err.message })
     }
     setUploading(false)
+  }
+
+  const handleRemoveAvatar = async () => {
+    setRemoving(true)
+    setAvatarMsg({ type: '', text: '' })
+    try {
+      const { error: dbErr } = await supabase
+        .from('alumni')
+        .update({ avatar_url: null })
+        .eq('id', alumni.id)
+      if (dbErr) throw new Error(dbErr.message)
+      setAvatarUrl(null)
+      setAlumni(a => ({ ...a, avatar_url: null }))
+      refreshAvatar(null)
+      setAvatarMsg({ type: 'success', text: 'Profile photo removed.' })
+    } catch (err) {
+      setAvatarMsg({ type: 'error', text: err.message })
+    }
+    setRemoving(false)
   }
 
   const handleSave = async e => {
@@ -147,11 +167,21 @@ export default function Profile() {
             <p className="text-xs text-gray-400">JPG, PNG or WebP · Max 5MB</p>
             <button
               onClick={() => fileRef.current?.click()}
-              disabled={uploading}
+              disabled={uploading || removing}
               className="btn-outline text-sm w-full flex items-center justify-center gap-2"
             >
               {uploading ? <><Spinner size={13} />Uploading...</> : <><Camera size={14} />Change Photo</>}
             </button>
+            {avatarUrl && (
+              <button
+                type="button"
+                onClick={handleRemoveAvatar}
+                disabled={removing || uploading}
+                className="text-sm w-full flex items-center justify-center gap-2 py-2 px-4 rounded-xl border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+              >
+                {removing ? <><Spinner size={13} />Removing...</> : <><Trash2 size={14} />Remove Photo</>}
+              </button>
+            )}
           </div>
         </div>
 
