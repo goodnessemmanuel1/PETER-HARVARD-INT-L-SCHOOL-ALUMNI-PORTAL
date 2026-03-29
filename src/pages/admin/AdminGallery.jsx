@@ -52,7 +52,14 @@ export default function AdminGallery() {
 
   const handleDelete = async name => {
     setDeletingName(name)
-    await supabase.storage.from('gallery').remove([name])
+    setUploadError('')
+    const { error } = await supabase.storage.from('gallery').remove([name])
+    if (error) {
+      setUploadError(`Delete failed: ${error.message}`)
+      setDeletingName(null)
+      setConfirmName(null)
+      return
+    }
     setImages(imgs => imgs.filter(i => i.name !== name))
     setDeletingName(null)
     setConfirmName(null)
