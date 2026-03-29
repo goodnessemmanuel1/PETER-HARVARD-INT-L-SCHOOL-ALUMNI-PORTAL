@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { eventsService } from '../../services/api'
 import EventCard from '../../components/EventCard'
+import { CalendarDays, PlusCircle } from 'lucide-react'
 
 const EMPTY = { title: '', description: '', event_date: '', type: 'Announcement' }
 
@@ -34,11 +35,16 @@ export default function AdminEvents() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">📅 Events & Announcements</h1>
+      <div className="flex items-center gap-3 mb-1">
+        <CalendarDays size={22} className="text-primary-600 dark:text-primary-400" />
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Events & Announcements</h1>
+      </div>
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Post and manage school events and announcements.</p>
 
-      {/* Create Form */}
       <div className="card p-6 mb-8">
-        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Post New Event</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <PlusCircle size={17} className="text-primary-500" />Post New Event
+        </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -62,13 +68,12 @@ export default function AdminEvents() {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
             <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={3} className="input resize-none" placeholder="Event details..." />
           </div>
-          <button type="submit" disabled={saving} className="btn-primary self-start">
-            {saving ? 'Posting...' : 'Post Event'}
+          <button type="submit" disabled={saving} className="btn-primary self-start flex items-center gap-2">
+            <PlusCircle size={15} />{saving ? 'Posting...' : 'Post Event'}
           </button>
         </form>
       </div>
 
-      {/* Events List */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[...Array(3)].map((_, i) => <div key={i} className="card p-5 h-32 animate-pulse bg-gray-100 dark:bg-gray-800" />)}

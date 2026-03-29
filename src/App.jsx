@@ -10,6 +10,10 @@ import Register from './pages/Register'
 import Directory from './pages/Directory'
 import Events from './pages/Events'
 import Login from './pages/Login'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import AlumniProfile from './pages/AlumniProfile'
+import NotFound from './pages/NotFound'
 
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminApprovals from './pages/admin/AdminApprovals'
@@ -28,6 +32,10 @@ export default function App() {
               <Route path="/directory" element={<Directory />} />
               <Route path="/events" element={<Events />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/alumni/:id" element={<AlumniProfile />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
