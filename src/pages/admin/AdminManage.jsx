@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../services/supabase'
 import { adminService } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
-import { ShieldCheck, UserPlus, Mail, Lock, Trash2, Eye, EyeOff } from 'lucide-react'
+import { ShieldCheck, UserPlus, Mail, Lock, Trash2, Eye, EyeOff, RefreshCw } from 'lucide-react'
 import { Spinner } from '../../components/Loader'
 
 export default function AdminManage() {
   const { user } = useAuth()
   const [admins, setAdmins] = useState([])
+  const [loadingAdmins, setLoadingAdmins] = useState(true)
   const [form, setForm] = useState({ email: '', password: '' })
   const [showPass, setShowPass] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -15,8 +16,10 @@ export default function AdminManage() {
   const [success, setSuccess] = useState('')
 
   const loadAdmins = async () => {
+    setLoadingAdmins(true)
     const { data, error } = await adminService.listAdmins()
     if (!error && data?.admins) setAdmins(data.admins)
+    setLoadingAdmins(false)
   }
 
   useEffect(() => { loadAdmins() }, [])
@@ -27,14 +30,41 @@ export default function AdminManage() {
     setError('')
     setSuccess('')
 
+    const emailLower = form.email.trim().toLowerCase()
+
+    // Check if already an admin
+    const alreadyAdmin = admins.some(a => a.email?.toLowerCase() === emailLower)
+    if (alreadyAdmin) {
+      setError('An admin account with this email already exists.')
+      setSaving(false)
+      return
+    }
+
+    // Check if already an alumni user in the DB
+    const { data: alumniCheck } = await supabase
+      .from('alumni')
+      .select('id, full_name')
+      .ilike('email', emailLower)
+      .maybeSingle()
+    if (alumniCheck) {
+      setError(`This email belongs to an existing alumni user (${alumniCheck.full_name}). Cannot create admin with this email.`)
+      setSaving(false)
+      return
+    }
+
     const { data, error: err } = await adminService.createAdmin(form.email, form.password)
 
     if (err || data?.error) {
-      setError(err?.message || data?.error)
+      const msg = err?.message || data?.error || ''
+      if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('exists')) {
+        setError('An account with this email already exists.')
+      } else {
+        setError(msg || 'Failed to create admin.')
+      }
     } else {
       setSuccess(`Admin account created for ${form.email}`)
       setForm({ email: '', password: '' })
-      loadAdmins()
+      await loadAdmins()
     }
     setSaving(false)
   }
@@ -42,7 +72,7 @@ export default function AdminManage() {
   const handleRemove = async (userId) => {
     if (!confirm('Remove admin role from this user?')) return
     await adminService.removeAdmin(userId)
-    loadAdmins()
+    await loadAdmins()
   }
 
   return (
@@ -65,7 +95,7 @@ export default function AdminManage() {
             </label>
             <input
               required type="email" value={form.email}
-              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+              onChange={e => { setForm(f => ({ ...f, email: e.target.value })); setError(''); setSuccess('') }}
               className="input" placeholder="admin@example.com"
             />
           </div>
@@ -87,8 +117,16 @@ export default function AdminManage() {
             </div>
           </div>
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          {success && <p className="text-sm text-green-600 dark:text-green-400">{success}</p>}
+          {error && (
+            <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg px-3 py-2">
+              {success}
+            </div>
+          )}
 
           <button type="submit" disabled={saving} className="btn-primary self-start flex items-center gap-2">
             {saving ? <><Spinner size={14} />Creating...</> : <><UserPlus size={15} />Create Admin</>}
@@ -98,8 +136,20 @@ export default function AdminManage() {
 
       {/* Admins List */}
       <div>
-        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Current Admins</h2>
-        {admins.length === 0 ? (
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-semibold text-gray-900 dark:text-white">Current Admins</h2>
+          <button
+            onClick={loadAdmins}
+            disabled={loadingAdmins}
+            className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+          >
+            <RefreshCw size={13} className={loadingAdmins ? 'animate-spin' : ''} />
+            {loadingAdmins ? 'Refreshing...' : 'Refresh'}
+          </button>
+        </div>
+        {loadingAdmins ? (
+          <div className="card p-8 text-center text-gray-400 text-sm">Loading admins...</div>
+        ) : admins.length === 0 ? (
           <div className="card p-8 text-center text-gray-400 text-sm">No admins found or unable to load list.</div>
         ) : (
           <div className="flex flex-col gap-3 max-w-lg">
@@ -111,7 +161,7 @@ export default function AdminManage() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{a.email}</p>
-                    <p className="text-xs text-gray-400">Admin</p>
+                    <p className="text-xs text-gray-400">{a.id === user?.id ? 'Admin (You)' : 'Admin'}</p>
                   </div>
                 </div>
                 <button
