@@ -1,0 +1,128 @@
+import { useEffect, useState, useRef } from 'react'
+import { supabase } from '../../services/supabase'
+import { Images, Upload, Trash2, X } from 'lucide-react'
+import { Spinner } from '../../components/Loader'
+
+export default function AdminGallery() {
+  const [images, setImages] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
+  const [confirmName, setConfirmName] = useState(null)
+  const [deletingName, setDeletingName] = useState(null)
+  const fileRef = useRef()
+
+  const load = async () => {
+    setLoading(true)
+    const { data, error } = await supabase.storage.from('gallery').list('', {
+      limit: 200,
+      sortBy: { column: 'created_at', order: 'desc' },
+    })
+    if (!error && data) {
+      setImages(
+        data
+          .filter(f => f.name !== '.emptyFolderPlaceholder')
+          .map(f => ({
+            name: f.name,
+            url: supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl,
+          }))
+      )
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => { load() }, [])
+
+  const handleUpload = async e => {
+    const files = Array.from(e.target.files || [])
+    if (!files.length) return
+    setUploading(true)
+    setUploadError('')
+    for (const file of files) {
+      if (file.size > 10 * 1024 * 1024) { setUploadError(`${file.name} exceeds 10MB limit.`); continue }
+      const ext = file.name.split('.').pop()
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { error } = await supabase.storage.from('gallery').upload(fileName, file, { upsert: false })
+      if (error) setUploadError(error.message)
+    }
+    setUploading(false)
+    fileRef.current.value = ''
+    load()
+  }
+
+  const handleDelete = async name => {
+    setDeletingName(name)
+    await supabase.storage.from('gallery').remove([name])
+    setImages(imgs => imgs.filter(i => i.name !== name))
+    setDeletingName(null)
+    setConfirmName(null)
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center gap-3">
+          <Images size={22} className="text-primary-600 dark:text-primary-400" />
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gallery</h1>
+        </div>
+        <button onClick={() => fileRef.current?.click()} disabled={uploading}
+          className="btn-primary text-sm flex items-center gap-2">
+          {uploading ? <><Spinner size={14} />Uploading...</> : <><Upload size={15} />Upload Photos</>}
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} />
+      </div>
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Upload and manage school gallery photos.</p>
+
+      {uploadError && (
+        <div className="mb-4 flex items-center gap-2 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm">
+          <X size={14} className="flex-shrink-0" />{uploadError}
+        </div>
+      )}
+
+      {/* Delete Confirm */}
+      {confirmName && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 max-w-sm w-full border border-gray-100 dark:border-gray-800">
+            <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4">
+              <Trash2 size={22} className="text-red-600 dark:text-red-400" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white text-center mb-2">Delete Photo?</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">This photo will be permanently removed from the gallery.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setConfirmName(null)} className="flex-1 btn-outline py-2.5 text-sm">Cancel</button>
+              <button onClick={() => handleDelete(confirmName)} disabled={deletingName === confirmName}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
+                <Trash2 size={14} />{deletingName === confirmName ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="card p-12 text-center text-gray-400">Loading gallery...</div>
+      ) : images.length === 0 ? (
+        <div className="card p-16 text-center">
+          <Images size={40} className="text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-400">No photos uploaded yet. Click "Upload Photos" to get started.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {images.map(img => (
+            <div key={img.name} className="group relative rounded-2xl overflow-hidden aspect-square bg-gray-100 dark:bg-gray-800">
+              <img src={img.url} alt={img.name} className="w-full h-full object-cover" loading="lazy" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-200 flex items-center justify-center">
+                <button
+                  onClick={() => setConfirmName(img.name)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity w-9 h-9 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
