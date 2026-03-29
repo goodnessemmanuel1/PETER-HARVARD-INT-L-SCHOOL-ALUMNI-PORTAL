@@ -25,7 +25,12 @@ export default function Gallery() {
       })
       if (!error && data) {
         const imgs = data
-          .filter(f => f.name !== '.emptyFolderPlaceholder' && !f.name.startsWith('blog-covers/') && !f.name.startsWith('pending-avatars/'))
+          .filter(f => {
+            if (f.name === '.emptyFolderPlaceholder') return false
+            if (f.name.includes('/')) return false
+            const ext = f.name.split('.').pop()?.toLowerCase()
+            return ['jpg','jpeg','png','gif','webp','avif','svg'].includes(ext)
+          })
           .map((f, idx) => {
             const caption = decodeCaption(f.name)
             return {

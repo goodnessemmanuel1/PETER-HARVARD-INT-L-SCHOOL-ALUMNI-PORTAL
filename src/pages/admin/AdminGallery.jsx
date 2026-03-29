@@ -24,7 +24,12 @@ export default function AdminGallery() {
     if (!error && data) {
       setImages(
         data
-          .filter(f => f.name !== '.emptyFolderPlaceholder')
+          .filter(f => {
+            if (f.name === '.emptyFolderPlaceholder') return false
+            if (f.name.includes('/')) return false
+            const ext = f.name.split('.').pop()?.toLowerCase()
+            return ['jpg','jpeg','png','gif','webp','avif','svg'].includes(ext)
+          })
           .map(f => ({
             name: f.name,
             caption: decodeCaption(f.name),
