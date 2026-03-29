@@ -8,26 +8,33 @@ export function AuthProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
 
+  const checkAdmin = (u) => u?.user_metadata?.role === 'admin'
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
-      setIsAdmin(session?.user?.user_metadata?.role === 'admin')
+      setIsAdmin(checkAdmin(session?.user))
       setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
-      setIsAdmin(session?.user?.user_metadata?.role === 'admin')
+      setIsAdmin(checkAdmin(session?.user))
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  const signIn = (email, password) => supabase.auth.signInWithPassword({ email, password })
+  const signIn = (email, password) =>
+    supabase.auth.signInWithPassword({ email, password })
+
   const signOut = () => supabase.auth.signOut()
 
+  const updatePassword = (newPassword) =>
+    supabase.auth.updateUser({ password: newPassword })
+
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signOut, updatePassword }}>
       {children}
     </AuthContext.Provider>
   )

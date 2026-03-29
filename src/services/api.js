@@ -19,11 +19,23 @@ export const alumniService = {
   },
 
   async getPending() {
-    return supabase.from('alumni').select('*').eq('status', 'pending').order('created_at', { ascending: false })
+    return supabase.from('alumni')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
   },
 
-  async updateStatus(id, status) {
-    return supabase.from('alumni').update({ status }).eq('id', id)
+  // Approve: calls edge function which creates auth user + sends email
+  async approve(alumniId) {
+    const { data, error } = await supabase.functions.invoke('approve-alumni', {
+      body: { alumniId },
+    })
+    return { data, error }
+  },
+
+  // Reject: just update status
+  async reject(id) {
+    return supabase.from('alumni').update({ status: 'rejected' }).eq('id', id)
   },
 
   async setFeatured(id, featured) {
@@ -31,7 +43,10 @@ export const alumniService = {
   },
 
   async getFeatured() {
-    return supabase.from('alumni').select('*').eq('status', 'approved').eq('featured', true)
+    return supabase.from('alumni')
+      .select('*')
+      .eq('status', 'approved')
+      .eq('featured', true)
   },
 }
 

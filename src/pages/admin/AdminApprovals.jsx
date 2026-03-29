@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { alumniService } from '../../services/api'
 import AlumniCard from '../../components/AlumniCard'
-import { CheckSquare, Check, X } from 'lucide-react'
+import { CheckSquare, Check, X, Loader } from 'lucide-react'
 
 export default function AdminApprovals() {
   const [pending, setPending] = useState([])
   const [loading, setLoading] = useState(true)
+  const [processing, setProcessing] = useState({}) // { [id]: 'approving' | 'rejecting' }
+  const [errors, setErrors] = useState({})
 
   const load = async () => {
     const { data } = await alumniService.getPending()
@@ -15,8 +17,21 @@ export default function AdminApprovals() {
 
   useEffect(() => { load() }, [])
 
-  const handle = async (id, status) => {
-    await alumniService.updateStatus(id, status)
+  const handleApprove = async (id) => {
+    setProcessing(p => ({ ...p, [id]: 'approving' }))
+    setErrors(e => ({ ...e, [id]: null }))
+    const { error } = await alumniService.approve(id)
+    if (error) {
+      setErrors(e => ({ ...e, [id]: 'Failed to approve. Try again.' }))
+      setProcessing(p => ({ ...p, [id]: null }))
+    } else {
+      setPending(p => p.filter(a => a.id !== id))
+    }
+  }
+
+  const handleReject = async (id) => {
+    setProcessing(p => ({ ...p, [id]: 'rejecting' }))
+    await alumniService.reject(id)
     setPending(p => p.filter(a => a.id !== id))
   }
 
@@ -29,7 +44,8 @@ export default function AdminApprovals() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Pending Approvals</h1>
       </div>
       <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-        {pending.length} registration{pending.length !== 1 ? 's' : ''} awaiting review
+        {pending.length} registration{pending.length !== 1 ? 's' : ''} awaiting review.
+        Approving will create their account and email them their login credentials.
       </p>
 
       {pending.length === 0 ? (
@@ -43,20 +59,36 @@ export default function AdminApprovals() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {pending.map(a => (
-            <AlumniCard
-              key={a.id}
-              alumni={a}
-              actions={
-                <>
-                  <button onClick={() => handle(a.id, 'approved')} className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1">
-                    <Check size={12} />Approve
-                  </button>
-                  <button onClick={() => handle(a.id, 'rejected')} className="border border-red-400 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs py-1.5 px-3 rounded-lg transition-colors flex items-center gap-1">
-                    <X size={12} />Reject
-                  </button>
-                </>
-              }
-            />
+            <div key={a.id}>
+              <AlumniCard
+                alumni={a}
+                actions={
+                  <>
+                    <button
+                      onClick={() => handleApprove(a.id)}
+                      disabled={!!processing[a.id]}
+                      className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1 disabled:opacity-60"
+                    >
+                      {processing[a.id] === 'approving'
+                        ? <><Loader size={11} className="animate-spin" />Approving...</>
+                        : <><Check size={12} />Approve & Send Email</>
+                      }
+                    </button>
+                    <button
+                      onClick={() => handleReject(a.id)}
+                      disabled={!!processing[a.id]}
+                      className="border border-red-400 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs py-1.5 px-3 rounded-lg transition-colors flex items-center gap-1 disabled:opacity-60"
+                    >
+                      {processing[a.id] === 'rejecting'
+                        ? <><Loader size={11} className="animate-spin" />Rejecting...</>
+                        : <><X size={12} />Reject</>
+                      }
+                    </button>
+                  </>
+                }
+              />
+              {errors[a.id] && <p className="text-xs text-red-500 mt-1 px-1">{errors[a.id]}</p>}
+            </div>
           ))}
         </div>
       )}
