@@ -91,6 +91,21 @@ export const blogService = {
   },
 }
 
+export const contactService = {
+  async submit(data) {
+    return supabase.from('contact_submissions').insert([data])
+  },
+  async getAll() {
+    return supabase.from('contact_submissions').select('*').order('created_at', { ascending: false })
+  },
+  async markRead(id) {
+    return supabase.from('contact_submissions').update({ read: true }).eq('id', id)
+  },
+  async delete(id) {
+    return supabase.from('contact_submissions').delete().eq('id', id)
+  },
+}
+
 export const adminService = {
   async createAdmin(email, password) {
     return invokeWithAuth('create-admin', { email, password })

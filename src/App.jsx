@@ -30,6 +30,7 @@ import AdminManage from './pages/admin/AdminManage'
 import AdminProfile from './pages/admin/AdminProfile'
 import AdminBlog from './pages/admin/AdminBlog'
 import AdminGallery from './pages/admin/AdminGallery'
+import AdminSubmissions from './pages/admin/AdminSubmissions'
 
 export default function App() {
   return (
@@ -64,6 +65,7 @@ export default function App() {
               <Route path="profile" element={<AdminProfile />} />
               <Route path="blog" element={<AdminBlog />} />
               <Route path="gallery" element={<AdminGallery />} />
+              <Route path="submissions" element={<AdminSubmissions />} />
             </Route>
           </Routes>
         </BrowserRouter>
