@@ -127,3 +127,48 @@ alter table public.alumni add column if not exists avatar_url text;
 -- Add new columns if they don't exist (for existing databases)
 alter table public.alumni add column if not exists pending_password text;
 alter table public.alumni add column if not exists avatar_url text;
+
+-- ============================================================
+-- IMPORTANT: Run this in Supabase SQL Editor to fix storage 400 errors
+-- ============================================================
+
+-- Create profiles bucket if it doesn't exist
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'profiles',
+  'profiles',
+  true,
+  5242880,
+  array['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+)
+on conflict (id) do update set
+  public = true,
+  file_size_limit = 5242880;
+
+-- Drop old policies if they exist
+drop policy if exists "Users can upload avatars" on storage.objects;
+drop policy if exists "Users can update avatars" on storage.objects;
+drop policy if exists "Public can view avatars" on storage.objects;
+drop policy if exists "Users can delete avatars" on storage.objects;
+
+-- Allow authenticated users to upload
+create policy "Users can upload avatars" on storage.objects
+  for insert with check (
+    bucket_id = 'profiles' and auth.role() = 'authenticated'
+  );
+
+-- Allow authenticated users to update
+create policy "Users can update avatars" on storage.objects
+  for update using (
+    bucket_id = 'profiles' and auth.role() = 'authenticated'
+  );
+
+-- Allow authenticated users to delete their own
+create policy "Users can delete avatars" on storage.objects
+  for delete using (
+    bucket_id = 'profiles' and auth.role() = 'authenticated'
+  );
+
+-- Allow public read
+create policy "Public can view avatars" on storage.objects
+  for select using (bucket_id = 'profiles');

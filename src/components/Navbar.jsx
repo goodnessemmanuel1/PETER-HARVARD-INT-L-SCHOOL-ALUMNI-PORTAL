@@ -45,7 +45,7 @@ export default function Navbar() {
           <motion.div 
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.5 }}
-            className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border-2 border-primary-500/20"
+            className="w-12 h-12 rounded-xl overflow-hidden shadow-lg border-2 border-primary-500/20"
           >
             <img src="/favicon.ico" alt="Peter Harvard" className="w-full h-full object-cover" />
           </motion.div>

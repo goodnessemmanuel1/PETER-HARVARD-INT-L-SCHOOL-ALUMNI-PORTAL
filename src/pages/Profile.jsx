@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../services/supabase'
-import { User, Mail, Phone, Briefcase, FileText, Camera, Save, KeyRound, Eye, EyeOff, GraduationCap } from 'lucide-react'
+import { User, Phone, Briefcase, FileText, Camera, Save, KeyRound, Eye, EyeOff, GraduationCap, AlertCircle, CheckCircle } from 'lucide-react'
 import { Spinner, PageLoader } from '../components/Loader'
 import { Navigate } from 'react-router-dom'
 
@@ -15,8 +15,9 @@ export default function Profile() {
   const [uploading, setUploading] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState(null)
   const [msg, setMsg] = useState({ type: '', text: '' })
+  const [avatarMsg, setAvatarMsg] = useState({ type: '', text: '' })
 
-  const [pwForm, setPwForm] = useState({ current: '', newPw: '', confirm: '' })
+  const [pwForm, setPwForm] = useState({ newPw: '', confirm: '' })
   const [showPw, setShowPw] = useState(false)
   const [pwSaving, setPwSaving] = useState(false)
   const [pwMsg, setPwMsg] = useState({ type: '', text: '' })
@@ -46,16 +47,31 @@ export default function Profile() {
   const handleAvatarChange = async e => {
     const file = e.target.files?.[0]
     if (!file) return
+    if (file.size > 5 * 1024 * 1024) {
+      setAvatarMsg({ type: 'error', text: 'Image must be under 5MB' })
+      return
+    }
     setUploading(true)
-    const ext = file.name.split('.').pop()
-    const path = `avatars/${user.id}.${ext}`
-    const { error: upErr } = await supabase.storage.from('profiles').upload(path, file, { upsert: true })
-    if (upErr) { setMsg({ type: 'error', text: upErr.message }); setUploading(false); return }
+    setAvatarMsg({ type: '', text: '' })
+
+    const ext = file.name.split('.').pop().toLowerCase()
+    const path = `avatars/${user.id}-${Date.now()}.${ext}`
+
+    const { error: upErr } = await supabase.storage
+      .from('profiles')
+      .upload(path, file, { upsert: true, contentType: file.type })
+
+    if (upErr) {
+      setAvatarMsg({ type: 'error', text: `Upload failed: ${upErr.message}. Make sure the "profiles" storage bucket exists in Supabase.` })
+      setUploading(false)
+      return
+    }
+
     const { data: { publicUrl } } = supabase.storage.from('profiles').getPublicUrl(path)
     await supabase.from('alumni').update({ avatar_url: publicUrl }).eq('id', alumni.id)
     setAvatarUrl(publicUrl)
     setUploading(false)
-    setMsg({ type: 'success', text: 'Profile photo updated!' })
+    setAvatarMsg({ type: 'success', text: 'Profile photo updated!' })
   }
 
   const handleSave = async e => {
@@ -76,102 +92,132 @@ export default function Profile() {
     const { error } = await updatePassword(pwForm.newPw)
     setPwSaving(false)
     setPwMsg(error ? { type: 'error', text: error.message } : { type: 'success', text: 'Password updated!' })
-    if (!error) setPwForm({ current: '', newPw: '', confirm: '' })
+    if (!error) setPwForm({ newPw: '', confirm: '' })
   }
 
+  const MsgBox = ({ msg }) => msg.text ? (
+    <div className={`flex items-start gap-2 text-sm p-3 rounded-lg ${
+      msg.type === 'error'
+        ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400'
+        : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400'
+    }`}>
+      {msg.type === 'error' ? <AlertCircle size={15} className="flex-shrink-0 mt-0.5" /> : <CheckCircle size={15} className="flex-shrink-0 mt-0.5" />}
+      {msg.text}
+    </div>
+  ) : null
+
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 animate-fade-in">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 animate-fade-in">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Profile</h1>
 
-      <div className="flex flex-col gap-6">
-        {/* Avatar */}
-        <div className="card p-6 animate-fade-in-up">
-          <div className="flex items-center gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left — Avatar + Info */}
+        <div className="flex flex-col gap-5">
+          {/* Avatar Card */}
+          <div className="card p-6 flex flex-col items-center text-center gap-4 animate-fade-in-up">
             <div className="relative">
               {avatarUrl ? (
-                <img src={avatarUrl} alt={alumni.full_name} className="w-20 h-20 rounded-full object-cover border-2 border-primary-200 dark:border-primary-800" />
+                <img
+                  src={avatarUrl}
+                  alt={alumni.full_name}
+                  className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-primary-200 dark:border-primary-800 shadow-lg"
+                />
               ) : (
-                <div className="w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 flex items-center justify-center font-bold text-2xl border-2 border-primary-200 dark:border-primary-800">
+                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 flex items-center justify-center font-bold text-4xl border-4 border-primary-200 dark:border-primary-800 shadow-lg">
                   {initials}
                 </div>
               )}
               <button
                 onClick={() => fileRef.current?.click()}
                 disabled={uploading}
-                className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-primary-600 hover:bg-primary-700 text-white flex items-center justify-center shadow-md transition-colors"
+                className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-primary-600 hover:bg-primary-700 text-white flex items-center justify-center shadow-lg transition-colors border-2 border-white dark:border-gray-900"
               >
-                {uploading ? <Spinner size={12} /> : <Camera size={13} />}
+                {uploading ? <Spinner size={14} /> : <Camera size={15} />}
               </button>
-              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
+              <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleAvatarChange} />
             </div>
+
             <div>
-              <h2 className="font-semibold text-gray-900 dark:text-white text-lg">{alumni.full_name}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5 mt-0.5">
+              <h2 className="font-bold text-gray-900 dark:text-white text-lg">{alumni.full_name}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-1.5 mt-1">
                 <GraduationCap size={13} />Class of {alumni.graduation_year}
               </p>
-              <p className="text-xs text-gray-400 mt-1">{user.email}</p>
+              <p className="text-xs text-gray-400 mt-1 break-all">{user.email}</p>
             </div>
+
+            <MsgBox msg={avatarMsg} />
+            <p className="text-xs text-gray-400">JPG, PNG or WebP · Max 5MB</p>
+            <button
+              onClick={() => fileRef.current?.click()}
+              disabled={uploading}
+              className="btn-outline text-sm w-full flex items-center justify-center gap-2"
+            >
+              {uploading ? <><Spinner size={13} />Uploading...</> : <><Camera size={14} />Change Photo</>}
+            </button>
           </div>
         </div>
 
-        {/* Edit Profile */}
-        <form onSubmit={handleSave} className="card p-6 flex flex-col gap-5 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-          <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <User size={16} className="text-primary-500" />Edit Profile
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><User size={12} />Full Name</label>
-              <input value={form.full_name || ''} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} className="input" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><Phone size={12} />Phone</label>
-              <input value={form.phone || ''} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className="input" placeholder="+1 234 567 8900" />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><Briefcase size={12} />Current Occupation</label>
-            <input value={form.current_occupation || ''} onChange={e => setForm(f => ({ ...f, current_occupation: e.target.value }))} className="input" placeholder="Software Engineer at Acme" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><FileText size={12} />Bio</label>
-            <textarea value={form.bio || ''} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} rows={4} className="input resize-none" placeholder="Tell us about yourself..." />
-          </div>
-          {msg.text && <p className={`text-sm ${msg.type === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>{msg.text}</p>}
-          <button type="submit" disabled={saving} className="btn-primary self-start flex items-center gap-2">
-            {saving ? <><Spinner size={14} />Saving...</> : <><Save size={14} />Save Changes</>}
-          </button>
-        </form>
-
-        {/* Change Password */}
-        <form onSubmit={handlePasswordChange} className="card p-6 flex flex-col gap-5 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-          <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <KeyRound size={16} className="text-primary-500" />Change Password
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New Password</label>
-              <div className="relative">
-                <input type={showPw ? 'text' : 'password'} minLength={8} value={pwForm.newPw}
-                  onChange={e => setPwForm(f => ({ ...f, newPw: e.target.value }))}
-                  className="input pr-9" placeholder="Min. 8 characters" />
-                <button type="button" onClick={() => setShowPw(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
+        {/* Right — Edit + Password */}
+        <div className="lg:col-span-2 flex flex-col gap-5">
+          {/* Edit Profile */}
+          <form onSubmit={handleSave} className="card p-5 sm:p-6 flex flex-col gap-5 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <User size={16} className="text-primary-500" />Edit Profile
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><User size={12} />Full Name</label>
+                <input value={form.full_name || ''} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} className="input" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><Phone size={12} />Phone</label>
+                <input value={form.phone || ''} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className="input" placeholder="+1 234 567 8900" />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
-              <input type="password" value={pwForm.confirm}
-                onChange={e => setPwForm(f => ({ ...f, confirm: e.target.value }))}
-                className="input" placeholder="Repeat password" />
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><Briefcase size={12} />Current Occupation</label>
+              <input value={form.current_occupation || ''} onChange={e => setForm(f => ({ ...f, current_occupation: e.target.value }))} className="input" placeholder="Software Engineer at Acme" />
             </div>
-          </div>
-          {pwMsg.text && <p className={`text-sm ${pwMsg.type === 'error' ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>{pwMsg.text}</p>}
-          <button type="submit" disabled={pwSaving} className="btn-primary self-start flex items-center gap-2">
-            {pwSaving ? <><Spinner size={14} />Updating...</> : <><KeyRound size={14} />Update Password</>}
-          </button>
-        </form>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1.5"><FileText size={12} />Bio</label>
+              <textarea value={form.bio || ''} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} rows={4} className="input resize-none" placeholder="Tell us about yourself..." />
+            </div>
+            <MsgBox msg={msg} />
+            <button type="submit" disabled={saving} className="btn-primary self-start flex items-center gap-2">
+              {saving ? <><Spinner size={14} />Saving...</> : <><Save size={14} />Save Changes</>}
+            </button>
+          </form>
+
+          {/* Change Password */}
+          <form onSubmit={handlePasswordChange} className="card p-5 sm:p-6 flex flex-col gap-5 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+            <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <KeyRound size={16} className="text-primary-500" />Change Password
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New Password</label>
+                <div className="relative">
+                  <input type={showPw ? 'text' : 'password'} minLength={8} value={pwForm.newPw}
+                    onChange={e => setPwForm(f => ({ ...f, newPw: e.target.value }))}
+                    className="input pr-10" placeholder="Min. 8 characters" />
+                  <button type="button" onClick={() => setShowPw(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
+                <input type="password" value={pwForm.confirm}
+                  onChange={e => setPwForm(f => ({ ...f, confirm: e.target.value }))}
+                  className="input" placeholder="Repeat password" />
+              </div>
+            </div>
+            <MsgBox msg={pwMsg} />
+            <button type="submit" disabled={pwSaving} className="btn-primary self-start flex items-center gap-2">
+              {pwSaving ? <><Spinner size={14} />Updating...</> : <><KeyRound size={14} />Update Password</>}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )
