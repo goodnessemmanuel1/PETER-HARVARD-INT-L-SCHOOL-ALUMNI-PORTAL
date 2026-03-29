@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { blogService } from '../../services/api'
-import { BookOpen, PlusCircle, Trash2, X, CalendarDays, Pencil, Save } from 'lucide-react'
+import { supabase } from '../../services/supabase'
+import { BookOpen, PlusCircle, Trash2, X, CalendarDays, Pencil, Save, Upload, Image } from 'lucide-react'
 import { Spinner } from '../../components/Loader'
 import { useAuth } from '../../context/AuthContext'
 
@@ -15,13 +16,17 @@ export default function AdminBlog() {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [form, setForm] = useState(EMPTY)
-  const [editingId, setEditingId] = useState(null) // null = create mode, id = edit mode
+  const [coverFile, setCoverFile] = useState(null)
+  const [coverPreview, setCoverPreview] = useState(null)
+  const [uploadingCover, setUploadingCover] = useState(false)
+  const [editingId, setEditingId] = useState(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [confirmId, setConfirmId] = useState(null)
   const [deletingId, setDeletingId] = useState(null)
   const [showForm, setShowForm] = useState(false)
+  const coverRef = useRef()
 
   const load = async () => {
     setLoading(true)
@@ -35,20 +40,18 @@ export default function AdminBlog() {
   const openCreate = () => {
     setEditingId(null)
     setForm(EMPTY)
+    setCoverFile(null)
+    setCoverPreview(null)
     setError('')
     setSuccess('')
     setShowForm(true)
   }
 
-  const openEdit = (post) => {
+  const openEdit = post => {
     setEditingId(post.id)
-    setForm({
-      title: post.title || '',
-      category: post.category || '',
-      excerpt: post.excerpt || '',
-      content: post.content || '',
-      cover_url: post.cover_url || '',
-    })
+    setForm({ title: post.title || '', category: post.category || '', excerpt: post.excerpt || '', content: post.content || '', cover_url: post.cover_url || '' })
+    setCoverFile(null)
+    setCoverPreview(post.cover_url || null)
     setError('')
     setSuccess('')
     setShowForm(true)
@@ -59,8 +62,18 @@ export default function AdminBlog() {
     setShowForm(false)
     setEditingId(null)
     setForm(EMPTY)
+    setCoverFile(null)
+    setCoverPreview(null)
     setError('')
     setSuccess('')
+  }
+
+  const handleCoverPick = e => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setCoverFile(file)
+    setCoverPreview(URL.createObjectURL(file))
+    setForm(f => ({ ...f, cover_url: '' }))
   }
 
   const handleSubmit = async e => {
@@ -70,23 +83,28 @@ export default function AdminBlog() {
     setError('')
     setSuccess('')
 
+    let cover_url = form.cover_url
+
+    if (coverFile) {
+      setUploadingCover(true)
+      const ext = coverFile.name.split('.').pop()
+      const path = `blog-covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { error: upErr } = await supabase.storage.from('gallery').upload(path, coverFile)
+      setUploadingCover(false)
+      if (upErr) { setError(upErr.message); setSaving(false); return }
+      cover_url = supabase.storage.from('gallery').getPublicUrl(path).data.publicUrl
+    }
+
     if (editingId) {
-      // Update existing post
-      const { error: err } = await blogService.update(editingId, form)
+      const { error: err } = await blogService.update(editingId, { ...form, cover_url })
       setSaving(false)
       if (err) { setError(err.message); return }
-      setSuccess('Post updated!')
-      setPosts(p => p.map(x => x.id === editingId ? { ...x, ...form } : x))
+      setPosts(p => p.map(x => x.id === editingId ? { ...x, ...form, cover_url } : x))
       closeForm()
     } else {
-      // Create new post
-      const { error: err } = await blogService.create({
-        ...form,
-        author: user?.email?.split('@')[0] || 'Admin',
-      })
+      const { error: err } = await blogService.create({ ...form, cover_url, author: user?.email?.split('@')[0] || 'Admin' })
       setSaving(false)
       if (err) { setError(err.message); return }
-      setSuccess('Post published!')
       closeForm()
       load()
     }
@@ -108,10 +126,7 @@ export default function AdminBlog() {
           <BookOpen size={22} className="text-primary-600 dark:text-primary-400" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Blog Posts</h1>
         </div>
-        <button
-          onClick={showForm ? closeForm : openCreate}
-          className="btn-primary text-sm flex items-center gap-2"
-        >
+        <button onClick={showForm ? closeForm : openCreate} className="btn-primary text-sm flex items-center gap-2">
           {showForm ? <><X size={15} />Cancel</> : <><PlusCircle size={15} />New Post</>}
         </button>
       </div>
@@ -123,6 +138,7 @@ export default function AdminBlog() {
           <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             {editingId ? <><Pencil size={16} className="text-primary-500" />Edit Post</> : <><PlusCircle size={16} className="text-primary-500" />New Blog Post</>}
           </h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title *</label>
@@ -133,10 +149,41 @@ export default function AdminBlog() {
               <input value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} className="input" placeholder="e.g. News, Events, Alumni" />
             </div>
           </div>
+
+          {/* Cover Image */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cover Image URL</label>
-            <input value={form.cover_url} onChange={e => setForm(f => ({ ...f, cover_url: e.target.value }))} className="input" placeholder="https://..." />
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cover Image</label>
+            <div className="flex items-start gap-4">
+              <div
+                onClick={() => coverRef.current?.click()}
+                className="relative w-36 h-24 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center cursor-pointer hover:border-primary-500 transition-colors overflow-hidden flex-shrink-0 bg-gray-50 dark:bg-gray-800"
+              >
+                {coverPreview
+                  ? <img src={coverPreview} alt="cover preview" className="w-full h-full object-cover" />
+                  : <div className="flex flex-col items-center gap-1 text-gray-400"><Image size={22} /><span className="text-xs font-medium">Click to upload</span></div>
+                }
+                {uploadingCover && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <Spinner size={18} />
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 flex flex-col gap-2">
+                <button type="button" onClick={() => coverRef.current?.click()} className="btn-outline text-sm py-1.5 px-3 flex items-center gap-1.5 w-fit">
+                  <Upload size={13} />Upload Image
+                </button>
+                <p className="text-xs text-gray-400">Or paste an image URL:</p>
+                <input
+                  value={form.cover_url}
+                  onChange={e => { setForm(f => ({ ...f, cover_url: e.target.value })); if (e.target.value) { setCoverFile(null); setCoverPreview(e.target.value) } else { setCoverPreview(null) } }}
+                  className="input text-sm"
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+            <input ref={coverRef} type="file" accept="image/*" className="hidden" onChange={handleCoverPick} />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Excerpt (short summary)</label>
             <input value={form.excerpt} onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))} className="input" placeholder="Brief description shown on the blog list..." />
@@ -145,15 +192,14 @@ export default function AdminBlog() {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Content *</label>
             <textarea value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} rows={10} className="input resize-y" placeholder="Write your full post here..." required />
           </div>
+
           {error && <p className="text-sm text-red-500">{error}</p>}
-          {success && <p className="text-sm text-green-600 dark:text-green-400">{success}</p>}
+
           <div className="flex items-center gap-3">
-            <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2">
+            <button type="submit" disabled={saving || uploadingCover} className="btn-primary flex items-center gap-2">
               {saving
                 ? <><Spinner size={14} />{editingId ? 'Saving...' : 'Publishing...'}</>
-                : editingId
-                  ? <><Save size={14} />Save Changes</>
-                  : <><PlusCircle size={14} />Publish Post</>}
+                : editingId ? <><Save size={14} />Save Changes</> : <><PlusCircle size={14} />Publish Post</>}
             </button>
             <button type="button" onClick={closeForm} className="btn-outline flex items-center gap-2 text-sm">
               <X size={14} />Cancel
@@ -193,8 +239,12 @@ export default function AdminBlog() {
         <div className="flex flex-col gap-4">
           {posts.map(post => (
             <div key={post.id} className={`card p-5 flex items-start gap-4 transition-all ${editingId === post.id ? 'ring-2 ring-primary-500' : ''}`}>
-              {post.cover_url && (
+              {post.cover_url ? (
                 <img src={post.cover_url} alt={post.title} className="w-20 h-20 rounded-xl object-cover flex-shrink-0" />
+              ) : (
+                <div className="w-20 h-20 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                  <Image size={22} className="text-gray-300" />
+                </div>
               )}
               <div className="flex-1 min-w-0">
                 {post.category && <span className="text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400">{post.category}</span>}
@@ -207,18 +257,10 @@ export default function AdminBlog() {
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <button
-                  onClick={() => openEdit(post)}
-                  className="p-2 rounded-lg text-gray-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
-                  title="Edit post"
-                >
+                <button onClick={() => openEdit(post)} className="p-2 rounded-lg text-gray-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors" title="Edit post">
                   <Pencil size={15} />
                 </button>
-                <button
-                  onClick={() => setConfirmId(post.id)}
-                  className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                  title="Delete post"
-                >
+                <button onClick={() => setConfirmId(post.id)} className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Delete post">
                   <Trash2 size={15} />
                 </button>
               </div>

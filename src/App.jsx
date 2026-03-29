@@ -21,6 +21,7 @@ import Profile from './pages/Profile'
 import Dashboard from './pages/Dashboard'
 import Gallery from './pages/Gallery'
 import Blog from './pages/Blog'
+import BlogPost from './pages/BlogPost'
 
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminApprovals from './pages/admin/AdminApprovals'
@@ -53,6 +54,7 @@ export default function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/admin/login" element={<AdminLogin />} />
