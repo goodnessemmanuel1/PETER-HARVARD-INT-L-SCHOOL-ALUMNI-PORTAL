@@ -45,7 +45,7 @@ export const alumniService = {
   },
 
   async reject(id) {
-    return supabase.from('alumni').update({ status: 'rejected' }).eq('id', id)
+    return invokeWithAuth('reject-alumni', { alumniId: id })
   },
 
   async delete(id) {

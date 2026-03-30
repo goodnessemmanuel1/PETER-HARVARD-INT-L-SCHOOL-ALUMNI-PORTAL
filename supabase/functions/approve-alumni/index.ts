@@ -6,28 +6,35 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resendApiKey }) {
+async function sendApprovalEmail({ to, fullName, email, password, loginUrl, resendApiKey }) {
   const html = `
     <!DOCTYPE html>
     <html>
     <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
-    <body style="margin:0;padding:0;background:#f4f4f5;font-family:'Segoe UI',Arial,sans-serif;">
-      <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:40px 0;">
+    <body style="margin:0;padding:0;background:#f0fdf4;font-family:'Segoe UI',Arial,sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;padding:40px 0;">
         <tr><td align="center">
           <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);max-width:600px;width:100%;">
             <tr>
-              <td style="background:linear-gradient(135deg,#1d4ed8,#1e40af);padding:40px 40px 32px;text-align:center;">
+              <td style="background:linear-gradient(135deg,#16a34a,#15803d);padding:40px 40px 32px;text-align:center;">
+                <div style="width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;">
+                  <span style="font-size:32px;">🎓</span>
+                </div>
                 <h1 style="color:#ffffff;margin:0 0 8px;font-size:26px;font-weight:900;letter-spacing:-0.5px;">
                   Peter Harvard INT'L School
                 </h1>
-                <p style="color:rgba(255,255,255,0.75);margin:0;font-size:14px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">
+                <p style="color:rgba(255,255,255,0.8);margin:0;font-size:14px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">
                   Alumni Portal
                 </p>
               </td>
             </tr>
             <tr>
               <td style="padding:40px;">
-                <h2 style="color:#111827;margin:0 0 8px;font-size:22px;font-weight:800;">
+                <div style="background:#f0fdf4;border:2px solid #bbf7d0;border-radius:12px;padding:20px;margin-bottom:28px;text-align:center;">
+                  <p style="color:#15803d;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">Registration Status</p>
+                  <p style="color:#16a34a;font-size:22px;font-weight:900;margin:0;">✅ Approved</p>
+                </div>
+                <h2 style="color:#111827;margin:0 0 12px;font-size:22px;font-weight:800;">
                   Welcome, ${fullName}! 🎉
                 </h2>
                 <p style="color:#6b7280;margin:0 0 28px;font-size:15px;line-height:1.6;">
@@ -53,7 +60,7 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
                             <span style="color:#6b7280;font-size:13px;font-weight:600;">Password</span>
                           </td>
                           <td style="padding:8px 0;text-align:right;">
-                            <span style="color:#1d4ed8;font-size:15px;font-weight:800;font-family:monospace;background:#eff6ff;padding:4px 10px;border-radius:6px;">${password}</span>
+                            <span style="color:#16a34a;font-size:15px;font-weight:800;font-family:monospace;background:#f0fdf4;padding:4px 10px;border-radius:6px;">${password}</span>
                           </td>
                         </tr>
                       </table>
@@ -65,7 +72,7 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
                 </p>
                 <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
                   <tr>
-                    <td style="background:#1d4ed8;border-radius:10px;">
+                    <td style="background:#16a34a;border-radius:10px;">
                       <a href="${loginUrl}" style="display:inline-block;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 32px;">
                         Login to Your Account →
                       </a>
@@ -73,13 +80,14 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
                   </tr>
                 </table>
                 <p style="color:#9ca3af;font-size:13px;margin:0;line-height:1.6;">
-                  If you have any issues logging in, please contact us at
-                  <a href="mailto:anointedthedeveloper@gmail.com" style="color:#1d4ed8;">anointedthedeveloper@gmail.com</a>
+                  If you have any issues logging in, feel free to reach out:<br/>
+                  📧 <a href="mailto:anointedthedeveloper@gmail.com" style="color:#16a34a;">anointedthedeveloper@gmail.com</a><br/>
+                  📞 <a href="tel:+2348033570685" style="color:#16a34a;">+234 803 357 0685</a>
                 </p>
               </td>
             </tr>
             <tr>
-              <td style="background:#f8fafc;border-top:1px solid #e5e7eb;padding:20px 40px;text-align:center;">
+              <td style="background:#f0fdf4;border-top:2px solid #bbf7d0;padding:20px 40px;text-align:center;">
                 <p style="color:#9ca3af;font-size:12px;margin:0;">
                   © ${new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal ·
                   <a href="https://anobyte.online" style="color:#6b7280;text-decoration:none;">Powered by Anobyte</a>
@@ -95,26 +103,20 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${resendApiKey}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Authorization': `Bearer ${resendApiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: 'Peter Harvard Alumni Portal <noreply@anobyte.online>',
       to: [to],
-      subject: 'Your Alumni Account Has Been Approved!',
+      subject: '✅ Your Alumni Registration Has Been Approved!',
       html,
     }),
   })
-
   if (!res.ok) throw new Error(`Email send failed: ${await res.text()}`)
   return res.json()
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { status: 200, headers: corsHeaders })
-  }
+  if (req.method === 'OPTIONS') return new Response('ok', { status: 200, headers: corsHeaders })
 
   try {
     const authHeader = req.headers.get('Authorization')
@@ -134,11 +136,7 @@ Deno.serve(async (req) => {
     if (!alumniId) throw new Error('alumniId is required')
 
     const { data: alumni, error: fetchError } = await supabaseAdmin
-      .from('alumni')
-      .select('*')
-      .eq('id', alumniId)
-      .single()
-
+      .from('alumni').select('*').eq('id', alumniId).single()
     if (fetchError || !alumni) throw new Error('Alumni not found')
 
     const password = alumni.pending_password ||
@@ -148,13 +146,8 @@ Deno.serve(async (req) => {
       email: alumni.email,
       password,
       email_confirm: true,
-      user_metadata: {
-        role: 'alumni',
-        alumni_id: alumniId,
-        full_name: alumni.full_name,
-      },
+      user_metadata: { role: 'alumni', alumni_id: alumniId, full_name: alumni.full_name },
     })
-
     if (authError) throw authError
 
     await supabaseAdmin
@@ -164,30 +157,24 @@ Deno.serve(async (req) => {
 
     const siteUrl = Deno.env.get('SITE_URL') || 'https://peterharvardalumni.vercel.app'
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
-
     if (resendApiKey) {
       try {
-        await sendWelcomeEmail({
-          to: alumni.email,
-          fullName: alumni.full_name,
-          email: alumni.email,
-          password,
-          loginUrl: `${siteUrl}/login`,
-          resendApiKey,
+        await sendApprovalEmail({
+          to: alumni.email, fullName: alumni.full_name,
+          email: alumni.email, password,
+          loginUrl: `${siteUrl}/login`, resendApiKey,
         })
       } catch (emailErr) {
-        console.error('Email send failed (non-fatal):', emailErr.message)
+        console.error('Approval email failed (non-fatal):', emailErr.message)
       }
     }
 
     return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 })
