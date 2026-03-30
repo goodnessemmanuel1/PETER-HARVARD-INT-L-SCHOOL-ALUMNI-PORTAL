@@ -6,7 +6,7 @@ import { supabase } from '../services/supabase'
 import { eventsService } from '../services/api'
 import {
   GraduationCap, Briefcase, CalendarDays, Users, Star,
-  ChevronRight, Camera, Clock, CheckCircle, AlertCircle, Edit
+  ChevronRight, Camera, Clock, CheckCircle, AlertCircle, Edit, Inbox
 } from 'lucide-react'
 import { PageLoader } from '../components/Loader'
 import EventCard from '../components/EventCard'
@@ -170,6 +170,7 @@ export default function Dashboard() {
                 {[
                   { to: '/directory', icon: <Users size={20} />, label: 'Alumni Directory', desc: 'Browse all graduates' },
                   { to: '/events', icon: <CalendarDays size={20} />, label: 'Events', desc: 'School events & news' },
+                  { to: '/inbox', icon: <Inbox size={20} />, label: 'Inbox', desc: 'Messages from admin' },
                   { to: '/profile', icon: <Edit size={20} />, label: 'Edit Profile', desc: 'Update your info' },
                 ].map(l => (
                   <Link key={l.to} to={l.to} className="group flex flex-col gap-2 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 hover:bg-primary-50 dark:hover:bg-primary-900/20 border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 transition-all">

@@ -22,6 +22,7 @@ import Dashboard from './pages/Dashboard'
 import Gallery from './pages/Gallery'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
+import AlumniInbox from './pages/AlumniInbox'
 
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminApprovals from './pages/admin/AdminApprovals'
@@ -33,6 +34,7 @@ import AdminBlog from './pages/admin/AdminBlog'
 import AdminGallery from './pages/admin/AdminGallery'
 import AdminSubmissions from './pages/admin/AdminSubmissions'
 import AdminBugReports from './pages/admin/AdminBugReports'
+import AdminMessages from './pages/admin/AdminMessages'
 import AdminLogin from './pages/admin/AdminLogin'
 
 export default function App() {
@@ -53,6 +55,7 @@ export default function App() {
               <Route path="/alumni/:id" element={<AlumniProfile />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/inbox" element={<AlumniInbox />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPost />} />
@@ -72,6 +75,7 @@ export default function App() {
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="submissions" element={<AdminSubmissions />} />
               <Route path="bug-reports" element={<AdminBugReports />} />
+              <Route path="messages" element={<AdminMessages />} />
             </Route>
           </Routes>
         </BrowserRouter>

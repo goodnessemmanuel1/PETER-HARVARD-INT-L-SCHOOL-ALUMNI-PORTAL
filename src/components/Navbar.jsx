@@ -1,11 +1,12 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
+import { supabase } from '../services/supabase'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Sun, Moon, Menu, X, Home,
-  Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone, LayoutDashboard, UserCircle, Images, BookOpen
+  Users, CalendarDays, LogOut, LogIn, UserPlus, Info, Phone, LayoutDashboard, UserCircle, Images, BookOpen, Inbox
 } from 'lucide-react'
 
 export default function Navbar() {
@@ -14,12 +15,27 @@ export default function Navbar() {
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [unread, setUnread] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Load unread count for alumni
+  useEffect(() => {
+    if (!user || isAdmin) return
+    async function loadUnread() {
+      const { data: alumni } = await supabase.from('alumni').select('id').eq('auth_user_id', user.id).maybeSingle()
+      if (!alumni) return
+      const { data: allMsgs } = await supabase.from('messages').select('id')
+      const { data: readMsgs } = await supabase.from('message_reads').select('message_id').eq('alumni_id', alumni.id)
+      const readIds = new Set((readMsgs || []).map(r => r.message_id))
+      setUnread((allMsgs || []).filter(m => !readIds.has(m.id)).length)
+    }
+    loadUnread()
+  }, [user, isAdmin])
 
   const handleSignOut = async () => { await signOut(); navigate('/') }
 
@@ -93,6 +109,25 @@ export default function Navbar() {
               )}
             </NavLink>
           ))}
+          {user && !isAdmin && (
+            <NavLink to="/inbox"
+              className={({ isActive }) =>
+                `relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-semibold'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/60'
+                }`}>
+              {({ isActive }) => (
+                <>
+                  <span className={isActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'}>
+                    <Inbox size={15} />
+                  </span>
+                  Inbox
+                  {unread > 0 && <span className="bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{unread}</span>}
+                </>
+              )}
+            </NavLink>
+          )}
           {isAdmin && (
             <NavLink
               to="/admin"
@@ -210,9 +245,14 @@ export default function Navbar() {
                 ) : (
                   <>
                     {!isAdmin && (
-                      <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-all">
-                        <LayoutDashboard size={16} />My Dashboard
-                      </Link>
+                      <>
+                        <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-all">
+                          <LayoutDashboard size={16} />My Dashboard
+                        </Link>
+                        <Link to="/inbox" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-all">
+                          <Inbox size={16} />Inbox{unread > 0 && <span className="ml-auto bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{unread}</span>}
+                        </Link>
+                      </>
                     )}
                     <Link
                       to={isAdmin ? '/admin/profile' : '/profile'}

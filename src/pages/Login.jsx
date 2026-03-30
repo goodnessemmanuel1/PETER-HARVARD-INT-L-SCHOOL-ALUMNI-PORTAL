@@ -66,7 +66,13 @@ export default function Login() {
   }
 
   const HeroPanel = () => (
-    <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary-700 to-primary-900 text-white p-12 w-[45%] flex-shrink-0">
+    <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary-700 to-primary-900 text-white p-12 w-[45%] flex-shrink-0 relative overflow-hidden">
+      {/* Green decorative squares */}
+      <div className="absolute top-10 right-8 w-16 h-16 bg-green-400/20 rounded-2xl rotate-12 pointer-events-none" />
+      <div className="absolute top-32 right-16 w-8 h-8 bg-green-400/15 rounded-lg rotate-45 pointer-events-none" />
+      <div className="absolute bottom-24 right-6 w-12 h-12 bg-green-500/20 rounded-xl -rotate-12 pointer-events-none" />
+      <div className="absolute bottom-48 right-20 w-5 h-5 bg-green-300/20 rounded rotate-12 pointer-events-none" />
+      <div className="absolute top-1/2 right-4 w-6 h-6 bg-green-400/10 rounded-md rotate-45 pointer-events-none" />
       <div className="flex items-center gap-3">
         <img src="/assets/phislogo.png" alt="PHIS" className="w-12 h-12 object-contain" />
         <div>
