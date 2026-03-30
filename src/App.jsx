@@ -34,7 +34,6 @@ import AdminGallery from './pages/admin/AdminGallery'
 import AdminSubmissions from './pages/admin/AdminSubmissions'
 import AdminBugReports from './pages/admin/AdminBugReports'
 import AdminLogin from './pages/admin/AdminLogin'
-import CookieBanner from './components/CookieBanner'
 
 export default function App() {
   return (
@@ -42,7 +41,6 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <ScrollToTop />
-          <CookieBanner />
           <Routes>
             <Route element={<PublicLayout />}>
               <Route path="/" element={<Home />} />
