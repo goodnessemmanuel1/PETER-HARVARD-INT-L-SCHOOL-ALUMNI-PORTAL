@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
       .from('alumni')
       .select('avatar_url')
       .eq('auth_user_id', u.id)
-      .single()
+      .maybeSingle()
     setAvatarUrl(data?.avatar_url || null)
   }
 

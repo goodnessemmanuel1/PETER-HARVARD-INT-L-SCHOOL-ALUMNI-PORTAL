@@ -113,7 +113,7 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'Peter Harvard Alumni Portal <noreply@anobyte.online>',
+      from: 'Peter Harvard Alumni Portal <onboarding@resend.dev>',
       to: [to],
       subject: '🎓 Your Alumni Account Has Been Approved!',
       html,
