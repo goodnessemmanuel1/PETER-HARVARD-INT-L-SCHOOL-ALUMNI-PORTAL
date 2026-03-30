@@ -142,6 +142,11 @@ Deno.serve(async (req) => {
     const password = alumni.pending_password ||
       Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-4).toUpperCase() + '!2'
 
+    // If auth user already exists for this email, delete it first to avoid 409
+    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers()
+    const existing = existingUsers?.users?.find(u => u.email === alumni.email)
+    if (existing) await supabaseAdmin.auth.admin.deleteUser(existing.id)
+
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email: alumni.email,
       password,
