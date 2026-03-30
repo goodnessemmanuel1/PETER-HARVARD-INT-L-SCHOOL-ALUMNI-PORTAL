@@ -17,8 +17,8 @@ async function sendRejectionEmail({ to, fullName, resendApiKey }) {
           <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);max-width:600px;width:100%;">
             <tr>
               <td style="background:linear-gradient(135deg,#dc2626,#b91c1c);padding:40px 40px 32px;text-align:center;">
-                <div style="width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;">
-                  <span style="font-size:32px;">📋</span>
+                <div style="width:80px;height:80px;background:#ffffff;border-radius:50%;display:inline-block;margin-bottom:16px;overflow:hidden;">
+                  <img src="https://peterharvardalumni.vercel.app/assets/phislogo.png" alt="PHIS Logo" width="80" height="80" style="width:80px;height:80px;object-fit:contain;border-radius:50%;" />
                 </div>
                 <h1 style="color:#ffffff;margin:0 0 8px;font-size:26px;font-weight:900;letter-spacing:-0.5px;">
                   Peter Harvard INT'L School

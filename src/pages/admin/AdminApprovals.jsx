@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { alumniService } from '../../services/api'
-import { CheckSquare, Check, X, Loader, GraduationCap, Briefcase, Mail, Phone, User } from 'lucide-react'
+import { supabase } from '../../services/supabase'
+import { CheckSquare, Check, X, Loader, GraduationCap, Briefcase, Mail, Phone } from 'lucide-react'
 import { CardSkeleton } from '../../components/Loader'
 
 export default function AdminApprovals() {
@@ -15,7 +16,22 @@ export default function AdminApprovals() {
     setLoading(false)
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load()
+
+    // Realtime subscription — auto-updates when new pending registrations arrive
+    const channel = supabase
+      .channel('pending-approvals')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'alumni',
+        filter: 'status=eq.pending',
+      }, () => load())
+      .subscribe()
+
+    return () => supabase.removeChannel(channel)
+  }, [])
 
   const handleApprove = async (id) => {
     setProcessing(p => ({ ...p, [id]: 'approving' }))
