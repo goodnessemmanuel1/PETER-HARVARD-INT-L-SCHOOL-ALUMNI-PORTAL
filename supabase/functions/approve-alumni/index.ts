@@ -15,8 +15,6 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
       <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:40px 0;">
         <tr><td align="center">
           <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);max-width:600px;width:100%;">
-            
-            <!-- Header -->
             <tr>
               <td style="background:linear-gradient(135deg,#1d4ed8,#1e40af);padding:40px 40px 32px;text-align:center;">
                 <h1 style="color:#ffffff;margin:0 0 8px;font-size:26px;font-weight:900;letter-spacing:-0.5px;">
@@ -27,8 +25,6 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
                 </p>
               </td>
             </tr>
-
-            <!-- Body -->
             <tr>
               <td style="padding:40px;">
                 <h2 style="color:#111827;margin:0 0 8px;font-size:22px;font-weight:800;">
@@ -37,8 +33,6 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
                 <p style="color:#6b7280;margin:0 0 28px;font-size:15px;line-height:1.6;">
                   Your alumni registration has been <strong style="color:#16a34a;">approved</strong>. You are now officially part of the Peter Harvard INT'L School Alumni community.
                 </p>
-
-                <!-- Credentials Box -->
                 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;margin-bottom:28px;">
                   <tr>
                     <td style="padding:24px;">
@@ -66,12 +60,9 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
                     </td>
                   </tr>
                 </table>
-
                 <p style="color:#6b7280;font-size:13px;margin:0 0 24px;line-height:1.6;">
                   ⚠️ For your security, please <strong>change your password</strong> after your first login via your profile settings.
                 </p>
-
-                <!-- CTA Button -->
                 <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
                   <tr>
                     <td style="background:#1d4ed8;border-radius:10px;">
@@ -81,24 +72,20 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
                     </td>
                   </tr>
                 </table>
-
                 <p style="color:#9ca3af;font-size:13px;margin:0;line-height:1.6;">
-                  If you have any issues logging in, please contact us at 
+                  If you have any issues logging in, please contact us at
                   <a href="mailto:anointedthedeveloper@gmail.com" style="color:#1d4ed8;">anointedthedeveloper@gmail.com</a>
                 </p>
               </td>
             </tr>
-
-            <!-- Footer -->
             <tr>
               <td style="background:#f8fafc;border-top:1px solid #e5e7eb;padding:20px 40px;text-align:center;">
                 <p style="color:#9ca3af;font-size:12px;margin:0;">
-                  © ${new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal · 
+                  © ${new Date().getFullYear()} Peter Harvard INT'L School Alumni Portal ·
                   <a href="https://anobyte.online" style="color:#6b7280;text-decoration:none;">Powered by Anobyte</a>
                 </p>
               </td>
             </tr>
-
           </table>
         </td></tr>
       </table>
@@ -113,17 +100,14 @@ async function sendWelcomeEmail({ to, fullName, email, password, loginUrl, resen
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'Peter Harvard Alumni Portal <onboarding@resend.dev>',
+      from: 'Peter Harvard Alumni Portal <noreply@anobyte.online>',
       to: [to],
-      subject: '🎓 Your Alumni Account Has Been Approved!',
+      subject: 'Your Alumni Account Has Been Approved!',
       html,
     }),
   })
 
-  if (!res.ok) {
-    const err = await res.text()
-    throw new Error(`Email send failed: ${err}`)
-  }
+  if (!res.ok) throw new Error(`Email send failed: ${await res.text()}`)
   return res.json()
 }
 
@@ -141,7 +125,6 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'),
     )
 
-    // Verify caller is authenticated
     const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(
       authHeader.replace('Bearer ', '')
     )
@@ -150,7 +133,6 @@ Deno.serve(async (req) => {
     const { alumniId } = await req.json()
     if (!alumniId) throw new Error('alumniId is required')
 
-    // Get alumni record
     const { data: alumni, error: fetchError } = await supabaseAdmin
       .from('alumni')
       .select('*')
@@ -162,7 +144,6 @@ Deno.serve(async (req) => {
     const password = alumni.pending_password ||
       Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-4).toUpperCase() + '!2'
 
-    // Create Supabase auth user
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email: alumni.email,
       password,
@@ -176,19 +157,14 @@ Deno.serve(async (req) => {
 
     if (authError) throw authError
 
-    // Update alumni record
     await supabaseAdmin
       .from('alumni')
-      .update({
-        status: 'approved',
-        auth_user_id: authData.user.id,
-        pending_password: null,
-      })
+      .update({ status: 'approved', auth_user_id: authData.user.id, pending_password: null })
       .eq('id', alumniId)
 
-    // Send custom welcome email with credentials (non-fatal)
-    const siteUrl = Deno.env.get('SITE_URL') || 'https://peter-harvard-int-l-school-alumni-p.vercel.app'
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://peterharvardalumni.vercel.app'
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
+
     if (resendApiKey) {
       try {
         await sendWelcomeEmail({
