@@ -46,7 +46,7 @@ async function sendRejectionEmail({ to, fullName, resendApiKey }) {
                 <div style="background:#fff1f2;border-left:4px solid #dc2626;border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:28px;">
                   <p style="color:#374151;font-size:14px;font-weight:600;margin:0 0 8px;">Think this was a mistake?</p>
                   <p style="color:#6b7280;font-size:13px;margin:0;line-height:1.6;">
-                    If you believe your registration was rejected in error, please contact us and we will review your application again.
+                    If you believe your registration was rejected in error, you are welcome to <strong>register again</strong> with updated information, or contact us directly for clarification.
                   </p>
                 </div>
                 <p style="color:#374151;font-size:14px;font-weight:600;margin:0 0 12px;">Contact us:</p>
@@ -106,13 +106,23 @@ Deno.serve(async (req) => {
     if (!alumniId) throw new Error('alumniId is required')
 
     const { data: alumni, error: fetchError } = await supabaseAdmin
-      .from('alumni').select('id, full_name, email').eq('id', alumniId).single()
+      .from('alumni').select('id, full_name, email, phone, graduation_year, current_occupation, bio, avatar_url').eq('id', alumniId).single()
     if (fetchError || !alumni) throw new Error('Alumni not found')
 
-    await supabaseAdmin
-      .from('alumni')
-      .update({ status: 'rejected', pending_password: null })
-      .eq('id', alumniId)
+    // Archive to rejected_alumni before deleting
+    await supabaseAdmin.from('rejected_alumni').insert([{
+      original_id: alumni.id,
+      full_name: alumni.full_name,
+      email: alumni.email,
+      phone: alumni.phone,
+      graduation_year: alumni.graduation_year,
+      current_occupation: alumni.current_occupation,
+      bio: alumni.bio,
+      avatar_url: alumni.avatar_url,
+    }])
+
+    // Delete from alumni so they can re-register
+    await supabaseAdmin.from('alumni').delete().eq('id', alumniId)
 
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
     if (resendApiKey) {
