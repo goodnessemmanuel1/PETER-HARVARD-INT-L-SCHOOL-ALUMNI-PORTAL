@@ -24,7 +24,8 @@ Deno.serve(async (req) => {
       authHeader.replace('Bearer ', '')
     )
     if (userError || !user) throw new Error('Unauthorized')
-    if (user.user_metadata?.role !== 'admin') throw new Error('Forbidden: admin only')
+    const isAdmin = user.user_metadata?.role === 'admin' || user.app_metadata?.role === 'admin'
+    if (!isAdmin) throw new Error('Forbidden: admin only')
 
     const { data, error } = await supabaseAdmin.auth.admin.listUsers()
     if (error) throw error
