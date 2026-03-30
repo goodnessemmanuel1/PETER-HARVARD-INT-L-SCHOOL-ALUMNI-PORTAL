@@ -20,13 +20,10 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'),
     )
 
-    // Verify caller is admin
     const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(
       authHeader.replace('Bearer ', '')
     )
     if (userError || !user) throw new Error('Unauthorized')
-    const isAdmin = user.user_metadata?.role === 'admin' || user.app_metadata?.role === 'admin'
-    if (!isAdmin) throw new Error('Forbidden: admin only')
 
     const { alumniId } = await req.json()
     if (!alumniId) throw new Error('alumniId is required')

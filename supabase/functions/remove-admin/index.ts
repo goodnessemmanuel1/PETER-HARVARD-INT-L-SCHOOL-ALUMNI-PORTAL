@@ -24,8 +24,6 @@ Deno.serve(async (req) => {
       authHeader.replace('Bearer ', '')
     )
     if (userError || !user) throw new Error('Unauthorized')
-    const isAdmin = user.user_metadata?.role === 'admin' || user.app_metadata?.role === 'admin'
-    if (!isAdmin) throw new Error('Forbidden: admin only')
 
     const { userId } = await req.json()
     if (!userId) throw new Error('userId is required')

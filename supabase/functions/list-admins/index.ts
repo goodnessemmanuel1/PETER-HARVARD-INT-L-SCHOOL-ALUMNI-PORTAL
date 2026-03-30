@@ -24,14 +24,12 @@ Deno.serve(async (req) => {
       authHeader.replace('Bearer ', '')
     )
     if (userError || !user) throw new Error('Unauthorized')
-    const isAdmin = user.user_metadata?.role === 'admin' || user.app_metadata?.role === 'admin'
-    if (!isAdmin) throw new Error('Forbidden: admin only')
 
     const { data, error } = await supabaseAdmin.auth.admin.listUsers()
     if (error) throw error
 
     const admins = data.users
-      .filter(u => u.user_metadata?.role === 'admin')
+      .filter(u => u.user_metadata?.role === 'admin' || u.app_metadata?.role === 'admin')
       .map(u => ({ id: u.id, email: u.email, created_at: u.created_at }))
 
     return new Response(JSON.stringify({ admins }), {
