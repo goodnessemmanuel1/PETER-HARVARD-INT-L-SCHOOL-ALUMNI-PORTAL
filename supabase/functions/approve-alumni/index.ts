@@ -18,7 +18,7 @@ async function sendApprovalEmail({ to, fullName, email, password, loginUrl, rese
             <tr>
               <td style="background:linear-gradient(135deg,#16a34a,#15803d);padding:40px 40px 32px;text-align:center;">
                 <div style="width:80px;height:80px;background:#ffffff;border-radius:50%;display:inline-block;margin-bottom:16px;overflow:hidden;">
-                  <img src="https://peterharvardalumni.vercel.app/assets/phislogo.png" alt="PHIS Logo" width="80" height="80" style="width:80px;height:80px;object-fit:contain;border-radius:50%;" />
+                  <img src="https://peterharvardalumni.site/assets/phislogo.png" alt="PHIS Logo" width="80" height="80" style="width:80px;height:80px;object-fit:contain;border-radius:50%;" />
                 </div>
                 <h1 style="color:#ffffff;margin:0 0 8px;font-size:26px;font-weight:900;letter-spacing:-0.5px;">
                   Peter Harvard INT'L School
@@ -160,7 +160,7 @@ Deno.serve(async (req) => {
       .update({ status: 'approved', auth_user_id: authData.user.id, pending_password: null })
       .eq('id', alumniId)
 
-    const siteUrl = Deno.env.get('SITE_URL') || 'https://peterharvardalumni.vercel.app'
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://peterharvardalumni.site'
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
     if (resendApiKey) {
       try {
