@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { LogIn, Mail, Lock, Eye, EyeOff, KeyRound, AlertCircle, GraduationCap, Users, Star } from 'lucide-react'
@@ -21,7 +21,7 @@ function friendlyError(msg) {
 }
 
 export default function Login() {
-  const { signIn, signOut, updatePassword } = useAuth()
+  const { signIn, signOut, updatePassword, user, isAdmin, loading } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
   const [newPassword, setNewPassword] = useState('')
@@ -29,36 +29,40 @@ export default function Login() {
   const [showPass, setShowPass] = useState(false)
   const [step, setStep] = useState('login')
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (!loading && user && !isAdmin) navigate('/dashboard', { replace: true })
+  }, [user, isAdmin, loading])
 
   const handleLogin = async e => {
     e.preventDefault()
-    setLoading(true)
+    setSubmitting(true)
     setError('')
     const { data, error: err } = await signIn(form.email, form.password)
-    if (err) { setError(friendlyError(err.message)); setLoading(false); return }
+    if (err) { setError(friendlyError(err.message)); setSubmitting(false); return }
     if (data?.user?.user_metadata?.role === 'admin') {
       await signOut()
       setError('Admin accounts must use the Admin portal to log in.')
-      setLoading(false)
+      setSubmitting(false)
       return
     }
     if (data?.user?.user_metadata?.must_change_password) {
       setStep('change-password')
-      setLoading(false)
+      setSubmitting(false)
     } else {
-      navigate('/dashboard')
+      navigate('/dashboard', { replace: true })
     }
   }
 
   const handleChangePassword = async e => {
     e.preventDefault()
     if (newPassword.length < 8) { setError('Password must be at least 8 characters.'); return }
-    setLoading(true)
+    setSubmitting(true)
     setError('')
     const { error: err } = await updatePassword(newPassword)
-    if (err) { setError(friendlyError(err.message)); setLoading(false); return }
-    navigate('/dashboard')
+    if (err) { setError(friendlyError(err.message)); setSubmitting(false); return }
+    navigate('/dashboard', { replace: true })
   }
 
   const HeroPanel = () => (
@@ -124,7 +128,7 @@ export default function Login() {
                 <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />{error}
               </div>
             )}
-            <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2 py-3">
+            <button type="submit" disabled={submitting} className="btn-primary w-full flex items-center justify-center gap-2 py-3">
               {loading ? <><Spinner size={14} />Saving...</> : <><KeyRound size={15} />Set Password & Continue</>}
             </button>
           </form>
@@ -188,8 +192,8 @@ export default function Login() {
               </div>
             )}
 
-            <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2 py-3 mt-1">
-              {loading ? <><Spinner size={14} />Signing in...</> : <><LogIn size={16} />Sign In</>}
+            <button type="submit" disabled={submitting} className="btn-primary w-full flex items-center justify-center gap-2 py-3 mt-1">
+              {submitting ? <><Spinner size={14} />Signing in...</> : <><LogIn size={16} />Sign In</>}
             </button>
           </form>
 

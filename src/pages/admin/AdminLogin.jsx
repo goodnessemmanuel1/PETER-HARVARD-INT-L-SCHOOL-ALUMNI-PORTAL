@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { LogIn, Mail, Lock, Eye, EyeOff, AlertCircle, ShieldCheck } from 'lucide-react'
@@ -15,27 +15,31 @@ function friendlyError(msg) {
 }
 
 export default function AdminLogin() {
-  const { signIn, signOut } = useAuth()
+  const { signIn, signOut, user, isAdmin, loading } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
   const [showPass, setShowPass] = useState(false)
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (!loading && user && isAdmin) navigate('/admin', { replace: true })
+  }, [user, isAdmin, loading])
 
   const handleLogin = async e => {
     e.preventDefault()
-    setLoading(true)
+    setSubmitting(true)
     setError('')
     const { data, error: err } = await signIn(form.email, form.password)
-    if (err) { setError(friendlyError(err.message)); setLoading(false); return }
+    if (err) { setError(friendlyError(err.message)); setSubmitting(false); return }
 
     if (data?.user?.user_metadata?.role !== 'admin') {
       await signOut()
       setError('This login is for admins only. Alumni should use the main login page.')
-      setLoading(false)
+      setSubmitting(false)
       return
     }
-    navigate('/admin')
+    navigate('/admin', { replace: true })
   }
 
   return (
@@ -80,8 +84,8 @@ export default function AdminLogin() {
             </div>
           )}
 
-          <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2 py-3">
-            <LogIn size={16} />{loading ? <><Spinner size={14} />Signing in...</> : 'Sign In to Admin'}
+          <button type="submit" disabled={submitting} className="btn-primary w-full flex items-center justify-center gap-2 py-3">
+            <LogIn size={16} />{submitting ? <><Spinner size={14} />Signing in...</> : 'Sign In to Admin'}
           </button>
         </form>
 
