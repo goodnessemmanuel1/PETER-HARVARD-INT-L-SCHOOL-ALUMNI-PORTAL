@@ -95,7 +95,7 @@ export default function Register() {
   return (
     <div className="min-h-[calc(100vh-64px)] flex">
       {/* Hero Panel */}
-      <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary-700 to-primary-900 text-white p-12 w-[38%] flex-shrink-0 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary-700 to-primary-900 text-white p-10 w-[32%] flex-shrink-0 relative overflow-hidden">
         {/* Green decorative squares */}
         <div className="absolute top-10 right-8 w-16 h-16 bg-green-400/20 rounded-2xl rotate-12 pointer-events-none" />
         <div className="absolute top-32 right-16 w-8 h-8 bg-green-400/15 rounded-lg rotate-45 pointer-events-none" />

@@ -131,9 +131,9 @@ export default function About() {
             className="grid grid-cols-2 gap-4">
             {[
               { label: 'Founded', value: FOUNDED, color: 'bg-primary-600' },
-              { label: 'Years of Excellence', value: `${YEARS_RUNNING}+`, color: 'bg-primary-700' },
-              { label: 'Registered Alumni', value: '50+', color: 'bg-primary-800' },
-              { label: 'Growing Community', value: '🌍', color: 'bg-primary-900' },
+              { label: 'Years of Excellence', value: `${YEARS_RUNNING}+`, color: 'bg-green-600' },
+              { label: 'Registered Alumni', value: '50+', color: 'bg-blue-600' },
+              { label: 'Growing Community', value: '🌍', color: 'bg-yellow-500' },
             ].map(s => (
               <div key={s.label} className={`${s.color} text-white rounded-2xl p-6`}>
                 <p className="text-3xl font-black mb-1">{s.value}</p>

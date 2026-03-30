@@ -64,7 +64,7 @@ export default function Home() {
     <div className="overflow-x-hidden">
 
       {/* ── Hero ── */}
-      <section className="relative min-h-[92vh] flex items-center bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 text-white overflow-hidden">
+      <section className="relative min-h-[75vh] flex items-center bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 text-white overflow-hidden">
         {/* decorative blobs */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <motion.div animate={{ y: [0, -30, 0] }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
@@ -74,12 +74,12 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,rgba(255,255,255,0.07),transparent_65%)]" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-36 w-full">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
           <div className="max-w-4xl">
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <span className="inline-flex items-center gap-2 text-xs font-bold bg-white/10 border border-white/20 text-white/90 px-4 py-1.5 rounded-full mb-8 backdrop-blur-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                Version 1.1 — Live & Growing
+                Now Live
               </span>
             </motion.div>
 
@@ -137,9 +137,9 @@ export default function Home() {
         >
           {[
             { label: 'Registered Alumni', value: stats.alumni, icon: <GraduationCap size={22} />, color: 'text-primary-600 dark:text-primary-400', bg: 'bg-primary-50 dark:bg-primary-900/20' },
-            { label: 'Graduation Years', value: stats.years, icon: <CalendarDays size={22} />, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-            { label: 'Featured Alumni', value: stats.featured, icon: <Star size={22} />, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-900/20' },
-            { label: 'Events Posted', value: stats.events, icon: <Megaphone size={22} />, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-900/20' },
+            { label: 'Grad Years', value: stats.years, icon: <CalendarDays size={22} />, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+            { label: 'Featured', value: stats.featured, icon: <Star size={22} />, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-900/20' },
+            { label: 'Events', value: stats.events, icon: <Megaphone size={22} />, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-900/20' },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} viewport={{ once: true }}
               className="card p-5 flex flex-col items-center text-center gap-2 hover:shadow-md transition-shadow">
@@ -197,10 +197,10 @@ export default function Home() {
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             className="grid grid-cols-2 gap-4">
             {[
-              { label: 'Years of Excellence', value: `${new Date().getFullYear() - 2017}+`, color: 'bg-primary-600' },
+              { label: 'Years of Excellence', value: `${new Date().getFullYear() - 2017}+`, color: 'bg-green-600' },
               { label: 'Alumni Worldwide', value: `${stats.alumni}+`, color: 'bg-blue-600' },
               { label: 'Featured Graduates', value: `${stats.featured}+`, color: 'bg-yellow-500' },
-              { label: 'School Events', value: `${stats.events}+`, color: 'bg-green-600' },
+              { label: 'School Events', value: `${stats.events}+`, color: 'bg-primary-600' },
             ].map(s => (
               <div key={s.label} className={`${s.color} text-white rounded-2xl p-6 flex flex-col gap-2`}>
                 <p className="text-3xl font-black">{s.value}</p>
