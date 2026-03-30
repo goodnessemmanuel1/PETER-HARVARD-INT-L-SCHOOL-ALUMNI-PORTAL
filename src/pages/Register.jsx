@@ -6,7 +6,8 @@ import { UserPlus, CheckCircle, User, Mail, Phone, Calendar, Briefcase, FileText
 import { Spinner } from '../components/Loader'
 
 const currentYear = new Date().getFullYear()
-const YEARS = Array.from({ length: 41 }, (_, i) => currentYear - i)
+const START_YEAR = 2024
+const YEARS = Array.from({ length: currentYear - START_YEAR + 1 }, (_, i) => START_YEAR + i).reverse()
 
 export default function Register() {
   const fileRef = useRef()
@@ -94,7 +95,13 @@ export default function Register() {
   return (
     <div className="min-h-[calc(100vh-64px)] flex">
       {/* Hero Panel */}
-      <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary-700 to-primary-900 text-white p-12 w-[38%] flex-shrink-0">
+      <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-primary-700 to-primary-900 text-white p-12 w-[38%] flex-shrink-0 relative overflow-hidden">
+        {/* Green decorative squares */}
+        <div className="absolute top-10 right-8 w-16 h-16 bg-green-400/20 rounded-2xl rotate-12 pointer-events-none" />
+        <div className="absolute top-32 right-16 w-8 h-8 bg-green-400/15 rounded-lg rotate-45 pointer-events-none" />
+        <div className="absolute bottom-24 right-6 w-12 h-12 bg-green-500/20 rounded-xl -rotate-12 pointer-events-none" />
+        <div className="absolute bottom-48 right-20 w-5 h-5 bg-green-300/20 rounded rotate-12 pointer-events-none" />
+        <div className="absolute top-1/2 right-4 w-6 h-6 bg-green-400/10 rounded-md rotate-45 pointer-events-none" />
         <div className="flex items-center gap-3">
           <img src="/assets/phislogo.png" alt="PHIS" className="w-12 h-12 object-contain" />
           <div>
@@ -139,7 +146,7 @@ export default function Register() {
 
           <div className="mb-7">
             <h1 className="text-3xl font-black text-gray-900 dark:text-white mb-1">Alumni Registration</h1>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">Fill in your details to join the community.</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">Fill in your details to join the community. <span className="text-green-600 dark:text-green-400 font-semibold">It's free!</span></p>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -170,7 +177,7 @@ export default function Register() {
 
             {/* Personal Info */}
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">Personal Information</p>
+              <p className="text-xs font-black uppercase tracking-widest text-green-600 dark:text-green-400 mb-3">Personal Information</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"><User size={12} />Full Name *</label>
@@ -196,7 +203,7 @@ export default function Register() {
 
             {/* Professional */}
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">Professional Details</p>
+              <p className="text-xs font-black uppercase tracking-widest text-green-600 dark:text-green-400 mb-3">Professional Details</p>
               <div className="flex flex-col gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5"><Briefcase size={12} />Current Occupation</label>
@@ -211,7 +218,7 @@ export default function Register() {
 
             {/* Password */}
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-1.5"><Lock size={11} />Set Your Password</p>
+              <p className="text-xs font-black uppercase tracking-widest text-green-600 dark:text-green-400 mb-3 flex items-center gap-1.5"><Lock size={11} />Set Your Password</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Password *</label>
@@ -229,7 +236,7 @@ export default function Register() {
                     required className="input" placeholder="Repeat password" />
                 </div>
               </div>
-              <p className="text-xs text-gray-400 mt-2">You'll use this password to log in once your registration is approved.</p>
+              <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center gap-1">✓ You'll use this password to log in once your registration is approved.</p>
             </div>
 
             {error && (
